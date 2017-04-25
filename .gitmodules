@@ -1,0 +1,3 @@
+[submodule "lib/bldc_uart_comm_stm32f4_discovery"]
+	path = lib/bldc_uart_comm_stm32f4_discovery
+	url = https://github.com/faraday-motion/bldc_uart_comm_stm32f4_discovery.git

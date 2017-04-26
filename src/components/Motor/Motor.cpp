@@ -35,15 +35,6 @@ Motor::Motor(MotorController* motorController){
 
 void Motor::setPower(byte target, byte controllerType)
 {
-  #if defined(ENABLEDEVMODE)
-    Serial.print("setPower: ");
-    Serial.printl(target);
-  #endif
-
-  #if defined(ENABLEWEBUPDATE)
-    disableWebUpdate();
-  #endif
-
     Motor::adjustPower(constrain(target, defaultInputMaxBrake, defaultInputMaxAcceleration));
     // Once the values are adjusted convert the Power.
     Motor::convertPower();
@@ -53,26 +44,16 @@ void Motor::setPower(byte target, byte controllerType)
 void Motor::adjustPower(byte target)
 {
 
-  #if defined(ENABLEDEVMODE)
-   Serial.print("adjustPowerTarget:");
-   Serial.println(target);
-  #endif
+  // Smooth the input
+  float targetAlpha = (defaultSmoothAlpha * target) + ((1 - defaultSmoothAlpha * controlPower));
+  // If the value is close to target, set it to target
+  if (abs(float(target) - float(targetAlpha)))
+  {
+    targetAlpha = target;
+  }
+  target = targetAlpha;
 
-  #if defined(ENABLESMOOTHING)
-    // Smooth the input
-    float targetAlpha = (defaultSmoothAlpha * target) + ((1 - defaultSmoothAlpha * controlPower));
-    // If the value is close to target, set it to target
-    if (abs(float(target) - float(targetAlpha)))
-    {
-      targetAlpha = target;
-    }
-    target = targetAlpha;
-  #endif
 
-  #if defined(ENABLEDEVMODE)
-   Serial.print("target:");
-   Serial.println(target);
-  #endif
 
   if (target > defaultInputMinBrake && target < defaultInputMinAcceleration)
   {
@@ -89,10 +70,6 @@ void Motor::adjustPower(byte target)
     // else
     // {
     controlPower = constrain(target, defaultInputMaxBrake, defaultInputMaxAcceleration);
-    #if defined(ENABLEDEVMODE)
-      Serial.print("adjustPowerActual: ");
-      Serial.println(controlPower);
-    #endif
   //}
 }
 
@@ -103,15 +80,6 @@ void Motor::adjustPower(byte target)
 
 void Motor::convertPower()
 {
-  #if defined(ENABLEDEVMODE)
-    Serial.print("convertPower:");
-    Serial.println(controlPower);
-  #endif
-
-  #if defined(ENABLESERVOESC)
-    servoESC.writeMicroseconds(servoN)
-  #endif
-
   if (controlPower > defaultInputMinBrake && controlPower < defaultInputMinAcceleration )
   {
     // Neutral
@@ -119,50 +87,20 @@ void Motor::convertPower()
     motorPercent = 0;
     motorTargetPercent = 0;
 
-    #if defined(ENABLEVESC)
-     motorController->set_current_brake(0);
-    #endif
-
-    #if defined(ENABLESERVOESC)
-     servoESC.writeMicroseconds(servoNeutralPWM);
-    #endif
+    motorController->set_current_brake(0);
   }
   else if (controlPower >= defaultInputMinAcceleration)
   {
     // Accelerating
     motorDirection = 1;
     motorTargetPercent = map(controlTarget, defaultInputMinBrake, defaultInputMaxAcceleration, 0, 100);
-
-    #if defined(ENABLEDEVMODE)
-     Serial.print("motorTargetPercent:");
-     Serial.println(motorTargetPercent);
-    #endif
     // current percent of the power based sent from input from the controller.
     motorPercent = map(controlPower, defaultInputMinBrake, defaultInputMaxAcceleration, 0, 100);
 
-    #if defined(ENABLEVESC)
-     float motorCurrent = map(controlPower, defaultInputMinAcceleration, defaultInputMaxAcceleration, defaultCurrentNeutral, defaultCurrentAccelerationMax);
-
-     //Hack function for making things more smooth
-     float adjustedCurrent = ((motorCurrent * motorCurrent) / defaultCurrentAccelerationMax) + defaultCurrentAccelerationMin;
-
-     motorController->set_current(adjustedCurrent);
-
-     #if defined(ENABLEDEVMODE)
-      Serial.print("AccelerationCur: ");
-      Serial.println(adjustedCurrent);
-     #endif
-    #endif // endif ENABLEVESC
-
-    #if defined(ENABLESERVOESC)
-      int servoMotorPWM = map(controlPower, defaultInputMinAcceleration, defaultInputMaxAcceleration, servoNeutralPWM, servoMaxPWM);
-      servoESC.writeMicroseconds(servoMotorPWM);
-
-      #if defined(ENABLEDEVMODE)
-       Serial.print("AccelerationServo: ");
-       Serial.println(servoMotorPWM);
-      #endif
-    #endif
+    float motorCurrent = map(controlPower, defaultInputMinAcceleration, defaultInputMaxAcceleration, defaultCurrentNeutral, defaultCurrentAccelerationMax);
+    //Hack function for making things more smooth
+    float adjustedCurrent = ((motorCurrent * motorCurrent) / defaultCurrentAccelerationMax) + defaultCurrentAccelerationMin;
+    motorController->set_current(adjustedCurrent);
   }
   else
   {
@@ -170,40 +108,18 @@ void Motor::convertPower()
     motorDirection = 2;
     motorTargetPercent = map(controlTarget, defaultInputMinBrake, defaultInputMaxBrake, 0, 100);
 
-    #if defined(ENABLEDEVMODE)
-     Serial.print("motorTargetPercent: ");
-     Seria.println(motorTargetPercent);
-    #endif
 
     motorPercent = map(controlPower, defaultInputMinBrake, defaultInputMaxBrake, 0, 100);
 
-    #if defined(ENABLEVESC)
 
-     float motorCurrent = map(controlPower, defaultInputMinBrake, defaultInputMaxBrake, defaultCurrentBrakeMin, defaultCurrentBrakeMax);
-     float adjustedCurrent = motorCurrent;
+    float motorCurrent = map(controlPower, defaultInputMinBrake, defaultInputMaxBrake, defaultCurrentBrakeMin, defaultCurrentBrakeMax);
+    float adjustedCurrent = motorCurrent;
 
-     #if defined(ENABLENONLINEARBRAKE)
-      adjustedCurrent = ((motorCurrent * motorCurrent) / defaultCurrentBrakeMax) + defaultCurrentBrakeMin;
-      adjustedCurrent = constrain(adjustedCurrent, defaultCurrentBrakeMin, defaultCurrentBrakeMax);
-     #endif
+    adjustedCurrent = ((motorCurrent * motorCurrent) / defaultCurrentBrakeMax) + defaultCurrentBrakeMin;
+    adjustedCurrent = constrain(adjustedCurrent, defaultCurrentBrakeMin, defaultCurrentBrakeMax);
 
-     motorController->set_current_brake(adjustedCurrent);
+    motorController->set_current_brake(adjustedCurrent);
 
-     #if defined(ENABLEDEVMODE)
-      Serial.print("BrakeCur: ");
-      Serial.println(adjustedCurrent);
-     #endif
-
-    #endif // endif ENABLEVESC
-
-    #if defined(ENABLESERVOESC)
-     int servoMotorPWM = map(controlPower, defaultInputMinBrake, defaultInputMaxBrake, servoNeutralPWM, servoMinPWM)
-     servoESC.writeMicroseconds(servoMotorPWM);
-     #if defined(ENABLEDEVMODE)
-      Serial.print("BrakeServo: ");
-      Serial.println(servoMotorPWM);
-     #endif
-    #endif
   } // end if accelerate, neutral or brake
 } // end Motor::convertPower();
 
@@ -220,13 +136,7 @@ void Motor::setDefaultPower()
   motorPercent = 0;
   motorTargetPercent = 0;
 
-  //#if defined(ENABLEVESC)
   motorController->set_current(defaultCurrentNeutral);
-  //#endif
-
-  // #if defined(ENABLESERVOESC)
-  //  servoESC.writeMicroseconds(servoNeutralPWM);
-  // #endif
 }
 
 

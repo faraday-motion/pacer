@@ -1,14 +1,16 @@
 #ifndef Controller_h
 #define Controller_h
-#include "../Motor/Motor.h"
+#include "../MotorController/MotorController.h"
 #include "../Connection/Wifi.h"
 class Controller
 {
 public:
   // Motor
-  Motor* motor;
-  // Wifi
-  Wifi* wifi;
+  MotorController* motorController;
+
+  // Controller Inputs
+  byte  latestInput;
+  float previousInput;
 
   // Controller States
   bool controlDead;
@@ -18,14 +20,20 @@ public:
   //Controller Values
   byte controllerType;
 
-  //float controlPower; // moved to the motor. It seems the controller should not care what is the value of this variable.
-  //int   controlTarget; // moved to the motor. It seems the controller should not care what is the value of this variable.
+  // Controller Constraints
+  byte defaultInputNeutral;
+  byte defaultInputMinBrake;
+  byte defaultInputMaxBrake;
+  byte defaultInputMinAcceleration;
+  byte defaultInputMaxAcceleration;
+  float defaultSmoothAlpha;
 
   Controller();
-  void setup(Motor* motor, Wifi* wifi);
+  void setup(MotorController* motorController);
   // Sends the computed controller targe to the motor.
-  void setMotorPower(byte target);
   void setMotorDefaultPower();
+  void smoothenInput(byte latestInput);
+  bool setMotorPower();
 };
 
 #endif

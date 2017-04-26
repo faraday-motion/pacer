@@ -52,7 +52,7 @@ void Wifi::setup(WiFiServer* wifiServer)
 }
 
 void Wifi::registerClient() {
-  Serial.printf("Stations connected to soft-AP = %d\n", WiFi.softAPgetStationNum());
+  //Serial.printf("Stations connected to soft-AP = %d\n", WiFi.softAPgetStationNum());
   yield();
   if (server->hasClient()){
     client = server->available();

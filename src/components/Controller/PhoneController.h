@@ -15,7 +15,7 @@ public:
   Controller* controller;
   Wifi* wifi;
   PhoneController();
-  void setup(Controller* baseController);
+  void setup(Controller* baseController, Wifi* wifi);
   void read();
 
 };

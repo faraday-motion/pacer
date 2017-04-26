@@ -8,20 +8,20 @@ PhoneController::PhoneController() {
 
 }
 
-void PhoneController::setup(Controller* controller)
+void PhoneController::setup(Controller* controller, Wifi* wifi)
 {
   this->controller = controller;
-  this->wifi = controller->wifi;
-
+  this->wifi = wifi;
 }
+
 void PhoneController::read()
 {
-
  uint8_t i;
  // Check clients for data
    if (wifi->client && wifi->client.connected()) {
-     unsigned int timeout = 3;
+     unsigned int  timeout   = 3;
      unsigned long timestamp = millis();
+
      // While no data is coming do yield();
      while (wifi->client.available() == 0 && ((millis() - timestamp) <= timeout)) {
        yield();
@@ -53,11 +53,8 @@ void PhoneController::read()
          //Set the power and specify controller 1, the wifi reciever
          if (controller->controllerType == 0 || controller->controllerType == 1)
          {
-           Serial.println("phoneController is setting power.");
            controller->controlEnabled = true;
-           Serial.print("Data Received from client: ");
-           Serial.println(m[4]);
-           controller->setMotorPower(m[4]);
+           controller->smoothenInput(m[4]);
          }
        }
        else

@@ -77,24 +77,17 @@ void setupMotorController()
 void setup() {
   Serial.begin(115200);
   wifi.setup(&wifiServer);
-  delay(250);
-  controller.setup(&motor, &wifi);
-  phoneController.setup(&controller);
+  controller.setup(&motorController);
+  phoneController.setup(&controller, &wifi);
   setupMotorController();
 }
 
 
 void loop() {
-  // Check if clients want to connect to Wifi AP Server.
-  if (metro250ms.check() == 1)
-  {
-    wifi.registerClient();
-    yield();
-  }
 
-  if (metroControllerRead.check() == 1) {
-    phoneController.read();
-  }
+  // Check if clients want to connect to Wifi AP Server.
+  while (metro250ms.check() == 1)          wifi.registerClient();
+  while (metroControllerRead.check() == 1) phoneController.read();
 
   yield();
 }

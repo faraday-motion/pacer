@@ -1,11 +1,8 @@
-//#include <Arduino.h>
+#include <Arduino.h>
 #include "Wifi.h"
 #include <ESP8266WiFi.h>
 #include <IPAddress.h>
-
-//How many clients should be able to connect to this ESP8266
-//#define MAX_SRV_CLIENTS 5
-
+#include "../ConfigController/ConfigController.h"
 
 Wifi::Wifi()
 {
@@ -21,7 +18,6 @@ void Wifi::setup(WiFiServer* wifiServer)
   const char *password = "faraday100";
   const int port = 8899;
 
-  MAX_SRV_CLIENTS = 5;
   Serial.print("Configuring access point...");
   IPAddress address(10, 10, 100, 254);
   IPAddress subnet(255, 255, 255, 0);

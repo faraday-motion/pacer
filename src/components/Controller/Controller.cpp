@@ -10,7 +10,7 @@ Controller::Controller()
 void Controller::setup(MotorController* motorController)
 {
   // Setting the pointers to Motor and Wifi.
-  this->motorController = motorController;
+  //this->motorController = motorController;
 
   // Seting the default values and states for the controller;
   defaultInputNeutral         = 50;
@@ -41,9 +41,11 @@ bool Controller::setMotorPower()
   if (previousInput > defaultInputMinBrake && previousInput < defaultInputMinAcceleration)
   {
     // we are in neutral.
-    Serial.print("Neutral ::: Controller Input = ");
-    Serial.println(previousInput);
+    float motorCurrent = currentController.getNeutralCurrent();
+    motorController->set_current(motorCurrent);
 
+    //Serial.print("Neutral ::: Current = ");
+    //Serial.println(motorCurrent);
     return 0;
   }
 
@@ -51,28 +53,26 @@ bool Controller::setMotorPower()
   {
     //accelerating
     float motorCurrent = currentController.getMotorAccelerationCurrent(previousInput);
+    motorController->set_current(motorCurrent);
 
-    Serial.print("Accelerating ::: Current = ");
-    Serial.println(motorCurrent);
-    return 0;
+    //Serial.print("Acceller ::: Current = ");
+    //Serial.println(motorCurrent);
+    return 1;
   }
 
   // braking;
-
-
-
-
   float motorCurrent = currentController.getMotorBrakingCurrent(previousInput);
-  Serial.print("Braking ::: Current = ");
-  Serial.println(motorCurrent);
-  return 0;
+  motorController->set_current_brake(motorCurrent);
+
+  //Serial.print("Braking ::: Current = ");
+  //Serial.println(motorCurrent);
+  return 1;
 
 }
 
-void Controller::smoothenInput(byte latestInput)
+void Controller::processInput(byte latestInput)
 {
   float targetAlpha = (defaultSmoothAlpha * latestInput) + ((1 - defaultSmoothAlpha * previousInput));
-
   // If the value is close to target, set it to target
   if(abs(float(latestInput) - float(targetAlpha)))
   {

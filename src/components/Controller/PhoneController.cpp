@@ -54,7 +54,7 @@ void PhoneController::read()
          if (controller->controllerType == 0 || controller->controllerType == 1)
          {
            controller->controlEnabled = true;
-           controller->smoothenInput(m[4]);
+           controller->processInput(m[4]);
          }
        }
        else

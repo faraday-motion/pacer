@@ -4,7 +4,8 @@
 
 class CurrentController {
 public:
-  //Current control
+  // Current control
+  //TODO:: This Needs to Come from a Config File.
   float defaultCurrentNeutral;
   float defaultCurrentAccelerationMax;
   float defaultCurrentAccelerationMin;
@@ -23,6 +24,7 @@ public:
   CurrentController();
   float getMotorAccelerationCurrent(float previousControllerInput);
   float getMotorBrakingCurrent(float previousControllerInput);
+  float getNeutralCurrent();
 };
 
 #endif

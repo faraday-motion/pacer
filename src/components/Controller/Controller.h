@@ -30,9 +30,7 @@ public:
 
   Controller();
   void setup(MotorController* motorController);
-  // Sends the computed controller targe to the motor.
-  void setMotorDefaultPower();
-  void smoothenInput(byte latestInput);
+  void processInput(byte latestInput);
   bool setMotorPower();
 };
 

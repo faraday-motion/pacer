@@ -17,7 +17,7 @@ CurrentController::CurrentController()
   defaultInputMaxAcceleration = 100;
   defaultSmoothAlpha          = 0.5;
 
-} 
+}
 
 // Returns the amps required to be passed to the motorcontroller.
 float CurrentController::getMotorAccelerationCurrent(float previousControllerInput)
@@ -39,4 +39,9 @@ float CurrentController::getMotorBrakingCurrent(float previousControllerInput)
   adjustedCurrent = constrain(adjustedCurrent, defaultCurrentBrakeMin, defaultCurrentBrakeMax);
 
   return adjustedCurrent;
+}
+
+float CurrentController::getNeutralCurrent()
+{
+  return defaultCurrentNeutral;
 }

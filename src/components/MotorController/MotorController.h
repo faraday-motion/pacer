@@ -12,15 +12,16 @@
 class MotorController
 {
 public:
-  Ticker ticker;
 
   MotorController();
 
   // Communication
   //void uartInit(void(*s_func)(unsigned char *data, unsigned int len), void(*p_func)(unsigned char b), void(*v_func)(mc_values *val));
-  void uartInit(void(*s_func)(unsigned char *data, unsigned int len), void(*p_func)(unsigned char b));
+  void uartInit(void(*s_func)(unsigned char *data, unsigned int len));
   void uartProcess(unsigned char b);
   void update();
+
+  void vescSend(unsigned char *data, unsigned int len);
 
   // Motor Control
   void set_current(float current);
@@ -28,6 +29,8 @@ public:
 
   // Communication Commands
   void get_values();
+
+  void exists();
 };
 
 #endif

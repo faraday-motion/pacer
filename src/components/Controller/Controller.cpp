@@ -1,9 +1,12 @@
 #include "Controller.h"
-#include "../CurrentController/CurrentController.h"
 
+#include "../ConfigController/Config.h"
+#include "../ConfigController/ConfigController.h"
 
-Controller::Controller()
+Controller::Controller(ConfigController* configController)
 {
+  config = configController->config;
+  // Pass the config pointer to the current controller.
 
 }
 
@@ -11,14 +14,17 @@ void Controller::setup(MotorController* motorController)
 {
   // Setting the pointers to Motor and Wifi.
   //this->motorController = motorController;
-
+  Serial.println("Controller is setting up the CurrentController");
+  currentController.setup(config);
   // Seting the default values and states for the controller;
-  defaultInputNeutral         = 50;
-  defaultInputMinBrake        = 48;
-  defaultInputMaxBrake        = 0;
-  defaultInputMinAcceleration = 52;
-  defaultInputMaxAcceleration = 100;
-  defaultSmoothAlpha          = 0.5;
+  defaultInputNeutral         = config->controller.defaultInputNeutral;
+  defaultInputMinBrake        = config->controller.defaultInputMinBrake;
+  defaultInputMaxBrake        = config->controller.defaultInputMaxBrake;
+  defaultInputMinAcceleration = config->controller.defaultInputMinAcceleration;
+  defaultInputMaxAcceleration = config->controller.defaultInputMaxAcceleration;
+  defaultSmoothAlpha          = config->controller.defaultSmoothAlpha;
+
+
 
   // Setting inputs to neutral;
   latestInput                 = defaultInputNeutral;
@@ -36,7 +42,7 @@ void Controller::setup(MotorController* motorController)
 // Decides the state of the motor
 bool Controller::setMotorPower()
 {
-  CurrentController currentController;
+
   // here I think we need to set the current input measurements.
   if (previousInput > defaultInputMinBrake && previousInput < defaultInputMinAcceleration)
   {
@@ -44,8 +50,8 @@ bool Controller::setMotorPower()
     float motorCurrent = currentController.getNeutralCurrent();
     motorController->set_current(motorCurrent);
 
-    //Serial.print("Neutral ::: Current = ");
-    //Serial.println(motorCurrent);
+    // Serial.print("Neutral ::: Current = ");
+    // Serial.println(motorCurrent);
     return 0;
   }
 
@@ -55,8 +61,8 @@ bool Controller::setMotorPower()
     float motorCurrent = currentController.getMotorAccelerationCurrent(previousInput);
     motorController->set_current(motorCurrent);
 
-    //Serial.print("Acceller ::: Current = ");
-    //Serial.println(motorCurrent);
+    // Serial.print("Acceller ::: Current = ");
+    // Serial.println(motorCurrent);
     return 1;
   }
 
@@ -64,8 +70,8 @@ bool Controller::setMotorPower()
   float motorCurrent = currentController.getMotorBrakingCurrent(previousInput);
   motorController->set_current_brake(motorCurrent);
 
-  //Serial.print("Braking ::: Current = ");
-  //Serial.println(motorCurrent);
+  // Serial.print("Braking ::: Current = ");
+  // Serial.println(motorCurrent);
   return 1;
 
 }

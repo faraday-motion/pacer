@@ -1,21 +1,58 @@
 #include "CurrentController.h"
 CurrentController::CurrentController()
 {
-  //Current control
-  defaultCurrentNeutral         = 0;
-  defaultCurrentAccelerationMax = 60;
-  defaultCurrentAccelerationMin = 0.25;
-  defaultCurrentBrakeMax        = 60;
-  defaultCurrentBrakeMin        = 0;
+}
 
-  //TODO:: this needs to be coming out of a config file.
+
+void CurrentController::setup(Config* configuration)
+{
+  config = configuration;
+
+  //Current control
+  defaultCurrentNeutral         = config->currentControl.defaultCurrentNeutral;
+  defaultCurrentAccelerationMax = config->currentControl.defaultCurrentAccelerationMax;
+  defaultCurrentAccelerationMin = config->currentControl.defaultCurrentAccelerationMin;
+  defaultCurrentBrakeMax        = config->currentControl.defaultCurrentBrakeMax;
+  defaultCurrentBrakeMin        = config->currentControl.defaultCurrentBrakeMin;
+
   // Seting the default values and states for the controller;
-  defaultInputNeutral         = 50;
-  defaultInputMinBrake        = 48;
-  defaultInputMaxBrake        = 0;
-  defaultInputMinAcceleration = 52;
-  defaultInputMaxAcceleration = 100;
-  defaultSmoothAlpha          = 0.5;
+  defaultInputNeutral         = config->controller.defaultInputNeutral;
+  defaultInputMinBrake        = config->controller.defaultInputMinBrake;
+  defaultInputMaxBrake        = config->controller.defaultInputMaxBrake;
+  defaultInputMinAcceleration = config->controller.defaultInputMinAcceleration;
+  defaultInputMaxAcceleration = config->controller.defaultInputMaxAcceleration;
+  defaultSmoothAlpha          = config->controller.defaultSmoothAlpha;
+
+
+  // Serial.println("The CurrrentControler Configured::::::::::::");
+  // Serial.println(":::::: CURRENT VALUES  :::::::");
+  // Serial.print("defaultCurrentNeutral :: ");
+  // Serial.println(defaultCurrentNeutral);
+  // Serial.print("defaultCurrentAccelerationMax :: ");
+  // Serial.println(defaultCurrentAccelerationMax);
+  // Serial.print("defaultCurrentAccelerationMin :: ");
+  // Serial.println(defaultCurrentAccelerationMin);
+  // Serial.print("defaultCurrentBrakeMax :: ");
+  // Serial.println(defaultCurrentBrakeMax);
+  // Serial.print("defaultCurrentBrakeMin :: ");
+  // Serial.println(defaultCurrentBrakeMin);
+  //
+  // Serial.println(":::::: INPUT VALUES  :::::::");
+  // Serial.print("defaultInputNeutral :: ");
+  // Serial.println(defaultInputNeutral);
+  // Serial.print("defaultInputMinBrake :: ");
+  // Serial.println(defaultInputMinBrake);
+  // Serial.print("defaultInputMaxBrake :: ");
+  // Serial.println(defaultInputMaxBrake);
+  // Serial.print("defaultInputMinAcceleration :: ");
+  // Serial.println(defaultInputMinAcceleration);
+  // Serial.print("defaultInputMaxAcceleration :: ");
+  // Serial.println(defaultInputMaxAcceleration);
+  // Serial.print("defaultSmoothAlpha :: ");
+  // Serial.println(defaultSmoothAlpha);
+
+
+
 
 }
 
@@ -26,7 +63,7 @@ float CurrentController::getMotorAccelerationCurrent(float previousControllerInp
   //Hack function for making things more smooth
   float adjustedCurrent = ((motorCurrent * motorCurrent) / defaultCurrentAccelerationMax) + defaultCurrentAccelerationMin;
   adjustedCurrent = constrain(adjustedCurrent, defaultCurrentAccelerationMin, defaultCurrentAccelerationMax);
-
+  //Serial.println("Step 3");
   return adjustedCurrent;
 }
 

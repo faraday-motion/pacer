@@ -8,22 +8,23 @@ Wifi::Wifi()
 {
 }
 
-void Wifi::setup(WiFiServer* wifiServer)
+void Wifi::setup(WiFiServer* wifiServer, ConfigController* configController)
 {
   // Store address of the wifiServer
   server = wifiServer;
+  config = configController->config;
+
   Serial.println("Wifi Setup Started");
   //Wifi
-  const char *ssid = "FMV-OOP";
-  const char *password = "faraday100";
-  const int port = 8899;
+  const char *ssid = config->wifi.ssid;
+  const char *password = config->wifi.password;
 
   Serial.print("Configuring access point...");
-  IPAddress address(10, 10, 100, 254);
-  IPAddress subnet(255, 255, 255, 0);
+  IPAddress address(config->wifi.ip[0], config->wifi.ip[1], config->wifi.ip[2], config->wifi.ip[3]);
+  IPAddress subnet (config->wifi.subnet[0], config->wifi.subnet[1], config->wifi.subnet[2], config->wifi.subnet[3]);
   //If we dont disable the wifi, then there will be some issues with conncting to the device sometimes
   WiFi.disconnect(true);
-  byte channel = 11;
+  byte channel = config->wifi.channel;
   float wifiOutputPower = 20.5; //Max power
   WiFi.setOutputPower(wifiOutputPower);
   WiFi.setPhyMode(WIFI_PHY_MODE_11B);

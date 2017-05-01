@@ -3,24 +3,18 @@
 
 #include <IPAddress.h>
 #include <ESP8266WiFi.h>
+#include "../ConfigController/Config.h"
+#include "../ConfigController/ConfigController.h"
+
 class Wifi {
 
-private:
-
-  byte ip[4];
-  byte subnet[4];
-  byte channel;
-
-  int  port;
-  const char *ssid;
-  const char *password;
-
 public:
-  WiFiServer* server;
-  WiFiClient  client;
+  WiFiServer*  server;
+  Config*      config;
+  WiFiClient   client;
 
   Wifi();
-  void setup(WiFiServer* wifiServer);
+  void setup(WiFiServer* wifiServer, ConfigController* configController);
   void registerClient();
   byte getChecksum(byte* array, byte arraySize);
   bool validateChecksum(byte* array, byte arra0ySize);

@@ -3,8 +3,6 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
-
-//#include "components/Motor/Motor.h"
 #include "components/Connection/Wifi.h"
 #include "components/Controller/Controller.h"
 #include "components/Controller/PhoneController.h"
@@ -48,9 +46,6 @@ ConfigController configController(&config);
 Wifi            wifi;
 WiFiServer      wifiServer(8899); // TODO::Get the port from a config file. Not sure how to do it as it need to be in this global scope where we can't execute ConfigController::getConfig(&Config);
 MotorController motorController;
-
-
-// Dependent Objects
 Controller      controller(&configController);
 PhoneController phoneController;
 /***********************************************/
@@ -58,20 +53,7 @@ PhoneController phoneController;
 
 void setup() {
   Serial.begin(115200);
-
-  // TODO:: this should be in configController.setup();
-  Serial.println("Mounting File System");
-  if (!SPIFFS.begin()) {
-    Serial.println("Failed to mount File System");
-    return;
-  }
-  bool loaded = configController.loadConfig();
-  if(!loaded) {
-    Serial.println("Failed to load config");
-  } else {
-    Serial.println("Config Loaded");
-  }
-
+  configController.loadConfig();
   wifi.setup(&wifiServer, &configController);
   motorController.setup();
   controller.setup(&motorController);
@@ -80,12 +62,9 @@ void setup() {
 
 
 void loop() {
-  delay(5000);
-  Serial.println("LOOP");
   // Check if clients want to connect to Wifi AP Server.
   while (metro250ms.check() == 1)          wifi.registerClient();
   while (metroControllerRead.check() == 1) phoneController.read();
   yield();
   while (Serial.available() > 0) motorController.processUartByte(Serial.read());
-  //motorController.get_values();
 }

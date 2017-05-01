@@ -52,7 +52,6 @@ void printValues(mc_values *val)
   // TODO:: See what we are doing with all of this data
   // Example: use have it be used by a logger.
 
-
   Serial.print("Input voltage: ");
   Serial.println(val->v_in);
   Serial.print("Temp: ");

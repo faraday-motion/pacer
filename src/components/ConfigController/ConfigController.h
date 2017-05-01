@@ -8,9 +8,11 @@
 class ConfigController
 {
 private:
-  File getFile(const char *permission);
   const char *configFilePath;
   const char *factoryConfigPath;
+  File getFile(const char *permission);
+  bool beginSPIFFS();
+  bool endSPIFFS();
 public:
   Config* config;
   String configString;
@@ -21,6 +23,8 @@ public:
   bool saveConfig();
   bool setConfigString(String newConfigString);
   bool unsetConfigString();
+
+
 
 };
 

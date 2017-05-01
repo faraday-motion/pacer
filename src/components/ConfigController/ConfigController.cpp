@@ -10,8 +10,21 @@ ConfigController::ConfigController(Config* config)
   factoryConfigPath = "/config_factory.json";
 }
 
+// Get a json string from the phone app and set it as the current stringConfig
+//bool ConfigController::setConfigString (char *newConfigString)
+bool ConfigController::setConfigString(String newConfigString)
+{
+  configString = newConfigString;
+  return true;
+}
+
 bool ConfigController::loadConfig()
 {
+
+  if(!beginSPIFFS()) {
+    return false;
+  }
+
   ConfigController::getJsonConfig();
 
   StaticJsonBuffer<1024> jsonBuffer;
@@ -50,21 +63,16 @@ bool ConfigController::loadConfig()
   config->currentControl.defaultCurrentAccelerationMin = json["currentControl"]["defaultCurrentAccelerationMin"];
   config->currentControl.defaultCurrentAccelerationMax = json["currentControl"]["defaultCurrentAccelerationMax"];
 
+  endSPIFFS();
   return true;
 }
-
-
-// Get a json string from the phone app and set it as the current stringConfig
-//bool ConfigController::setConfigString (char *newConfigString)
-bool ConfigController::setConfigString(String newConfigString)
-{
-  configString = newConfigString;
-  return true;
-}
-
 
 bool ConfigController::saveConfig()
 {
+  if(!beginSPIFFS()) {
+    return false;
+  }
+
   StaticJsonBuffer<1024> jsonBuffer;
   JsonObject& json = jsonBuffer.parseObject(configString);
 
@@ -81,6 +89,7 @@ bool ConfigController::saveConfig()
   // Write the new config to the configFile.
   json.printTo(configFileUpdate);
   configFileUpdate.close();
+  endSPIFFS();
 
   return true;
 }
@@ -88,6 +97,10 @@ bool ConfigController::saveConfig()
 
 bool ConfigController::getJsonConfig()
 {
+  if(!beginSPIFFS()) {
+    return false;
+  }
+
   File configFile = ConfigController::getFile("r");
   if(!configFile) {
     Serial.println("Failed to open config file");
@@ -108,12 +121,27 @@ bool ConfigController::getJsonConfig()
 
   json.printTo(configString);
   configFile.close();
-
-
+  endSPIFFS();
   return true;
 }
 
 
+
+
 File ConfigController::getFile(const char *permission) {
    return SPIFFS.open(configFilePath, permission);
+}
+
+bool ConfigController::beginSPIFFS()
+{
+  if (!SPIFFS.begin()) {
+    Serial.println("Failed to mount File System");
+    return false;
+  }
+  return true;
+}
+bool ConfigController::endSPIFFS()
+{
+  SPIFFS.end();
+  return true;
 }

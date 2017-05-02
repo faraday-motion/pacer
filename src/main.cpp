@@ -1,18 +1,14 @@
-// Required includes
 #include <Metro.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include "components/Connection/Wifi.h"
-#include "components/Controller/Controller.h"
+#include "components/Controller/AbstractController.h"
 #include "components/Controller/PhoneController.h"
+#include "components/Controller/ControllerManager.h"
 #include "components/MotorController/MotorController.h"
-
-
-//temp
-#include "FS.h"
 #include "components/ConfigController/ConfigController.h"
-//temp
+
 
 /******************************************************/
 /** TODO:: Have a class for pin configuration (.ini) **/
@@ -41,30 +37,30 @@ Metro metroControllerCommunication = Metro(500); // TODO:: implement timer to ch
 
 // Independent Objects
 Config config;
-ConfigController configController(&config);
-
-Wifi            wifi;
-WiFiServer      wifiServer(8899); // TODO::Get the port from a config file. Not sure how to do it as it need to be in this global scope where we can't execute ConfigController::getConfig(&Config);
-MotorController motorController;
-Controller      controller(&configController);
-PhoneController phoneController;
+Wifi              wifi;
+WiFiServer        wifiServer(8899); // TODO::Get the port from a config file. Not sure how to do it as it need to be in this global scope where we can't execute ConfigController::getConfig(&Config);
+MotorController   motorController;
+ConfigController  configController(&config); // TODO:: see if we can instantiate the Config.h directly in the ConfigController.
+ControllerManager controllerManager(&configController, &motorController, &wifi);
 /***********************************************/
-
 
 void setup() {
   Serial.begin(115200);
   configController.loadConfig();
   wifi.setup(&wifiServer, &configController);
   motorController.setup();
-  controller.setup(&motorController);
-  phoneController.setup(&controller, &wifi);
+
+  controllerManager.registerController(1, 3); // type = 1, id = 3
+  controllerManager.setActiveController(3);
 }
 
 
 void loop() {
+
   // Check if clients want to connect to Wifi AP Server.
   while (metro250ms.check() == 1)          wifi.registerClient();
-  while (metroControllerRead.check() == 1) phoneController.read();
   yield();
-  while (Serial.available() > 0) motorController.processUartByte(Serial.read());
+  while (metroControllerRead.check() == 1) controllerManager.listenToController();
+  yield();
+  //while (Serial.available() > 0) motorController.processUartByte(Serial.read());
 }

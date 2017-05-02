@@ -1,23 +1,18 @@
 //#include <Arduino.h>
 #include <stdint.h> // Required to be able to use uint8_t.
 #include "PhoneController.h"
-#include "Controller.h"
-#include "components/Motor/Motor.h"
+#include "AbstractController.h"
 
-PhoneController::PhoneController() {
-
-}
-
-void PhoneController::setup(Controller* controller, Wifi* wifi)
+// Construct the PhoneController and the AbstractController
+PhoneController::PhoneController(ConfigController* configController, MotorController* motorController, Wifi* wifi, byte controllerType, byte controllerId)
+ : AbstractController(configController, motorController, controllerType, controllerId)
 {
-  this->controller = controller;
   this->wifi = wifi;
 }
-
 void PhoneController::read()
 {
- uint8_t i;
- // Check clients for data
+   uint8_t i;
+   // Check clients for data
    if (wifi->client && wifi->client.connected()) {
      unsigned int  timeout   = 3;
      unsigned long timestamp = millis();
@@ -50,12 +45,12 @@ void PhoneController::read()
        if (PhoneController::validateChecksum(m, packetCount))
        {
          yield();
-         //Set the power and specify controller 1, the wifi reciever
-         if (controller->controllerType == 0 || controller->controllerType == 1)
-         {
-           controller->controlEnabled = true;
-           controller->processInput(m[4]);
-         }
+        //  //Set the power and specify controller 1, the wifi reciever
+        //  if (controller->controllerType == 0 || controller->controllerType == 1)
+        //  {
+        //    controller->controlEnabled = true;
+           processInput(m[4]);
+        //}
        }
        else
        {

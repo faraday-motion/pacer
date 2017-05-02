@@ -14,7 +14,7 @@
     "defaultInputMinBrake"        : 48  ,
     "defaultInputMaxBrake"        : 0   ,
     "defaultInputMinAcceleration" : 52  ,
-    "defaultInputMaxAcceleration" : 100
+    "defaultInputMaxAcceleration" : 100 
   },
 
   "currentControl" : {

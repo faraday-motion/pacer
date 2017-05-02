@@ -1,0 +1,21 @@
+//TODO:: Phase 1 is still to be implemented.
+Phase 1 - Register Controller on the LEV
+
+1. Controller sends JSON request for registering.
+   Payload: {"controllerId" : controllerUUID, "controllerType" : "iOS device"}
+
+2. LEV Registers the controller in the config.json file.
+   // TODO:: in the future we should have a controller manager.
+   // A user should be able to ban/remove registered controllers.
+   // A user should be able to choose if a new controller is allowed to be registered.
+
+Phase 2 - Manage Connected Controllers
+
+#IF a controller is already active
+1. Don't listen to any other controller drive commands but the one that is already active.
+
+#IF no controller is active yet.
+1. Listen for a "enable controller as active" request.
+2. Enable the listening of the active controller ONLY
+3. Stop listening to drivingCommands the active controller once the active controller sends a "disable controller as active" command
+4. Listen for a "enable controller as active" request.

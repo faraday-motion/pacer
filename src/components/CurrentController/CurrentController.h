@@ -8,14 +8,14 @@ class CurrentController {
   Config* config;
 public:
   // Current control
-  //TODO:: This Needs to Come from a Config File.
+  // Set by the config file.
   float defaultCurrentNeutral;
   float defaultCurrentAccelerationMax;
   float defaultCurrentAccelerationMin;
   float defaultCurrentBrakeMax;
   float defaultCurrentBrakeMin;
 
-  //TODO:: this needs to be coming out of a config file.
+  //Set by the config file.
   byte defaultInputNeutral;
   byte defaultInputMinBrake;
   byte defaultInputMaxBrake;
@@ -25,7 +25,7 @@ public:
 
 
   CurrentController();
-  void setup(Config* configuration); // Configures the CurrentController.
+  void setup(Config* configuration); // Configures itself and the CurrentController.
   float getMotorAccelerationCurrent(float previousControllerInput);
   float getMotorBrakingCurrent(float previousControllerInput);
   float getNeutralCurrent();

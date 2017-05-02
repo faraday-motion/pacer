@@ -1,12 +1,17 @@
-#ifndef Controller_h
-#define Controller_h
+#ifndef AbstractController_h
+#define AbstractController_h
 #include "../MotorController/MotorController.h"
 #include "../CurrentController/CurrentController.h"
 
 #include "../ConfigController/Config.h"
 #include "../ConfigController/ConfigController.h"
 
-class Controller
+
+//TODO:: this class needs to be abstracted.
+//TODO:: read this https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
+//TODO:: the ControllerManager should handle the setting of activeControlelrs. It should also register the controllers by type.
+//TODO:: Now the AbstractController is not really useful. Read "Abstract base classes" -> http://www.cplusplus.com/doc/tutorial/polymorphism/
+class AbstractController
 {
 public:
   // Config
@@ -27,8 +32,9 @@ public:
   bool controlEnabled;
   bool controlCruiseControl;
 
-  //Controller Values
+  //Controller Identification
   byte controllerType;
+  byte controllerId;
 
   // Controller Constraints
   byte defaultInputNeutral;
@@ -38,10 +44,14 @@ public:
   byte defaultInputMaxAcceleration;
   float defaultSmoothAlpha;
 
-  Controller(ConfigController* configController);
-  void setup(MotorController* motorController);
+  AbstractController(ConfigController* configController, MotorController* motorController, byte controllerType, byte controllerId);
+  virtual ~AbstractController() {}
+  void setup();
   void processInput(byte latestInput);
   bool setMotorPower();
+  virtual void read() = 0;
+
+
 };
 
 #endif

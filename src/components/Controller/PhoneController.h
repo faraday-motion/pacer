@@ -12,7 +12,7 @@ private:
   // Functiones for reading the wifi packets.
   byte getChecksum(byte* array, byte arraySize);
   bool validateChecksum(byte* array, byte arraySize);
-  bool controllerIsActive;   // tells us if this instance of PhoneController is active
+  bool controllerIsActive;   // tells us if this instance of PhoneController is active // not sure if we will use this.
 
 public:
   Wifi* wifi;

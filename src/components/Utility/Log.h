@@ -1,0 +1,26 @@
+#ifndef Log_h
+#define Log_h
+// Source: http://www.yolinux.com/TUTORIALS/C++Singleton.html
+//Usage Logger::Instance()->method(<param>);
+#include "../Communication/WebSocketCommunicator.h"
+
+class Log
+{
+public:
+ static Log* Instance();
+ // Public Methods..
+ void logTo(WebSocketCommunicator* wsCommunicator); // TODO:: This should take an enum paramenter. Case we choose WEB_SOCKET_CLIENTS then we enable websockets.
+ void enable();
+ void disable();
+ void write(String payload);
+private:
+  Log(){}; // Private so that it can not be called
+  Log(Log const&){};// copy constructor is private
+  Log& operator=(Log const&){}; //assignment operator is private.
+  static Log* m_pInstance; // Not sure what this is.
+  bool isEnabled = false;
+  WebSocketCommunicator* wsCommunicator;
+};
+
+
+#endif

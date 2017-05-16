@@ -6,11 +6,7 @@
 #include "../ConfigController/Config.h"
 #include "../ConfigController/ConfigController.h"
 
-
-//TODO:: this class needs to be abstracted.
-//TODO:: read this https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
-//TODO:: the ControllerManager should handle the setting of activeControlelrs. It should also register the controllers by type.
-//TODO:: Now the AbstractController is not really useful. Read "Abstract base classes" -> http://www.cplusplus.com/doc/tutorial/polymorphism/
+//https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
 class AbstractController
 {
 public:
@@ -49,7 +45,9 @@ public:
   void setup();
   void processInput(byte latestInput);
   bool setMotorPower();
-  virtual void read() = 0;
+  virtual void read() = 0; // virutal read function
+  virtual void write() = 0; // virtaul write function
+  virtual void listenToController() = 0; // virtual loop function
 
 
 };

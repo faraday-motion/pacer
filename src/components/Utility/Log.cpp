@@ -22,12 +22,23 @@ Log* Log::Instance()
 
 void Log::write(String payload)
 {
-  if(isEnabled){
-    wsCommunicator->wss->broadcastTXT(payload);
+  if(isEnabled)
+  {
+    Serial.println(payload);
+    // TODO:: Check if wsCommunicator extists.
+    wsCommunicator->wss->broadcastTXT("payload of logged data");
   }
 }
+// void Log::write(String payload)
+// {
+//   if(isEnabled){
+//     wsCommunicator->wss->broadcastTXT(payload);
+//   }
+// }
 
-void Log::logTo(WebSocketCommunicator* wsCommunicator)
+
+
+void Log::enableWebsocket(WebSocketCommunicator* wsCommunicator)
 {
   this->wsCommunicator = wsCommunicator;
 }

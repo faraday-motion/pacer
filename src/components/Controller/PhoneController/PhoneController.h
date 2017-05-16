@@ -1,7 +1,7 @@
 #ifndef PhoneController_h
 #define PhoneController_h
 
-#include "AbstractController.h"
+#include "../AbstractController.h"
 #include "components/Connection/Wifi.h"
 
 
@@ -18,6 +18,8 @@ public:
   Wifi* wifi;
   PhoneController(ConfigController* configController, MotorController* motorController, Wifi* wifi, byte controllerType, byte controllerId);
   void read();
+  void write();
+  void listenToController();
   bool registerAsActive(String controllerUUID);
 
 };

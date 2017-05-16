@@ -1,6 +1,7 @@
 #include "ControllerManager.h"
 #include "AbstractController.h"
-#include "PhoneController.h"
+#include "PhoneController/PhoneController.h"
+#include "NunchuckController/NunchuckController.h"
 
 ControllerManager::ControllerManager(ConfigController* configController, MotorController* motorController, Wifi* wifi)
 {
@@ -15,19 +16,16 @@ ControllerManager::ControllerManager(ConfigController* configController, MotorCo
   }
 }
 
-
-// This method will be in the loop of main.cpp.
 void ControllerManager::listenToController()
 {
   if (activeController != nullptr){
-    activeController->read();
+    activeController->listenToController();
     return;
   }
 }
 
 bool ControllerManager::setActiveController(byte id)
 {
-
   byte index = getControllerIndexById(id);
   activeController = availableControllers[index];
   return true;
@@ -42,12 +40,15 @@ bool ControllerManager::unsetActiveController()
 
 void ControllerManager::registerController(byte controllerType, byte controllerId)
 {
-  if (controllerType = 1) {
+if (controllerType == 1) {
+    Serial.println("Registering a PhoneController");
     AbstractController * phoneController = new PhoneController(configController, motorController, wifi, controllerType, controllerId);
-    //phoneController->setup();
+    phoneController->setup();
     allocateRegisteredController(phoneController);
-  } else if (controllerType = 2) {
-    // Nunchuck
+  } else if (controllerType == 2) {
+    Serial.println("Registering a NunchuckController");
+    AbstractController * nunchuckController = new NunchuckController(configController, motorController, controllerType, controllerId);
+    allocateRegisteredController(nunchuckController);
   } else {
     Serial.println("Unknown type of controller");
     return;

@@ -9,7 +9,8 @@ class Log
 public:
  static Log* Instance();
  // Public Methods..
- void logTo(WebSocketCommunicator* wsCommunicator); // TODO:: This should take an enum paramenter. Case we choose WEB_SOCKET_CLIENTS then we enable websockets.
+ void logTo(const char* target); // TODO:: This should take an enum paramenter. Case we choose WEB_SOCKET_CLIENTS then we enable websockets.
+ void enableWebsocket(WebSocketCommunicator* wsCommunicator);
  void enable();
  void disable();
  void write(String payload);

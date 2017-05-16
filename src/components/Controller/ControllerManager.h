@@ -16,10 +16,8 @@ public:
   ConfigController* configController;
   MotorController*  motorController;
 
-
   void allocateRegisteredController(AbstractController* controller);
   byte getControllerIndexById(byte id);
-
 
   ControllerManager(ConfigController* configController, MotorController* motorController, Wifi* wifi);
   void registerController(byte type, byte id); // create a new controller based on the type [mobile, nunchuck]

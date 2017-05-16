@@ -1,7 +1,7 @@
 //#include <Arduino.h>
 #include <stdint.h> // Required to be able to use uint8_t.
 #include "PhoneController.h"
-#include "AbstractController.h"
+#include "../AbstractController.h"
 
 // Construct the PhoneController and the AbstractController
 PhoneController::PhoneController(ConfigController* configController, MotorController* motorController, Wifi* wifi, byte controllerType, byte controllerId)
@@ -60,6 +60,19 @@ void PhoneController::read()
    } // endif serverClients are connected
 
 } // end readFromWifiClient
+
+
+// Placeholder for now.
+void PhoneController::write()
+{
+  return; //
+}
+
+// this is the loop
+void PhoneController::listenToController()
+{
+  read();
+}
 
 byte PhoneController::getChecksum(byte* array, byte arraySize)
 {

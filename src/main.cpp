@@ -71,8 +71,6 @@ void loop() {
   yield();
 
   while (Serial.available() > 0) motorController.processUartByte(Serial.read());
-//while(logMetro.check() == 1) Log::Instance()->write();
-
-
+  //while(logMetro.check() == 1) Log::Instance()->write();
 
 }

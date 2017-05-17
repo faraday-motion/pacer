@@ -16,8 +16,7 @@ public:
   Wifi();
   void setup(WiFiServer* wifiServer, ConfigController* configController);
   void registerClient();
-  byte getChecksum(byte* array, byte arraySize);
-  bool validateChecksum(byte* array, byte arra0ySize);
+
 };
 
 #endif

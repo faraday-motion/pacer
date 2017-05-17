@@ -12,7 +12,6 @@ NunchuckController::NunchuckController(ConfigController* configController, Motor
 {
 
   radio = new Radio();
-
   /**
     Setiing the Metro Timers
   */
@@ -39,15 +38,13 @@ NunchuckController::NunchuckController(ConfigController* configController, Motor
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
 
-
-  this->setup();
 }
 
 void NunchuckController::setup()
 {
-  Serial.println("Setting Up Nunchuck Controller");
-  // TODO:: See what kind of setup we need, if any.
-  Serial.println("Finished Setting Up Nunchuck Controller");
+  // Serial.println("Setting Up Nunchuck Controller");
+  // // TODO:: See what kind of setup we need, if any.
+  // Serial.println("Finished Setting Up Nunchuck Controller");
 }
 
 void NunchuckController::read()
@@ -155,8 +152,6 @@ void NunchuckController::listenToController()
     if (metroCommunication->check() == 1)
     {
       // Read data from transmitter
-      Serial.println();
-      Serial.println();
       Serial.println("****************START READ************");
       this->read();
       this->printResponsePacket();
@@ -184,13 +179,11 @@ void NunchuckController::listenToController()
       Serial.println("****************START WRITE************");
       this->write();
       this->printRequestPacket();
-      this->printAddresses();
       Serial.println("****************END WRITE************");
       if (metroHasController->check() == 1)
       {
         //Check if we had connection problems
         radio->resetConnection();
-        Serial.println("metrsoHasController was triggered");
         // moved from resetConnection() to be able to abstract Radio.h
         sendCommand = 0;
         // TODO:: this should be ported in the ControllerManager.h
@@ -211,19 +204,6 @@ bool NunchuckController::isNewOrKnownController()
 {
   //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
   //Was there no controller connecter before
-  Serial.println("::::: isNewOrKnownController ::::");
-  Serial.println("Current controller :: ");
-  Serial.print(transmitterId[0]);
-  Serial.print("|");
-  Serial.print(transmitterId[1]);
-  Serial.print("|");
-  Serial.print(transmitterId[2]);
-  Serial.print("|");
-  Serial.print(transmitterId[3]);
-  Serial.print("|");
-  Serial.print(transmitterId[4]);
-  Serial.print("|");
-  Serial.println();
 
   if (transmitterId[0] == 0 && transmitterId[1] == 0 && transmitterId[2] == 0 && transmitterId[3] == 0 && transmitterId[4] == 0)
   {
@@ -233,17 +213,6 @@ bool NunchuckController::isNewOrKnownController()
     transmitterId[2] = responsePacket.Value3 ;
     transmitterId[3] = responsePacket.Value4 ;
     transmitterId[4] = responsePacket.Value5 ;
-    Serial.println("Controller is was set to :: ");
-    Serial.print(responsePacket.Value1);
-    Serial.print(" ");
-    Serial.print(responsePacket.Value2);
-    Serial.print(" ");
-    Serial.print(responsePacket.Value3);
-    Serial.print(" ");
-    Serial.print(responsePacket.Value4);
-    Serial.print(" ");
-    Serial.print(responsePacket.Value5);
-    Serial.println(" ");
     return true;
   }
   //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
@@ -278,13 +247,13 @@ bool NunchuckController::tryReadBytes()
 
   if(!timeout)
   {
-    Serial.println("*** Reading packet ***");
     success = true;
     controllerConnected = true;
     metroHasController->reset();
     //Reading bytes from transmitter
     radio->_receiver->read(&responsePacket, packetSize);
     lastPacketId = responsePacket.Id;
+    yield();
   }
   else
   {
@@ -314,6 +283,7 @@ bool NunchuckController::tryWriteBytes()
   radio->_receiver->txStandBy();
   // Enable listeing after writing
   radio->_receiver->startListening();
+  yield();
   return success;
 }
 

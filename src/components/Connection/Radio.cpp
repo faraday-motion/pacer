@@ -10,11 +10,12 @@ currentAddresses{"FM01R", "FM01W"},  // initialize currentAddresses
 foundAddresses{"FM000"}              // initialize foundAddresses
 {
   this->_receiver = new RF24(4,15); // TODO:: These are environment pin configurations. Should get it out of the .ini file.
+  this->setup();
 }
 
 void Radio::setup()
 {
-  Serial.println("Setting Up Nunchuck Controller");
+  Serial.println("Setting Up Radio Connection");
   _receiver->begin();
   _receiver->setAutoAck(false);
   _receiver->setRetries(0, 0);
@@ -32,7 +33,8 @@ void Radio::setup()
   delay(50);
   generateRandomAddress();
   openPipes();
-  Serial.println("Finished Setting Up Nunchuck Controller");
+  Serial.println("Finished Setting Up Radio Connection");
+  yield();
 }
 
 void Radio::findChannel()

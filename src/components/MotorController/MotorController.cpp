@@ -23,7 +23,7 @@ MotorController::MotorController()
 
 }
 
-
+// TODO:: See if this can just be put in the constructor
 // Setup the MotorController Object.
 void MotorController::setup()
 {

@@ -11,8 +11,11 @@ Log* Log::m_pInstance = nullptr;
 
 Log* Log::Instance()
 {
-  if(!m_pInstance) // Only allow one instance of class to be generated.
+  if(!m_pInstance){ // Only allow one instance of class to be generated.
     m_pInstance = new Log;
+    m_pInstance->logInterval = new Metro(1000); // This should be configurable.
+  }
+
   return m_pInstance;
 }
 
@@ -22,7 +25,7 @@ Log* Log::Instance()
 
 void Log::write(String payload)
 {
-  if(isEnabled)
+  if(isEnabled && logInterval->check() == 1)
   {
     Serial.println(payload);
     // TODO:: Check if wsCommunicator extists.

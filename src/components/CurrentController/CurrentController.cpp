@@ -22,6 +22,7 @@ void CurrentController::setup(Config* configuration)
   defaultInputMinAcceleration = config->controller.defaultInputMinAcceleration;
   defaultInputMaxAcceleration = config->controller.defaultInputMaxAcceleration;
   defaultSmoothAlpha          = config->controller.defaultSmoothAlpha;
+  Serial.println("Finished Configuration of the Current Controller");
 
 }
 

@@ -3,9 +3,9 @@
 #include "ArduinoJson.h"
 #include "FS.h"
 
-ConfigController::ConfigController(Config* config)
+ConfigController::ConfigController()
 {
-  this->config = config;
+  this->config = new Config;
   configFilePath = "/config.json";
   factoryConfigPath = "/config_factory.json";
 }
@@ -124,8 +124,6 @@ bool ConfigController::getJsonConfig()
   endSPIFFS();
   return true;
 }
-
-
 
 
 File ConfigController::getFile(const char *permission) {

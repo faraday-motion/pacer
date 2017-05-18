@@ -9,6 +9,9 @@
 //https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
 class AbstractController
 {
+private:
+  bool setMotorPower();
+
 public:
   // Config
   Config*            config;
@@ -40,14 +43,17 @@ public:
   byte defaultInputMaxAcceleration;
   float defaultSmoothAlpha;
 
-  AbstractController(ConfigController* configController, MotorController* motorController, byte controllerType, byte controllerId);
+  AbstractController(ConfigController* configController, byte controllerType, byte controllerId);
   virtual ~AbstractController() {}
   void setup();
   void processInput(byte latestInput);
-  bool setMotorPower();
+
+  virtual void handleController() = 0; // virtual loop function
+
+  // TODO:: These don't really need to be virtual at least for now.
   virtual void read() = 0; // virutal read function
   virtual void write() = 0; // virtaul write function
-  virtual void listenToController() = 0; // virtual loop function
+
 
 
 };

@@ -63,11 +63,11 @@ private:
 
 public:
 
-  NunchuckController(ConfigController* configController, MotorController* motorController, byte controllerType, byte controllerId);
+  NunchuckController(ConfigController* configController, byte controllerType, byte controllerId);
   void read();
   void write();
   void setup();
-  void listenToController();
+  void handleController();
 
 };
 

@@ -4,8 +4,8 @@
 #include "../AbstractController.h"
 
 // Construct the PhoneController and the AbstractController
-PhoneController::PhoneController(ConfigController* configController, MotorController* motorController, Wifi* wifi, byte controllerType, byte controllerId)
- : AbstractController(configController, motorController, controllerType, controllerId)
+PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId)
+ : AbstractController(configController, controllerType, controllerId)
 {
   this->wifi = wifi;
 }
@@ -65,11 +65,11 @@ void PhoneController::read()
 // Placeholder for now.
 void PhoneController::write()
 {
-  return; //
+  return;
 }
 
 // this is the loop
-void PhoneController::listenToController()
+void PhoneController::handleController()
 {
   read();
 }

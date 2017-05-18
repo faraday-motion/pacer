@@ -27,11 +27,8 @@
 /** TODO:: Metro Timers need to be ported to class  **/
 // Metro Timers
 
-Metro metro250ms                   = Metro(250);
-Metro metroControllerRead          = Metro(50) ;
-Metro metroControllerCommunication = Metro(500); // TODO:: implement timer to check if the connection is lost.
-Metro logMetro                     = Metro(1000); // TODO:: This should be reconfigurable.
-Metro radioCheck                   = Metro(10);
+//Metro metro250ms                   = Metro(250);
+//Metro metroControllerCommunication = Metro(500); // TODO:: implement timer to check if the connection is lost.
 /***********************************************/
 
 
@@ -39,12 +36,10 @@ Metro radioCheck                   = Metro(10);
 /** TODO:: Wrap up in a builder of some sort  **/
 
 // Independent Objects
-Config config;
 Wifi              wifi;
-WiFiServer        wifiServer(8899); // TODO:: Use the same instantiation as on the NunchuckController.h TODO::Get the port from a config file. Not sure how to do it as it need to be in this global scope where we can't execute ConfigController::getConfig(&Config);
-MotorController   motorController;
-ConfigController  configController(&config); // TODO:: see if we can instantiate the Config.h directly in the ConfigController.
-ControllerManager controllerManager(&configController, &motorController, &wifi);
+
+ConfigController  configController;
+ControllerManager controllerManager(&configController, &wifi);
 WebSocketCommunicator wsCommunicator(81);
 
 /***********************************************/
@@ -52,9 +47,10 @@ WebSocketCommunicator wsCommunicator(81);
 void setup() {
   Serial.begin(115200);
   configController.loadConfig();
-  wifi.setup(&wifiServer, &configController);
-  motorController.setup();
-  controllerManager.registerController(2, 3); // type = 1, id = 3
+  wifi.setup(&configController);
+
+  // TODO:: This should be in a hanlder function.
+  controllerManager.registerController(1, 3); // type = 1, id = 3
   controllerManager.setActiveController(3);
   wsCommunicator.wss->begin();
   Log::Instance()->enableWebsocket(&wsCommunicator);
@@ -65,12 +61,12 @@ void loop() {
   wsCommunicator.wss->loop();
   yield();
   // Check if clients want to connect to Wifi AP Server.
-  while (metro250ms.check() == 1)          wifi.registerClient();
+  wifi.handleClientConnections();
   yield();
-  while (metroControllerRead.check() == 1) controllerManager.listenToController();
+  controllerManager.handleController();
   yield();
-
-  while (Serial.available() > 0) motorController.processUartByte(Serial.read());
+  // TODO:: Find a place for calling this method in a loop.
+  //while (Serial.available() > 0) motorController.processUartByte(Serial.read());
   //while(logMetro.check() == 1) Log::Instance()->write();
 
 }

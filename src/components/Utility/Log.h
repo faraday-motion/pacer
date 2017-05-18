@@ -3,10 +3,13 @@
 // Source: http://www.yolinux.com/TUTORIALS/C++Singleton.html
 //Usage Logger::Instance()->method(<param>);
 #include "../Communication/WebSocketCommunicator.h"
+#include <Metro.h>
 
 class Log
 {
 public:
+
+ Metro* logInterval;
  static Log* Instance();
  // Public Methods..
  void logTo(const char* target); // TODO:: This should take an enum paramenter. Case we choose WEB_SOCKET_CLIENTS then we enable websockets.

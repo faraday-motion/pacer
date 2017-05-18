@@ -4,9 +4,15 @@
 #include "../Connection/Wifi.h"
 #include "../ConfigController/ConfigController.h"
 #include "../MotorController/MotorController.h"
+#include <Metro.h>
 
 class ControllerManager
 {
+
+private:
+   Metro* controllerReadInterval;
+
+
 public:
   // Some sort of abstract controller.
   // TODO:: read this https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
@@ -17,10 +23,10 @@ public:
   ConfigController* configController;
   MotorController*  motorController;
 
-  void allocateRegisteredController(AbstractController* controller);
+  bool allocateRegisteredController(AbstractController* controller);
   byte getControllerIndexById(byte id);
 
-  ControllerManager(ConfigController* configController, MotorController* motorController, Wifi* wifi);
+  ControllerManager(ConfigController* configController, Wifi* wifi);
   void registerController(byte type, byte id); // create a new controller based on the type [mobile, nunchuck]
   void removeRegisteredController(AbstractController* controller); // destroys a certain controller.
 
@@ -28,7 +34,7 @@ public:
   bool setActiveController(byte id); // set one of the controllers as active based on the id of the controller
   bool unsetActiveController();
 
-  void listenToController();
+  void handleController();
 
 };
 

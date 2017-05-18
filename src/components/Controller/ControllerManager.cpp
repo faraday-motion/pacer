@@ -3,23 +3,23 @@
 #include "PhoneController/PhoneController.h"
 #include "NunchuckController/NunchuckController.h"
 
-ControllerManager::ControllerManager(ConfigController* configController, MotorController* motorController, Wifi* wifi)
+ControllerManager::ControllerManager(ConfigController* configController, Wifi* wifi)
 {
+  // TODO:: It seems a bit redundant to pass all these pointers to the controllerManager and then to the AbstractController. Investigate on how to optimize this.
   this->configController = configController;
-  this->motorController  = motorController;
   this->wifi             = wifi;
 
   activeController = nullptr;
-
+  controllerReadInterval = new Metro(50);
   for (byte i = 0; i < 5; i++) {
     availableControllers[i] = nullptr;
   }
 }
 
-void ControllerManager::listenToController()
+void ControllerManager::handleController()
 {
-  if (activeController != nullptr){
-    activeController->listenToController();
+  if (activeController != nullptr && controllerReadInterval->check() == 1){
+    activeController->handleController();
     return;
   }
 }
@@ -31,9 +31,10 @@ bool ControllerManager::setActiveController(byte id)
   return true;
 }
 
+
 bool ControllerManager::unsetActiveController()
 {
-  delete activeController; // Delete the object, hopefully...
+  delete activeController; // Delete the object, hopefully... //TODO:: It might be wrong to delete the object when unsetting the as active. We lose the registered Controller.
   activeController = nullptr;
   return true;
 }
@@ -42,19 +43,18 @@ void ControllerManager::registerController(byte controllerType, byte controllerI
 {
 if (controllerType == 1) {
     Serial.println("Registering a PhoneController");
-    AbstractController * phoneController = new PhoneController(configController, motorController, wifi, controllerType, controllerId);
+    AbstractController * phoneController = new PhoneController(configController, wifi, controllerType, controllerId);
     phoneController->setup();
     allocateRegisteredController(phoneController);
   } else if (controllerType == 2) {
     Serial.println("Registering a NunchuckController");
-    AbstractController * nunchuckController = new NunchuckController(configController, motorController, controllerType, controllerId);
+    AbstractController * nunchuckController = new NunchuckController(configController, controllerType, controllerId);
     allocateRegisteredController(nunchuckController);
   } else {
     Serial.println("Unknown type of controller");
     return;
   }
 }
-
 
 byte ControllerManager::getControllerIndexById(byte id)
 {
@@ -65,13 +65,15 @@ byte ControllerManager::getControllerIndexById(byte id)
   }
 }
 
-void ControllerManager::allocateRegisteredController(AbstractController* controller)
+bool ControllerManager::allocateRegisteredController(AbstractController* controller)
 {
   //TODO:: Handle case when no slots available.
   for (byte i = 0; i < 5; i++) {
     if(availableControllers[i] == nullptr)  {
       availableControllers[i] = controller;
-      break; // exit loop
+      return true; // found free slot. Returning true.
     }
   }
+  // No free slots where found
+  return false;
 }

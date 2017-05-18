@@ -6,8 +6,8 @@
 
 
 // Construct the NunchuckController and the AbstractController
-NunchuckController::NunchuckController(ConfigController* configController, MotorController* motorController, byte controllerType, byte controllerId)
- : AbstractController(configController, motorController, controllerType, controllerId),
+NunchuckController::NunchuckController(ConfigController* configController, byte controllerType, byte controllerId)
+ : AbstractController(configController, controllerType, controllerId),
  transmitterId{0, 0, 0, 0, 0}         // initialize transmitterId
 {
 
@@ -57,7 +57,7 @@ void NunchuckController::read()
     {
       //We have a name packet
       Serial.println("Name recived");
-
+      //START TODO:: Here we need to call the controllerManager.
       //If the name is not yet set, or if its the same as previously connected
       if (isNewOrKnownController())
       {
@@ -71,6 +71,7 @@ void NunchuckController::read()
         //Continue requesting controller name
         sendCommand = 1;
       }
+      //END TODO
     }
     else if (responsePacket.Command == 15)
     {
@@ -102,6 +103,7 @@ void NunchuckController::read()
       Serial.println(":::::::::::::: Controller inputs ::::::::::::::");
       Serial.println(responsePacket.Value2);
       Serial.println(":::::::::::::::::::::::::::::::::::::::::::::::");
+      processInput(responsePacket.Value2);
     }
   }
 } // end read();
@@ -140,7 +142,7 @@ void NunchuckController::write()
   }
 } // end write();
 
-void NunchuckController::listenToController()
+void NunchuckController::handleController()
 {
   if (radio->_receiver->failureDetected)
   {
@@ -197,8 +199,6 @@ void NunchuckController::listenToController()
 /**
   Private Methods
 */
-
-
 
 bool NunchuckController::isNewOrKnownController()
 {

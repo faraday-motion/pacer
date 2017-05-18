@@ -2,7 +2,7 @@
   "wifi" : {
     "ssid"     : "FARADAY200",
     "password" : "faraday200",
-    "port"     : "8899",
+    "port"     : 8899,
     "ip"       : [10, 10, 100, 254],
     "subnet"   : [255, 255, 255, 0],
     "channel"  : 11
@@ -14,7 +14,7 @@
     "defaultInputMinBrake"        : 48  ,
     "defaultInputMaxBrake"        : 0   ,
     "defaultInputMinAcceleration" : 52  ,
-    "defaultInputMaxAcceleration" : 100 
+    "defaultInputMaxAcceleration" : 100
   },
 
   "currentControl" : {

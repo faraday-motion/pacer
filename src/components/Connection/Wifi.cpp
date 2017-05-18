@@ -8,14 +8,15 @@ Wifi::Wifi()
 {
 }
 
-void Wifi::setup(WiFiServer* wifiServer, ConfigController* configController)
+void Wifi::setup(ConfigController* configController)
 {
-  // Store address of the wifiServer
-  server = wifiServer;
-  config = configController->config;
-
   Serial.println("Wifi Setup Started");
+  config = configController->config;
+  handleClientInterval = new Metro(250);
+
   //Wifi
+  // Store address of the WiFiServeir
+  this->server = new WiFiServer(config->wifi.port);
   const char *ssid = config->wifi.ssid;
   const char *password = config->wifi.password;
 
@@ -32,7 +33,6 @@ void Wifi::setup(WiFiServer* wifiServer, ConfigController* configController)
   WiFi.mode(WIFI_AP);
   //C:\Users\spe\AppData\Roaming\Arduino15\packages\esp8266\hardware\esp8266\2.1.0\cores\esp8266\core_esp8266_phy.c
   //TRYING TO SET [114] = 3 in core_esp8266_phy.c 3 = init all rf
-
   WiFi.persistent(false);
   WiFi.softAPConfig(address, address, subnet);
   WiFi.softAP(ssid, password, channel);
@@ -48,15 +48,22 @@ void Wifi::setup(WiFiServer* wifiServer, ConfigController* configController)
   //Serial.println(server->status());
 }
 
-void Wifi::registerClient() {
+void Wifi::handleClientConnections() {
   //Serial.printf("Stations connected to soft-AP = %d\n", WiFi.softAPgetStationNum());
   yield();
-  if (server->hasClient()){
-    client = server->available();
-    if (client && client.connected()) {
-      client.setNoDelay(true);
-    } else {
-      client.stop();
+  if (handleClientInterval->check() == 1)
+  {
+    if (server->hasClient())
+    {
+      client = server->available();
+      if (client && client.connected())
+      {
+        client.setNoDelay(true);
+      }
+      else
+      {
+        client.stop();
+      }
     }
   }
   yield();

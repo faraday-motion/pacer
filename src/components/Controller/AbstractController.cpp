@@ -4,14 +4,15 @@
 #include "../ConfigController/ConfigController.h"
 
 
-AbstractController::AbstractController(ConfigController* configController, MotorController* motorController, byte controllerType, byte controllerId)
+AbstractController::AbstractController(ConfigController* configController, byte controllerType, byte controllerId)
 {
   Serial.println("Constructing the Abastract Controller");
   this->config = configController->config;
-  this->motorController = motorController;
+  this->motorController = new MotorController;
+  this->motorController->setup();
   this->controllerType =  controllerType;
   this->controllerId =  controllerId;
-  AbstractController::setup();
+  this->setup();
 }
 
 void AbstractController::setup()

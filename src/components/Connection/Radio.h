@@ -18,7 +18,7 @@ public:
   byte defaultAddresses[2][6];
   byte currentAddresses[2][6];
   byte foundAddresses[6];
-  byte channelDefault = 100;
+  byte channelDefault  = 100;
   byte channelSelected = 100;
   byte channelFound = 255;
   byte channelMax = 125;
@@ -34,7 +34,7 @@ public:
   void setAddress(byte address[]);
 
   void openPipes();
-  
+
   void resetConnection();
 
 };

@@ -17,7 +17,7 @@ public:
   Config* config;
   String configString;
 
-  ConfigController(Config* config);
+  ConfigController();
   bool loadConfig();
   bool getJsonConfig();
   bool saveConfig();

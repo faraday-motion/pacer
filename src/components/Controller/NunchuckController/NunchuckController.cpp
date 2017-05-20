@@ -40,13 +40,6 @@ NunchuckController::NunchuckController(ConfigController* configController, byte 
 
 }
 
-void NunchuckController::setup()
-{
-  // Serial.println("Setting Up Nunchuck Controller");
-  // // TODO:: See what kind of setup we need, if any.
-  // Serial.println("Finished Setting Up Nunchuck Controller");
-}
-
 void NunchuckController::read()
 {
   if (tryReadBytes())
@@ -286,6 +279,29 @@ bool NunchuckController::tryWriteBytes()
   yield();
   return success;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void NunchuckController::printRequestPacket()
 {

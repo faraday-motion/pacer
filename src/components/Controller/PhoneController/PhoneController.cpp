@@ -35,22 +35,17 @@ void PhoneController::read()
        {
          wifi->client.read();
        }
-
        for (uint8_t ii = 0; ii < packetLength; ii++)
        {
          m[packetCount++] = wifi->client.read();
        }
+       Serial.println();
        yield();
 
        if (PhoneController::validateChecksum(m, packetCount))
        {
-         yield();
-        //  //Set the power and specify controller 1, the wifi reciever
-        //  if (controller->controllerType == 0 || controller->controllerType == 1)
-        //  {
-        //    controller->controlEnabled = true;
+           yield();
            processInput(m[4]);
-        //}
        }
        else
        {
@@ -71,6 +66,7 @@ void PhoneController::write()
 // this is the loop
 void PhoneController::handleController()
 {
+  Serial.println("handleController() (Phone)");
   read();
 }
 

@@ -44,7 +44,6 @@ void ControllerManager::registerController(byte controllerType, byte controllerI
 if (controllerType == 1) {
     Serial.println("Registering a PhoneController");
     AbstractController * phoneController = new PhoneController(configController, wifi, controllerType, controllerId);
-    phoneController->setup();
     allocateRegisteredController(phoneController);
   } else if (controllerType == 2) {
     Serial.println("Registering a NunchuckController");

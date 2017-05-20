@@ -34,8 +34,6 @@ private:
 
   byte transmitterId[6];
 
-
-
   // Packet Handling
   ControllerPacket responsePacket;
   ControllerPacket requestPacket;
@@ -48,12 +46,11 @@ private:
   bool controllerConnected = false;
   bool controllerVerified  = false;
 
-
-
   // Packet Handling
-  bool isNewOrKnownController();
   bool tryReadBytes();
   bool tryWriteBytes();
+
+  bool isNewOrKnownController();
 
   // Debug
   void printRequestPacket();
@@ -66,7 +63,6 @@ public:
   NunchuckController(ConfigController* configController, byte controllerType, byte controllerId);
   void read();
   void write();
-  void setup();
   void handleController();
 
 };

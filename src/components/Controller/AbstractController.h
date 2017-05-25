@@ -33,7 +33,7 @@ public:
 
   //Controller Identification
   byte controllerType;
-  byte controllerId;
+  byte controllerId[5];
 
   // Controller Constraints
   byte defaultInputNeutral;
@@ -43,7 +43,7 @@ public:
   byte defaultInputMaxAcceleration;
   float defaultSmoothAlpha;
 
-  AbstractController(ConfigController* configController, byte controllerType, byte controllerId);
+  AbstractController(ConfigController* configController, byte controllerType, byte controllerId[]);
   virtual ~AbstractController() {}
   void setup();
   void processInput(byte latestInput);

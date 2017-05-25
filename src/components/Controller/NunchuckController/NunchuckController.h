@@ -3,10 +3,6 @@
 
 #include "../AbstractController.h"
 #include "components/Connection/Radio.h"
-
-// #include <SPI.h>
-// #include <nRF24L01.h>
-// #include <RF24.h>
 #include "ControllerPacket.h"
 #include <Metro.h>
 
@@ -60,7 +56,7 @@ private:
 
 public:
 
-  NunchuckController(ConfigController* configController, byte controllerType, byte controllerId);
+  NunchuckController(ConfigController* configController, Radio* radio, byte controllerType, byte controllerId[]);
   void read();
   void write();
   void handleController();

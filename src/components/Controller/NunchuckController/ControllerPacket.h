@@ -1,5 +1,5 @@
 #ifndef ControllerPacket_h
-#define CotnrollerPacket_h
+#define ControllerPacket_h
 #include <Arduino.h>
 
 struct ControllerPacket {

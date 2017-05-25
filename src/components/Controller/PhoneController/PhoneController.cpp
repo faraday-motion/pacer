@@ -4,7 +4,7 @@
 #include "../AbstractController.h"
 
 // Construct the PhoneController and the AbstractController
-PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId)
+PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId[])
  : AbstractController(configController, controllerType, controllerId)
 {
   this->wifi = wifi;

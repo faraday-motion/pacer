@@ -16,7 +16,7 @@ private:
 
 public:
   Wifi* wifi;
-  PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId);
+  PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId[]);
   void read();
   void write();
   void handleController();

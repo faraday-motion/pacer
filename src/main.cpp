@@ -1,10 +1,16 @@
 #include <Arduino.h>
-#include "components/Connection/Wifi.h"
-#include "components/Controller/ControllerManager.h"
+#include "FMV.h"
+// #include "components/Communication/Console.h"
+// #include "components/ConfigController/ConfigController.h"
+// #include "components/Controller/ControllerManager.h"
+// #include "components/Connection/ConnectionManager.h"
+
+
+
 #include "components/MotorController/MotorController.h"
-#include "components/ConfigController/ConfigController.h"
 #include "components/Communication/WebSocketCommunicator.h"
 #include "components/Utility/Log.h"
+
 
 /******************************************************/
 /** TODO:: Have a class for pin configuration (.ini) **/
@@ -22,33 +28,45 @@
 /** TODO:: Wrap up in a builder of some sort  **/
 
 // Independent Objects
-Wifi              wifi;
-ConfigController  configController;
-ControllerManager controllerManager(&configController, &wifi);
+//Console console;
+
+//ConfigController  configController;
+
+//ConnectionManager connectionManager(&configController, &console);
+
+//ControllerManager controllerManager(&configController, &connectionManager);
+FMV fmv;
+
 WebSocketCommunicator wsCommunicator(81);
 
 /***********************************************/
 
 void setup() {
   Serial.begin(115200);
-  configController.loadConfig();
-  wifi.setup(&configController);
-
-  // TODO:: This should be in a hanlder function.
-  controllerManager.registerController(1, 3); // type = 1, id = 3
-  controllerManager.setActiveController(3);
+  //connectionManager.setup();
+  // TODO:: This should be in a hanlder function. Potentially the Console.h.
+  //byte cID[] = {"FMC01"};
+  //controllerManager.registerController(2, cID); // type = 1, id = 3
+  //controllerManager.setActiveController(cID);
   wsCommunicator.wss->begin();
+  fmv.setup();
   Log::Instance()->enableWebsocket(&wsCommunicator);
 }
 
 
 void loop() {
-  wsCommunicator.wss->loop();
+  Serial.println("STEP1");
+  fmv.loop();
+  Serial.println("STEP1");
+
+  //wsCommunicator.wss->loop();
   yield();
+
+
   // Check if clients want to connect to Wifi AP Server.
-  wifi.handleClientConnections();
+  //connectionManager.handleClientConnections(); // TODO:: Abstract this in the connectionManager.h
   yield();
-  controllerManager.handleController();
+  //controllerManager.handleController();
   yield();
   // TODO:: Find a place for calling this method in a loop.
   //while (Serial.available() > 0) motorController.processUartByte(Serial.read());

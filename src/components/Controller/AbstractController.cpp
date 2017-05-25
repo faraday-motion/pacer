@@ -4,14 +4,20 @@
 #include "../ConfigController/ConfigController.h"
 
 
-AbstractController::AbstractController(ConfigController* configController, byte controllerType, byte controllerId)
+AbstractController::AbstractController(ConfigController* configController, byte controllerType, byte controllerId[])
 {
   Serial.println("Constructing the Abastract Controller");
   this->config = configController->config;
   this->motorController = new MotorController;
   this->motorController->setup();
   this->controllerType =  controllerType;
-  this->controllerId =  controllerId;
+
+  this->controllerId[0] =  controllerId[0];
+  this->controllerId[1] =  controllerId[1];
+  this->controllerId[2] =  controllerId[2];
+  this->controllerId[3] =  controllerId[3];
+  this->controllerId[4] =  controllerId[4];
+
   this->setup();
 }
 
@@ -28,7 +34,6 @@ void AbstractController::setup()
   defaultInputMinAcceleration = config->controller.defaultInputMinAcceleration;
   defaultInputMaxAcceleration = config->controller.defaultInputMaxAcceleration;
   defaultSmoothAlpha          = config->controller.defaultSmoothAlpha;
-  //controllerId                =  3;
 
 
   // Setting inputs to neutral;

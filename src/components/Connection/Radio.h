@@ -5,14 +5,28 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <Metro.h>
+#include "components/Communication/Console.h"
+#include "components/Controller/NunchuckController/ControllerPacket.h"
 
 class Radio {
+private:
+  ControllerPacket responsePacket;
+  ControllerPacket requestPacket;
+
+  // Intervals
+  byte _TIMEOUT_READ = 50;
+
+  // Togglers and watchers
+  byte lastPacketId = 0;
+
 public:
   RF24* _receiver;
   Radio();
   void setup();
+  void handleClientConnections();
   // Packet Handler //TODO:: See how can we abstract this. Basically
   byte packetSize   = 7;
+  byte sendCount    = 0;
 
   // Connection
   byte defaultAddresses[2][6];
@@ -24,19 +38,29 @@ public:
   byte channelMax = 125;
   byte channelMin = 100;
   byte connectionStrength = 0;
+  bool handShaking = false;
+
 
   // Connection
   void findChannel();
   void setChannel(byte channel);
   void changeChannel();
-
   void generateRandomAddress();
   void setAddress(byte address[]);
-
   void openPipes();
-
   void resetConnection();
 
+  // Read/Write Packets
+
+  bool tryReadBytes();
+  bool tryWriteBytes();
+
+  byte transmitterId[6];
+
+  // Debug
+  void printRequestPacket();
+  void printResponsePacket();
+  void printAddresses();
 };
 
 

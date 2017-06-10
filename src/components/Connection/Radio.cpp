@@ -6,7 +6,7 @@ Radio::Radio() :
 defaultAddresses{"FM01R", "FM01W"},  // initialize defaultAddresses
 currentAddresses{"FM01R", "FM01W"},  // initialize currentAddresses
 foundAddresses{"FM000"},             // initialize foundAddresses
-transmitterId{0, 0, 0, 0, 0}
+pendingDeviceId{0, 0, 0, 0, 0}
 {
   this->_receiver = new RF24(4,15); // TODO:: These are environment pin configurations. Should get it out of the .ini file.
 }
@@ -36,30 +36,43 @@ void Radio::setup()
 }
 
 
-void Radio::handleClientConnections()
+
+
+bool Radio::handleClientConnections()
 {
   Serial.println(":::::::::Started radio.handleConnections");
   if (_receiver->failureDetected)
   {
     Serial.println("RF24 Failure Detected. Re-running the setup.");
     this->setup();
+    handShakeCount = 0;
     this->handleClientConnections(); // Retry
+  }
+
+  if (handShakeCount > 100) {
+    pendingDeviceId[0] = 0;
+    pendingDeviceId[1] = 0;
+    pendingDeviceId[2] = 0;
+    pendingDeviceId[3] = 0;
+    pendingDeviceId[4] = 0;
+    handShakeCount = 0;
+    return false;
   }
 
   if (tryReadBytes())
   {
     handShaking = true;
+    handShakeCount = handShakeCount + 1;
     if (responsePacket.Command == 5)
     {
       //We have a name packet
       Serial.println("Name recived");
 
-      transmitterId[0] = responsePacket.Value1 ;
-      transmitterId[1] = responsePacket.Value2 ;
-      transmitterId[2] = responsePacket.Value3 ;
-      transmitterId[3] = responsePacket.Value4 ;
-      transmitterId[4] = responsePacket.Value5 ;
-
+      pendingDeviceId[0] = responsePacket.Value1 ;
+      pendingDeviceId[1] = responsePacket.Value2 ;
+      pendingDeviceId[2] = responsePacket.Value3 ;
+      pendingDeviceId[3] = responsePacket.Value4 ;
+      pendingDeviceId[4] = responsePacket.Value5 ;
 
       //Send a request for address change
       requestPacket.Command = 10;
@@ -92,22 +105,23 @@ void Radio::handleClientConnections()
       //We have a channel change confirmation
       Serial.println("Channel change confirmed");
       this->setChannel(this->channelFound);
-      handShaking = false;
+      handShaking = false; // flag that the handShaking was finished.
       //sendCommand = 50; //TODO:: This command should only be sent after we have registered and Activated the controller.
     }
+  } else {
+    return false;
   }
 
-  Serial.println();
-  Serial.print("handShaking = ");
-  Serial.println(handShaking);
 
 
-  if (handShaking == true)
+  if (handShaking == true && handShakeMaxAttempts <= 100)
   {
     this->tryWriteBytes();
-    this->handleClientConnections();
+    this->handleClientConnections(); // recursive call.
   }
   Serial.println(":::::::Finished radio.handleConnections");
+  return true;
+
 }
 
 // void Radio::handleClientConnections()

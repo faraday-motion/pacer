@@ -17,7 +17,7 @@ public:
 
   Wifi();
   void setup(ConfigController* configController);
-  void handleClientConnections();
+  bool handleClientConnections();
 
 };
 

@@ -4,6 +4,7 @@
 #include "components/ConfigController/ConfigController.h"
 #include "components/Controller/ControllerManager.h"
 #include "components/Connection/ConnectionManager.h"
+#include <Metro.h>
 
 class FMV {
   Console* console;
@@ -11,10 +12,15 @@ class FMV {
   ConnectionManager* connectionManager;
   ControllerManager* controllerManager;
 
+  Metro* printRegisteredControllers;
+
 public:
   FMV();
   void loop();
   void setup();
+
+  // Tasks?
+  void registerPendingConnectionDevices();
 
 };
 

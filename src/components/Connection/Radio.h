@@ -18,12 +18,11 @@ private:
 
   // Togglers and watchers
   byte lastPacketId = 0;
-
 public:
   RF24* _receiver;
   Radio();
   void setup();
-  void handleClientConnections();
+  bool handleClientConnections();
   // Packet Handler //TODO:: See how can we abstract this. Basically
   byte packetSize   = 7;
   byte sendCount    = 0;
@@ -39,6 +38,8 @@ public:
   byte channelMin = 100;
   byte connectionStrength = 0;
   bool handShaking = false;
+  byte handShakeCount = 0;
+  byte handShakeMaxAttempts = 30;
 
 
   // Connection
@@ -55,7 +56,7 @@ public:
   bool tryReadBytes();
   bool tryWriteBytes();
 
-  byte transmitterId[6];
+  byte pendingDeviceId[6];
 
   // Debug
   void printRequestPacket();

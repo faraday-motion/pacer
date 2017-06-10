@@ -48,7 +48,7 @@ void Wifi::setup(ConfigController* configController)
   //Serial.println(server->status());
 }
 
-void Wifi::handleClientConnections() {
+bool Wifi::handleClientConnections() {
   //Serial.printf("Stations connected to soft-AP = %d\n", WiFi.softAPgetStationNum());
   yield();
   if (handleClientInterval->check() == 1)
@@ -59,12 +59,14 @@ void Wifi::handleClientConnections() {
       if (client && client.connected())
       {
         client.setNoDelay(true);
+        return true;
       }
       else
       {
         client.stop();
       }
     }
+    return false;
   }
   yield();
 }

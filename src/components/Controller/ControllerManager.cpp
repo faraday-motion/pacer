@@ -52,6 +52,7 @@ bool ControllerManager::registerController(byte controllerType, byte controllerI
       Serial.println("Registering a PhoneController");
       AbstractController * phoneController = new PhoneController(configController, connectionManager->wifi, controllerType, controllerId);
       allocateRegisteredController(phoneController);
+      registeredControllersCount = registeredControllersCount + 1;
       return true;
   }
   else if (controllerType == 2)
@@ -59,6 +60,7 @@ bool ControllerManager::registerController(byte controllerType, byte controllerI
       Serial.println("Registering a NunchuckController");
       AbstractController * nunchuckController = new NunchuckController(configController, connectionManager->radio, controllerType, controllerId);
       allocateRegisteredController(nunchuckController);
+      registeredControllersCount = registeredControllersCount + 1;
       return true;
   }
   else
@@ -70,9 +72,27 @@ bool ControllerManager::registerController(byte controllerType, byte controllerI
 
 int ControllerManager::getControllerIndexById(byte id[])
 {
+  Serial.println("Checking if the ControllerID is already registered.");
   for (byte i = 0; i < 5; i++) {
     if(availableControllers[i] != nullptr){  // not a null pointer
-      if(availableControllers[i]->controllerId[0] == id[0] && availableControllers[i]->controllerId[1] == id[1] && availableControllers[i]->controllerId[2] == id[2] && availableControllers[i]->controllerId[3] == id[3] && availableControllers[i]->controllerId[4] == id[4] && availableControllers[i]->controllerId[5] == id[5]  ) {
+      Serial.println("Not a null pointer");
+      Serial.println("registeredController :::");
+      Serial.print(availableControllers[i]->controllerId[0]);
+      Serial.print(availableControllers[i]->controllerId[1]);
+      Serial.print(availableControllers[i]->controllerId[2]);
+      Serial.print(availableControllers[i]->controllerId[3]);
+      Serial.print(availableControllers[i]->controllerId[4]);
+      Serial.println();
+      Serial.println("toBeRegisteredController :::");
+      Serial.print(id[0]);
+      Serial.print(id[1]);
+      Serial.print(id[2]);
+      Serial.print(id[3]);
+      Serial.print(id[4]);
+      Serial.println();
+
+      if(availableControllers[i]->controllerId[0] == id[0] && availableControllers[i]->controllerId[1] == id[1] && availableControllers[i]->controllerId[2] == id[2] && availableControllers[i]->controllerId[3] == id[3] && availableControllers[i]->controllerId[4] == id[4])
+      {
         return i;
       }
     }

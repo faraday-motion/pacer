@@ -18,7 +18,7 @@ public:
   // TODO:: read this https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
   AbstractController*  activeController;
   AbstractController*  availableControllers[5];  // Not sure if I should store the entire object or just the pointers.
-
+  byte registeredControllersCount = 0;
   ConfigController* configController;
   MotorController*  motorController;
 

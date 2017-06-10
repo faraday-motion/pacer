@@ -17,10 +17,11 @@ void FMV::setup() {
 
 void FMV::loop()
 {
-  //this->connectionManager->listen();
+
   // Step 1. Check for physical device that is trying to connect
   this->connectionManager->handleClientConnections(); // POPULATE NEW DEVICES
   // Step 2. Register physical devices as a controller
+
   // CASE:: WIFI
   // if (newDevices[0][0] != 0){
   //   wasRegistered = this->controllerManager->registerController(newDevices[0]);
@@ -50,6 +51,6 @@ void FMV::loop()
     Serial.print(" ");
     Serial.println(this->controllerManager->availableControllers[0]->controllerId[4]);
   }
-  
+
   this->controllerManager->handleController();
 }

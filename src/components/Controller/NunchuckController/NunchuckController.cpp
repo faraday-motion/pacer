@@ -94,89 +94,90 @@ void NunchuckController::write()
 
 void NunchuckController::handleController()
 {
-  // if (radio->_receiver->failureDetected)
-  // {
-  //   Serial.println("RF24 Failure Detected. Re-running the setup.");
-  //   this->setup();
-  // }
-  // else
-  // {
-  //   if (metroCommunication->check() == 1)
-  //   {
-  //     // Read data from transmitter
-  //     Serial.println("****************START READ************");
-  //     this->read();
-  //     this->printResponsePacket();
-  //     Serial.println("****************END READ************");
-  //     // Check performance of messages
-  //     if (metroController->check() == 1)
-  //     {
-  //       int rc = (_SIGNAL_CHECK_INTERVAL / _READ_INTERVAL) - 1;
-  //       radio->connectionStrength = min(float(receiveCounter) / float(rc) * 100, 100);
-  //       receiveCounter = 0;
-  //     }
-  //     Serial.print("Connection Strength:: ");
-  //     Serial.println(radio->connectionStrength);
-  //
-  //     // Channel hop
-  //     if (metroChannelChange->check() == 1)
-  //     {
-  //       // TODO:: Have a toggle switch fo this instead of commenting it out
-  //       //if (controllerConnected && controllerVerified)
-  //         //Serial.println("NOT SURE WHY BUT WE ARE CHANGING CHANNELS");
-  //         //changeChannel();
-  //     }
-  //
-  //     // Write data to transmitter
-  //     Serial.println("****************START WRITE************");
-  //     this->write();
-  //     this->printRequestPacket();
-  //     Serial.println("****************END WRITE************");
-  //     if (metroHasController->check() == 1)
-  //     {
-  //       //Check if we had connection problems
-  //       radio->resetConnection();
-  //       // moved from resetConnection() to be able to abstract Radio.h
-  //       sendCommand = 0;
-  //       // TODO:: this should be ported in the ControllerManager.h
-  //       controllerConnected = false;
-  //       controllerVerified  = false;
-  //     }
-  //   }
-  // }
+  if (radio->_receiver->failureDetected)
+  {
+    Serial.println("RF24 Failure Detected. Re-running the setup.");
+    this->setup();
+  }
+  else
+  {
+    if (metroCommunication->check() == 1)
+    {
+      // Read data from transmitter
+      Serial.println("****************START READ************");
+      this->read();
+      this->printResponsePacket();
+      Serial.println("****************END READ************");
+      // Check performance of messages
+      if (metroController->check() == 1)
+      {
+        int rc = (_SIGNAL_CHECK_INTERVAL / _READ_INTERVAL) - 1;
+        radio->connectionStrength = min(float(receiveCounter) / float(rc) * 100, 100);
+        receiveCounter = 0;
+      }
+      Serial.print("Connection Strength:: ");
+      Serial.println(radio->connectionStrength);
+
+      // Channel hop
+      if (metroChannelChange->check() == 1)
+      {
+        // TODO:: Have a toggle switch fo this instead of commenting it out
+        //if (controllerConnected && controllerVerified)
+          //Serial.println("NOT SURE WHY BUT WE ARE CHANGING CHANNELS");
+          //changeChannel();
+      }
+
+      // Write data to transmitter
+      Serial.println("****************START WRITE************");
+      this->write();
+      this->printRequestPacket();
+      Serial.println("****************END WRITE************");
+      if (metroHasController->check() == 1)
+      {
+        //Check if we had connection problems
+        radio->resetConnection();
+        // moved from resetConnection() to be able to abstract Radio.h
+        sendCommand = 0;
+        // TODO:: this should be ported in the ControllerManager.h
+        controllerConnected = false;
+        controllerVerified  = false;
+      }
+    }
+  }
 }
+
 
 /**
   Private Methods
 */
-
-bool NunchuckController::isNewOrKnownController()
-{
-  //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
-  //Was there no controller connecter before
-
-  if (transmitterId[0] == 0 && transmitterId[1] == 0 && transmitterId[2] == 0 && transmitterId[3] == 0 && transmitterId[4] == 0)
-  {
-    //Set the controllerid
-    transmitterId[0] = responsePacket.Value1 ;
-    transmitterId[1] = responsePacket.Value2 ;
-    transmitterId[2] = responsePacket.Value3 ;
-    transmitterId[3] = responsePacket.Value4 ;
-    transmitterId[4] = responsePacket.Value5 ;
-    return true;
-  }
-  //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
-  //If a controller was connected, allow connecting if the same
-  if (responsePacket.Value1 != transmitterId[0] || responsePacket.Value2 != transmitterId[1] || responsePacket.Value3 != transmitterId[2] || responsePacket.Value4 != transmitterId[3] || responsePacket.Value5 != transmitterId[4])
-  {
-    //We only allow a connection if the previous controller is the same as the one trying to connect
-    return false;
-  }
-  else
-  {
-    return true;
-  }
-}
+//
+// bool NunchuckController::isNewOrKnownController()
+// {
+//   //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
+//   //Was there no controller connecter before
+//
+//   if (transmitterId[0] == 0 && transmitterId[1] == 0 && transmitterId[2] == 0 && transmitterId[3] == 0 && transmitterId[4] == 0)
+//   {
+//     //Set the controllerid
+//     transmitterId[0] = responsePacket.Value1 ;
+//     transmitterId[1] = responsePacket.Value2 ;
+//     transmitterId[2] = responsePacket.Value3 ;
+//     transmitterId[3] = responsePacket.Value4 ;
+//     transmitterId[4] = responsePacket.Value5 ;
+//     return true;
+//   }
+//   //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
+//   //If a controller was connected, allow connecting if the same
+//   if (responsePacket.Value1 != transmitterId[0] || responsePacket.Value2 != transmitterId[1] || responsePacket.Value3 != transmitterId[2] || responsePacket.Value4 != transmitterId[3] || responsePacket.Value5 != transmitterId[4])
+//   {
+//     //We only allow a connection if the previous controller is the same as the one trying to connect
+//     return false;
+//   }
+//   else
+//   {
+//     return true;
+//   }
+// }
 
 
 

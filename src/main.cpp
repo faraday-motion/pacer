@@ -23,18 +23,6 @@
 /******************************************************/
 /**********************************************************/
 
-
-/***********************************************/
-/** TODO:: Wrap up in a builder of some sort  **/
-
-// Independent Objects
-//Console console;
-
-//ConfigController  configController;
-
-//ConnectionManager connectionManager(&configController, &console);
-
-//ControllerManager controllerManager(&configController, &connectionManager);
 FMV fmv;
 
 WebSocketCommunicator wsCommunicator(81);
@@ -43,25 +31,19 @@ WebSocketCommunicator wsCommunicator(81);
 
 void setup() {
   Serial.begin(115200);
-  //connectionManager.setup();
-  // TODO:: This should be in a hanlder function. Potentially the Console.h.
-  //byte cID[] = {"FMC01"};
-  //controllerManager.registerController(2, cID); // type = 1, id = 3
-  //controllerManager.setActiveController(cID);
-  wsCommunicator.wss->begin();
   fmv.setup();
+
+  wsCommunicator.wss->begin();
   Log::Instance()->enableWebsocket(&wsCommunicator);
 }
 
 
 void loop() {
-  Serial.println("STEP1");
   fmv.loop();
-  Serial.println("STEP1");
+
 
   //wsCommunicator.wss->loop();
   yield();
-
 
   // Check if clients want to connect to Wifi AP Server.
   //connectionManager.handleClientConnections(); // TODO:: Abstract this in the connectionManager.h

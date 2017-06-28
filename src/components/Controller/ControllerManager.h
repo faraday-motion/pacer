@@ -6,11 +6,14 @@
 #include "../MotorController/MotorController.h"
 #include <Metro.h>
 #include "components/Connection/ConnectionManager.h"
+#include "components/Connection/RadioDevice.h"
+
 class ControllerManager
 {
 
 private:
    Metro* controllerReadInterval;
+   Metro* printInterval;
    ConnectionManager* connectionManager;
 
 public:
@@ -27,7 +30,7 @@ public:
 
   ControllerManager(ConfigController* configController, ConnectionManager* connectionManager);
 
-  bool registerController(byte type, byte id[]); // create a new controller based on the type [mobile, nunchuck]
+  bool registerController(RadioDevice device); // create a new controller based on the type [mobile, nunchuck]
   void removeRegisteredController(AbstractController* controller); // destroys a certain controller.
 
   // Manage Active Controllers
@@ -35,6 +38,11 @@ public:
   bool unsetActiveController();
 
   void handleController();
+
+  // Debug
+
+  void printRegisteredControllers();
+  void printActiveController();
 
 
 };

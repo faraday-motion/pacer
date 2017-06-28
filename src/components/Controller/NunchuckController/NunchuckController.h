@@ -27,8 +27,10 @@ private:
   Metro* metroHasController;
   Metro* metroChannelChange;
 
-
-  byte transmitterId[6];
+  /**
+    Identification
+  */
+  RadioDevice nunchuck;
 
   // Packet Handling
   ControllerPacket responsePacket;
@@ -56,10 +58,12 @@ private:
 
 public:
 
-  NunchuckController(ConfigController* configController, Radio* radio, byte controllerType, byte controllerId[]);
+  NunchuckController(ConfigController* configController, Radio* radio, RadioDevice device);
   void read();
   void write();
+  bool enable();
   void handleController();
+  void processResponse();
 
 };
 

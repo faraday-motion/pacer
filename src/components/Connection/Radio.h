@@ -5,6 +5,7 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <Metro.h>
+#include "RadioDevice.h"
 #include "components/Communication/Console.h"
 #include "components/Controller/NunchuckController/ControllerPacket.h"
 
@@ -21,8 +22,12 @@ private:
 public:
   RF24* _receiver;
   Radio();
+  void readWrite();
+  void processResponse();
   void setup();
   bool handleClientConnections();
+
+  bool changeDevice(RadioDevice device);
   // Packet Handler //TODO:: See how can we abstract this. Basically
   byte packetSize   = 7;
   byte sendCount    = 0;
@@ -40,6 +45,7 @@ public:
   bool handShaking = false;
   byte handShakeCount = 0;
   byte handShakeMaxAttempts = 30;
+  bool handShakeSucceeded = false;
 
 
   // Connection
@@ -50,13 +56,16 @@ public:
   void setAddress(byte address[]);
   void openPipes();
   void resetConnection();
+  void initPackets();
 
   // Read/Write Packets
 
-  bool tryReadBytes();
-  bool tryWriteBytes();
+  bool tryReadBytes(ControllerPacket* response);
+  bool tryWriteBytes(ControllerPacket* request);
 
-  byte pendingDeviceId[6];
+  RadioDevice pendingDevice;
+  void clearPendingDevice();
+  void listenToRegisteredRadioDevice(RadioDevice device);
 
   // Debug
   void printRequestPacket();

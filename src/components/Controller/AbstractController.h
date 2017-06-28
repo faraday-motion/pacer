@@ -5,7 +5,7 @@
 
 #include "../ConfigController/Config.h"
 #include "../ConfigController/ConfigController.h"
-
+#include "components/Connection/RadioDevice.h"
 //https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
 class AbstractController
 {
@@ -32,8 +32,7 @@ public:
   bool controlCruiseControl;
 
   //Controller Identification
-  byte controllerType;
-  byte controllerId[5];
+  RadioDevice controller;
 
   // Controller Constraints
   byte defaultInputNeutral;
@@ -43,7 +42,7 @@ public:
   byte defaultInputMaxAcceleration;
   float defaultSmoothAlpha;
 
-  AbstractController(ConfigController* configController, byte controllerType, byte controllerId[]);
+  AbstractController(ConfigController* configController, RadioDevice device);
   virtual ~AbstractController() {}
   void setup();
   void processInput(byte latestInput);
@@ -53,6 +52,7 @@ public:
   // TODO:: These don't really need to be virtual at least for now.
   virtual void read() = 0; // virutal read function
   virtual void write() = 0; // virtaul write function
+  virtual bool enable() = 0;
 
 
 

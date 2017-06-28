@@ -48,6 +48,12 @@ void Wifi::setup(ConfigController* configController)
   //Serial.println(server->status());
 }
 
+
+/**
+ * Returns true if device is requesting registration.
+ * TODO:: Have it take the id and type and store it as a temporary pending device. 
+ */
+
 bool Wifi::handleClientConnections() {
   //Serial.printf("Stations connected to soft-AP = %d\n", WiFi.softAPgetStationNum());
   yield();

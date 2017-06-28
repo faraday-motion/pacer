@@ -5,20 +5,15 @@
 #include "Wifi.h"
 #include "components/ConfigController/ConfigController.h"
 #include <Metro.h>
-
-struct pendingDevice {
-  byte id[5];
-  byte type; // 0 - uknown, 1 - wifi, 2 - nunchuck.
-  bool isWaiting = false;
-};
+#include "RadioDevice.h"
 
 
 class ConnectionManager
 {
   ConfigController* configController;
-  byte _HANDLE_CLIENT_INTERVAL = 250;
+  byte _HANDLE_CLIENT_INTERVAL = 750;
 public:
-  pendingDevice pendingDevices[2];
+  RadioDevice pendingDevice;
   Metro* handleClientInterval;
   ConnectionManager(ConfigController* configController);
   void setup();

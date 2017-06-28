@@ -16,11 +16,11 @@ private:
 
 public:
   Wifi* wifi;
-  PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId[]);
+  PhoneController(ConfigController* configController, Wifi* wifi, RadioDevice device);
   void read();
   void write();
+  bool enable();
   void handleController();
-  bool registerAsActive(String controllerUUID);
 
 };
 

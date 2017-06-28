@@ -4,8 +4,8 @@
 #include "../AbstractController.h"
 
 // Construct the PhoneController and the AbstractController
-PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, byte controllerType, byte controllerId[])
- : AbstractController(configController, controllerType, controllerId)
+PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, RadioDevice device)
+ : AbstractController(configController, device)
 {
   this->wifi = wifi;
 }
@@ -63,11 +63,25 @@ void PhoneController::write()
   return;
 }
 
-// this is the loop
+/**
+  * This method is called in the main loop. It deals with reading and writing data from and to the controller.
+  */
 void PhoneController::handleController()
 {
-  Serial.println("handleController() (Phone)");
+  Serial.println("Reading Input Data from Phone");
   read();
+}
+
+/**
+  * Confirms with the physical controller that it is enbled and listened to.
+  */
+
+bool PhoneController::enable()
+{
+  //TODO:: Enable Two Way Communication with the phone.
+  //TODO:: Get Confirmation of being enabled from the phone and return true.
+  //TODO:: If no confirmation is comming in return false.
+  return true;
 }
 
 byte PhoneController::getChecksum(byte* array, byte arraySize)

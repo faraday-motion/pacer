@@ -7,20 +7,23 @@
 #include <Metro.h>
 
 class FMV {
+
+  /* Metro timers */
+  Metro* handleClientInterval;
+
   Console* console;
   ConfigController* configController;
   ConnectionManager* connectionManager;
   ControllerManager* controllerManager;
 
-  Metro* printRegisteredControllers;
-
 public:
+  bool stopScanning = false;
   FMV();
   void loop();
   void setup();
 
   // Tasks?
-  void registerPendingConnectionDevices();
+  void handlePendingConnectionDevices();
 
 };
 

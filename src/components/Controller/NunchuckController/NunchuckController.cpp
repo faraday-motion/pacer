@@ -6,16 +6,17 @@
 
 
 // Construct the NunchuckController and the AbstractController
-NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, byte controllerType, byte controllerId[])
- : AbstractController(configController, controllerType, controllerId),
- transmitterId{0, 0, 0, 0, 0}         // initialize transmitterId
+NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, RadioDevice device)
+ : AbstractController(configController, device)
 {
 
   this->radio = radio;
+  this->nunchuck = device;
+
   /**
-    Setiing the Metro Timers
-  */
-  metroCommunication = new Metro(_READ_INTERVAL);         // read interval
+   * Setiing the Metro Timers
+   */
+  metroCommunication = new Metro(_READ_INTERVAL);         // read data interval
   metroController    = new Metro(_SIGNAL_CHECK_INTERVAL); // signal check interval
   metroHasController = new Metro(500);
   metroChannelChange = new Metro(500);
@@ -40,142 +41,97 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
 
 }
 
-void NunchuckController::read()
-{
-//
-//     // Only this should be in the nunchuck
-//     else if (responsePacket.Command == 55)
-//     {
-//       //Controller inputs
-//       receiveCounter++;
-//       Serial.println(":::::::::::::: Controller inputs ::::::::::::::");
-//       Serial.println(responsePacket.Value2);
-//       Serial.println(":::::::::::::::::::::::::::::::::::::::::::::::");
-//       processInput(responsePacket.Value2);
-//     }
-//   }
-} // end read();
-
-void NunchuckController::write()
-{
-  // // requestName
-  // if (sendCommand == 1)
-  // {
-  //   requestPacket.Command = 1;
-  //   radio->tryWriteBytes(requestPacket);
-  // }
-  // // request Address Change
-  // else if (sendCommand == 10)
-  // {
-  //   requestPacket.Command = 10;
-  //   requestPacket.Value1  = radio->foundAddresses[0];
-  //   requestPacket.Value2  = radio->foundAddresses[1];
-  //   requestPacket.Value3  = radio->foundAddresses[2];
-  //   requestPacket.Value4  = radio->foundAddresses[3];
-  //   requestPacket.Value5  = radio->foundAddresses[4];
-  //   radio->tryWriteBytes(requestPacket);
-  // }
-  // // request Channel change
-  // else if (sendCommand == 20)
-  // {
-  //   requestPacket.Command = 20;
-  //   requestPacket.Value1  = radio->channelFound;
-  //   radio->tryWriteBytes(requestPacket);
-  // }
-  //
-  // // TODO::
-  // // request Control packet
-  // else if (sendCommand == 50)
-  // {
-  //   requestPacket.Command = 50;
-  //   radio->tryWriteBytes(requestPacket);
-  // }
-} // end write();
 
 void NunchuckController::handleController()
 {
-  if (radio->_receiver->failureDetected)
+  if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
-    Serial.println("RF24 Failure Detected. Re-running the setup.");
-    this->setup();
+    this->processResponse(); // populate the requestPacket
   }
-  else
+
+  this->radio->tryWriteBytes(&requestPacket);
+}
+
+
+void NunchuckController::processResponse()
+{
+  if(responsePacket.Command == 55)
   {
-    if (metroCommunication->check() == 1)
-    {
-      // Read data from transmitter
-      Serial.println("****************START READ************");
-      this->read();
-      this->printResponsePacket();
-      Serial.println("****************END READ************");
-      // Check performance of messages
-      if (metroController->check() == 1)
-      {
-        int rc = (_SIGNAL_CHECK_INTERVAL / _READ_INTERVAL) - 1;
-        radio->connectionStrength = min(float(receiveCounter) / float(rc) * 100, 100);
-        receiveCounter = 0;
-      }
-      Serial.print("Connection Strength:: ");
-      Serial.println(radio->connectionStrength);
-
-      // Channel hop
-      if (metroChannelChange->check() == 1)
-      {
-        // TODO:: Have a toggle switch fo this instead of commenting it out
-        //if (controllerConnected && controllerVerified)
-          //Serial.println("NOT SURE WHY BUT WE ARE CHANGING CHANNELS");
-          //changeChannel();
-      }
-
-      // Write data to transmitter
-      Serial.println("****************START WRITE************");
-      this->write();
-      this->printRequestPacket();
-      Serial.println("****************END WRITE************");
-      if (metroHasController->check() == 1)
-      {
-        //Check if we had connection problems
-        radio->resetConnection();
-        // moved from resetConnection() to be able to abstract Radio.h
-        sendCommand = 0;
-        // TODO:: this should be ported in the ControllerManager.h
-        controllerConnected = false;
-        controllerVerified  = false;
-      }
-    }
+    Serial.print(":::::::::::::: Controller inputs = ");
+    Serial.print(responsePacket.Value2);
+    Serial.println();
+    //processInput(responsePacket.Value2);
   }
 }
 
 
-/**
-  Private Methods
-*/
+
+
+bool NunchuckController::enable()
+{
+    this->radio->changeDevice(nunchuck);
+    requestPacket.Command = 50;
+
+   //this->enable(); //TODO:: Risk for infinite loop.
+}
+
+void NunchuckController::read()
+{
+
+  this->radio->tryReadBytes(&responsePacket); // populate response.
+
+  if(responsePacket.Command == 55)
+  {
+
+  }
+} // end read();
+
+void NunchuckController::write()
+{
+  radio->tryWriteBytes(&requestPacket);
+} // end write();
+
+
+
 //
-// bool NunchuckController::isNewOrKnownController()
+// void NunchuckController::handleController()
 // {
-//   //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
-//   //Was there no controller connecter before
-//
-//   if (transmitterId[0] == 0 && transmitterId[1] == 0 && transmitterId[2] == 0 && transmitterId[3] == 0 && transmitterId[4] == 0)
+//   if (radio->_receiver->failureDetected)
 //   {
-//     //Set the controllerid
-//     transmitterId[0] = responsePacket.Value1 ;
-//     transmitterId[1] = responsePacket.Value2 ;
-//     transmitterId[2] = responsePacket.Value3 ;
-//     transmitterId[3] = responsePacket.Value4 ;
-//     transmitterId[4] = responsePacket.Value5 ;
-//     return true;
-//   }
-//   //TODO:: THIS MIGHT NEED TO BE EXPORTED TO THE ControllerManager.h
-//   //If a controller was connected, allow connecting if the same
-//   if (responsePacket.Value1 != transmitterId[0] || responsePacket.Value2 != transmitterId[1] || responsePacket.Value3 != transmitterId[2] || responsePacket.Value4 != transmitterId[3] || responsePacket.Value5 != transmitterId[4])
-//   {
-//     //We only allow a connection if the previous controller is the same as the one trying to connect
-//     return false;
+//     Serial.println("RF24 Failure Detected. Re-running the setup.");
+//     this->setup();
 //   }
 //   else
 //   {
-//     return true;
+//     if (metroCommunication->check() == 1)
+//     {
+//       // Read data from transmitter
+//       this->read();
+//       this->printResponsePacket();
+//
+//       // Check performance of messages
+//       if (metroController->check() == 1)
+//       {
+//         int rc = (_SIGNAL_CHECK_INTERVAL / _READ_INTERVAL) - 1;
+//         radio->connectionStrength = min(float(receiveCounter) / float(rc) * 100, 100);
+//         receiveCounter = 0;
+//       }
+//       //Serial.print("Connection Strength:: ");
+//       //Serial.println(radio->connectionStrength);
+//
+//       // Write data to transmitter
+//       //Serial.println("****************START WRITE************");
+//       this->write();
+//       this->printRequestPacket();
+//       //Serial.println("****************END WRITE************");
+//       if (metroHasController->check() == 1)
+//       {
+//         //Check if we had connection problems
+//         radio->resetConnection();
+//         // moved from resetConnection() to be able to abstract Radio.h
+//         sendCommand = 0;
+//       }
+//     }
 //   }
 // }
 
@@ -183,12 +139,11 @@ void NunchuckController::handleController()
 
 
 
-
-
+// Debug
 
 void NunchuckController::printRequestPacket()
 {
-  Serial.println("Packet sent:: ");
+  Serial.println("Nunchuck Packet sent:: ");
   Serial.print(requestPacket.Id);
   Serial.print(" ");
   Serial.print(requestPacket.Command);
@@ -211,7 +166,7 @@ void NunchuckController::printRequestPacket()
 
 void NunchuckController::printResponsePacket()
 {
-  Serial.println("Packet received:: ");
+  Serial.println("Nunchuck Packet received:: ");
   Serial.print(responsePacket.Id);
   Serial.print(" ");
   Serial.print(responsePacket.Command);

@@ -7,7 +7,7 @@
 struct RadioDevice {
   byte id[5]; // We only have 5 bytes for the ID
   byte address[5]; // We only have 5 bytes for the Address. Last byte declares read/write
-  byte channel = 0;
+  byte channel = 100;
   bool pending = false; // flag the the device is pending.
   byte type;
 };

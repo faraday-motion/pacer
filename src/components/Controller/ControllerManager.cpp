@@ -10,7 +10,7 @@ ControllerManager::ControllerManager(ConfigController* configController, Connect
   this->connectionManager = connectionManager;
 
   activeController = nullptr;
-  controllerReadInterval = new Metro(50);
+  controllerReadInterval = new Metro(10);
   printInterval = new Metro(500);
 
   for (byte i = 0; i < 5; i++)

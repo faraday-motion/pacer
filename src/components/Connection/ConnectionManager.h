@@ -11,7 +11,7 @@
 class ConnectionManager
 {
   ConfigController* configController;
-  byte _HANDLE_CLIENT_INTERVAL = 750;
+  int _HANDLE_CLIENT_INTERVAL = 500;
 public:
   RadioDevice pendingDevice;
   Metro* handleClientInterval;

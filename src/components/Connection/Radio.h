@@ -16,6 +16,7 @@ private:
 
   // Intervals
   byte _TIMEOUT_READ = 50;
+  int _LOST_CONNECTION = 500;
 
   // Togglers and watchers
   byte lastPacketId = 0;
@@ -71,6 +72,7 @@ public:
   void printRequestPacket();
   void printResponsePacket();
   void printAddresses();
+  void printDeviceCredentials(RadioDevice d);
 };
 
 

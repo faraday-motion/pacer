@@ -92,6 +92,7 @@ void ConnectionManager::handleClientConnections()
 }
 
 /**
+ * TODO:: Remove this. As we should not handle this here. 
  * Clear the 2 element array that is storing the pending IDs and types of devices requesting to be registered.
  */
 void ConnectionManager::clearPendingDevices()

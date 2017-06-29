@@ -10,7 +10,7 @@ AbstractController::AbstractController(ConfigController* configController, Radio
   this->config = configController->config;
   this->motorController = new MotorController;
   this->motorController->setup();
-  this->controller = device;
+  this->controller = device; // TODO:: why do we store the device on the abstract and the concrete controller?
 
 
   this->setup();

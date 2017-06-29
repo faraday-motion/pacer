@@ -13,6 +13,10 @@ foundAddresses{"FM000"}             // initialize foundAddresses
 void Radio::setup()
 {
   Serial.println("Setting Up Radio Connection");
+  // Setup Metro Intervals
+
+
+  // Setup the NRF24
   _receiver->begin();
   _receiver->setAutoAck(false);
   _receiver->setRetries(0, 0);
@@ -32,111 +36,41 @@ void Radio::setup()
   openPipes();
 
   this->initPackets();
-
-  this->printRequestPacket();
-  this->printResponsePacket();
+  this->clearPendingDevice();
+  //this->printRequestPacket();
+  //this->printResponsePacket();
   Serial.println("Finished Setting Up Radio Connection");
   yield();
 }
 
 
-// TODO:: Try to avoid the recursive call for the handshake.
-
 bool Radio::handleClientConnections()
 {
+  //Serial.println("START: Scanning for new devices...");
   // Set defaut address and channel for scanning.
   if (handShaking == false)
   {
-    this->resetConnection();
+    //Serial.println("No handshake initiated.");
+    this->resetConnection(); // checking for devices on default device.
   }
-  Serial.println("handleConnections()");
-  Serial.print("handShaking = ");
-  Serial.println(handShaking);
-  this->printResponsePacket();
-
-  this->printAddresses();
+  //Serial.print("handShaking = ");
+  //Serial.println(handShaking);
+  // Resuming communication with the pending Device.
+  this->changeDevice(pendingDevice);
+  // Just give it some time to process stuff.
+  //delay(15);
+  // this->printResponsePacket();
+  // this->printAddresses();
   this->readWrite();
-  Serial.println("SCANNING...");
-  Serial.print("ID: ");
-  Serial.print(pendingDevice.id[0]);
-  Serial.print(" ");
-  Serial.print(pendingDevice.id[1]);
-  Serial.print(" ");
-  Serial.print(pendingDevice.id[2]);
-  Serial.print(" ");
-  Serial.print(pendingDevice.id[3]);
-  Serial.print(" ");
-  Serial.println(pendingDevice.id[4]);
+  //this->printDeviceCredentials(pendingDevice);
+  //Serial.println("STOP: Scanning");
 
-
-  Serial.print("ADDRESS: ");
-  Serial.print(pendingDevice.address[0]);
-  Serial.print(" ");
-  Serial.print(pendingDevice.address[1]);
-  Serial.print(" ");
-  Serial.print(pendingDevice.address[2]);
-  Serial.print(" ");
-  Serial.print(pendingDevice.address[3]);
-  Serial.print(" ");
-  Serial.println(pendingDevice.address[4]);
-
-  Serial.print("CHANNEL: ");
-  Serial.println(pendingDevice.channel);
-
-
-  Serial.print("PENDING: ");
-  Serial.println(pendingDevice.pending);
-  Serial.println(":::::: Finished Scan Step");
-  return pendingDevice.pending; // corner cases when we send true? // TODO:: when transmitter sends 25 we set the handshake = true and pendingDevice.pending = true. Implemente Idle command in the communication protocol.
+  return pendingDevice.pending; // corner cases when we send true by accident?
 }
-
-void Radio::listenToRegisteredRadioDevice(RadioDevice device)
-{
-  Serial.println("START LISTEN TO REGISTERED DEVICE");
-  setChannel(device.channel);
-  setAddress(device.address);
-  //generateRandomAddress();
-  openPipes();
-  this->readWrite();
-  Serial.println("LISTENING TO DEVICE:: ");
-  Serial.print("ID: ");
-  Serial.print(device.id[0]);
-  Serial.print(" ");
-  Serial.print(device.id[1]);
-  Serial.print(" ");
-  Serial.print(device.id[2]);
-  Serial.print(" ");
-  Serial.print(device.id[3]);
-  Serial.print(" ");
-  Serial.println(device.id[4]);
-
-  Serial.print("ADDRESS: ");
-  Serial.print(device.address[0]);
-  Serial.print(" ");
-  Serial.print(device.address[1]);
-  Serial.print(" ");
-  Serial.print(device.address[2]);
-  Serial.print(" ");
-  Serial.print(device.address[3]);
-  Serial.print(" ");
-  Serial.println(device.address[4]);
-
-
-  Serial.print("CHANNEL: ");
-  Serial.println(device.channel);
-
-
-  Serial.print("PENDING: ");
-  Serial.println(device.pending);
-
-  this->printRequestPacket();
-  Serial.println("END LISTEN TO REGISTERED DEVICE");
-}
-
 
 void Radio::processResponse()
 {
-  this->printResponsePacket();
+  //this->printResponsePacket();
   if (responsePacket.Command == 5)
   {
     handShaking = true;
@@ -171,17 +105,17 @@ void Radio::processResponse()
     pendingDevice.address[2] = this->foundAddresses[2];
     pendingDevice.address[3] = this->foundAddresses[3];
     pendingDevice.address[4] = this->foundAddresses[4];
-    pendingDevice.address[5] = 0; // This will be overwritten for read/write
 
     this->openPipes();
+
     //Send a request for the channel change
     requestPacket.Command = 20;
-    requestPacket.Value1  = this->channelFound;
+    requestPacket.Value1  = channelFound;
   }
   else if (responsePacket.Command == 20)
   {
     //We have a channel change request
-    Serial.println("Channel change ");
+    Serial.println("Channel change");
     this->changeChannel();
     requestPacket.Command = 20; // moved from changeChannel() for abstracting the Radio
   }
@@ -189,10 +123,9 @@ void Radio::processResponse()
   {
     //We have a channel change confirmation
     Serial.println("Channel change confirmed");
-    this->setChannel(this->channelFound);
-
     // Setting the channel of the pendingDevice.
     pendingDevice.channel = this->channelFound;
+    this->setChannel(this->channelFound);
 
     requestPacket.Command = 40;
   }
@@ -211,14 +144,17 @@ void Radio::readWrite()
 {
   if (_receiver->failureDetected)
   {
-    Serial.println("RF24 Failure Detected. Re-running the setup.");
+    //Serial.println("RF24 Failure Detected. Re-running the setup.");
     this->setup();
   }
 
   if (this->tryReadBytes(&responsePacket)) { // Populates the responsePacket.
+     //this->printResponsePacket();
      this->processResponse(); // populate the requestPacket
-  }
 
+  }
+  yield();
+  //this->printRequestPacket();
   this->tryWriteBytes(&requestPacket);
 }
 
@@ -262,7 +198,6 @@ void Radio::setChannel(byte channel)
 
 void Radio::changeChannel()
 {
-  Serial.println("changeChannel");
   //Bug need to call findChannel() 2 times for it to work. investigate.
   findChannel();
 }
@@ -301,13 +236,14 @@ void Radio::openPipes()
 
 void Radio::resetConnection()
 {
-  Serial.println("START RESET RADIO CONN");
+  //Serial.println("START RESET RADIO CONN");
   setChannel(channelDefault);
   setAddress(defaultAddresses[0]);
   generateRandomAddress();
   openPipes();
+  delay(1);
   //this->printAddresses();
-  Serial.println("END RESET RADIO CONN");
+  //Serial.println("END RESET RADIO CONN");
 }
 
 bool Radio::changeDevice(RadioDevice device)
@@ -316,39 +252,11 @@ bool Radio::changeDevice(RadioDevice device)
   setChannel(device.channel);
   setAddress(device.address);
   openPipes();
-  Serial.println("Finished Device Switch.");
+  delayMicroseconds(500);
+  //Serial.println("Finished Device Switch.");
 
-  Serial.println("Listening To ::");
-  Serial.print("ID: ");
-  Serial.print(device.id[0]);
-  Serial.print(" ");
-  Serial.print(device.id[1]);
-  Serial.print(" ");
-  Serial.print(device.id[2]);
-  Serial.print(" ");
-  Serial.print(device.id[3]);
-  Serial.print(" ");
-  Serial.println(device.id[4]);
-
-
-  Serial.print("ADDRESS: ");
-  Serial.print(device.address[0]);
-  Serial.print(" ");
-  Serial.print(device.address[1]);
-  Serial.print(" ");
-  Serial.print(device.address[2]);
-  Serial.print(" ");
-  Serial.print(device.address[3]);
-  Serial.print(" ");
-  Serial.println(device.address[4]);
-
-  Serial.print("CHANNEL: ");
-  Serial.println(device.channel);
-
-
-  Serial.print("PENDING: ");
-  Serial.println(device.pending);
-  Serial.println(":::::: Finished Scan Step");
+  //Serial.println("Listening To Device ::");
+  //this->printDeviceCredentials(device);
 }
 
 
@@ -357,15 +265,17 @@ bool Radio::tryReadBytes(ControllerPacket* response)
   bool timeout = false;
   bool success = false;
   long started_waiting_at = millis();
+
   //Serial.println("tryReadBytes() :::");
   //this->printAddresses();
+
   while (!_receiver->available())
   {
     yield();
     if(millis() - started_waiting_at > _TIMEOUT_READ)
     {
       timeout = true;
-      Serial.println("Radio Read timeout reached. On tryReadBytes()");
+      //Serial.println("Radio Read timeout reached. On tryReadBytes()");
       break;
     }
   }
@@ -374,19 +284,18 @@ bool Radio::tryReadBytes(ControllerPacket* response)
   {
     success = true;
     // metroController->reset();
-    _receiver->read(response, packetSize); // populate teh responsePacket
+    _receiver->read(response, packetSize); // populate the responsePacket
     lastPacketId = response->Id;
     yield();
   }
   else
   {
-    Serial.println("Reading from Radio Client failes. Reason: timeout");
+    //Serial.println("Reading from Radio Client failes. Reason: timeout");
   }
   return success;
 }
 
 
-// TODO:: We need to assmble the requestPacket somwhere and pass it in.
 bool Radio::tryWriteBytes(ControllerPacket* request)
 {
   bool success = false;
@@ -394,7 +303,7 @@ bool Radio::tryWriteBytes(ControllerPacket* request)
 
   //Don't listen while writing
   _receiver->stopListening();
-  //this->printRequestPacket();
+
   if(_receiver->write(request, packetSize, 1))
   {
     sendCount++;
@@ -415,19 +324,24 @@ bool Radio::tryWriteBytes(ControllerPacket* request)
 
 void Radio::clearPendingDevice()
 {
-  // Zerofying the pendingDevice
+  Serial.println("Claering Pending Device");
+  // Setting back to default
   for (byte i = 0; i < 5; i++) {
     pendingDevice.id[i] = 0;
-    pendingDevice.address[i] = 0;
   }
-  pendingDevice.channel = 0;
+  pendingDevice.address[0] = defaultAddresses[0][0];
+  pendingDevice.address[1] = defaultAddresses[0][1];
+  pendingDevice.address[2] = defaultAddresses[0][2];
+  pendingDevice.address[3] = defaultAddresses[0][3];
+  pendingDevice.address[4] = defaultAddresses[0][4];
+
+  pendingDevice.channel = channelDefault;
   pendingDevice.pending = false;
   pendingDevice.type = 0;
+  this->printDeviceCredentials(pendingDevice);
 }
 
 
-
-// DEBUG
 
 void Radio::initPackets()
 {
@@ -448,6 +362,40 @@ void Radio::initPackets()
   requestPacket.Value3  = 0;
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
+}
+
+
+// DEBUG
+
+void Radio::printDeviceCredentials(RadioDevice d)
+{
+  Serial.print("ID: ");
+  Serial.print(d.id[0]);
+  Serial.print(" ");
+  Serial.print(d.id[1]);
+  Serial.print(" ");
+  Serial.print(d.id[2]);
+  Serial.print(" ");
+  Serial.print(d.id[3]);
+  Serial.print(" ");
+  Serial.println(d.id[4]);
+
+  Serial.print("ADDRESS: ");
+  Serial.print(d.address[0]);
+  Serial.print(" ");
+  Serial.print(d.address[1]);
+  Serial.print(" ");
+  Serial.print(d.address[2]);
+  Serial.print(" ");
+  Serial.print(d.address[3]);
+  Serial.print(" ");
+  Serial.println(d.address[4]);
+
+  Serial.print("CHANNEL: ");
+  Serial.println(d.channel);
+
+  Serial.print("PENDING: ");
+  Serial.println(d.pending);
 }
 
 void Radio::printRequestPacket()

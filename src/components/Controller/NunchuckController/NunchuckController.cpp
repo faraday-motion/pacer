@@ -18,8 +18,8 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
    */
   metroCommunication = new Metro(_READ_INTERVAL);         // read data interval
   metroController    = new Metro(_SIGNAL_CHECK_INTERVAL); // signal check interval
-  metroHasController = new Metro(500);
-  metroChannelChange = new Metro(500);
+  //metroHasController = new Metro(500);
+  //metroChannelChange = new Metro(500);
 
   // Init.
   responsePacket.Id      = 0;
@@ -46,21 +46,28 @@ void NunchuckController::handleController()
 {
   if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
+    //this->printResponsePacket();
     this->processResponse(); // populate the requestPacket
   }
-
+  //this->printRequestPacket();
   this->radio->tryWriteBytes(&requestPacket);
 }
 
 
 void NunchuckController::processResponse()
 {
-  if(responsePacket.Command == 55)
+  // This gets triggered only on active controller. So it is safe to take the physical controller out of idle mode;
+  if(responsePacket.Command == 44)
+  {
+    Serial.println("Physical controller still in IDLE mode. Requesting Inputs");
+    requestPacket.Command = 50; // request input values.
+  }
+  else if (responsePacket.Command == 55)
   {
     Serial.print(":::::::::::::: Controller inputs = ");
     Serial.print(responsePacket.Value2);
     Serial.println();
-    //processInput(responsePacket.Value2);
+    processInput(responsePacket.Value2);
   }
 }
 
@@ -71,26 +78,7 @@ bool NunchuckController::enable()
 {
     this->radio->changeDevice(nunchuck);
     requestPacket.Command = 50;
-
-   //this->enable(); //TODO:: Risk for infinite loop.
 }
-
-void NunchuckController::read()
-{
-
-  this->radio->tryReadBytes(&responsePacket); // populate response.
-
-  if(responsePacket.Command == 55)
-  {
-
-  }
-} // end read();
-
-void NunchuckController::write()
-{
-  radio->tryWriteBytes(&requestPacket);
-} // end write();
-
 
 
 //
@@ -135,6 +123,18 @@ void NunchuckController::write()
 //   }
 // }
 
+
+//TODO:: remove the interface requirements
+
+void NunchuckController::write()
+{
+
+}
+
+void NunchuckController::read()
+{
+
+}
 
 
 

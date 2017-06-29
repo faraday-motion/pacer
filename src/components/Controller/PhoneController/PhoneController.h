@@ -20,7 +20,7 @@ public:
   void read();
   void write();
   bool enable();
-  void handleController();
+  bool handleController();
 
 };
 

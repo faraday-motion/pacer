@@ -14,7 +14,7 @@ void Radio::setup()
 {
   Serial.println("Setting Up Radio Connection");
   // Setup Metro Intervals
-
+  this->connectionLostTimer = new Metro(_LOST_CONNECTION);
 
   // Setup the NRF24
   _receiver->begin();
@@ -46,7 +46,7 @@ void Radio::setup()
 
 bool Radio::handleClientConnections()
 {
-  //Serial.println("START: Scanning for new devices...");
+  Serial.println("START: Scanning for new devices...");
   // Set defaut address and channel for scanning.
   if (handShaking == false)
   {
@@ -59,8 +59,7 @@ bool Radio::handleClientConnections()
   this->changeDevice(pendingDevice);
   // Just give it some time to process stuff.
   //delay(15);
-  // this->printResponsePacket();
-  // this->printAddresses();
+
   this->readWrite();
   //this->printDeviceCredentials(pendingDevice);
   //Serial.println("STOP: Scanning");
@@ -132,13 +131,29 @@ void Radio::processResponse()
   else if (responsePacket.Command == 44)
   {
     Serial.println("Device handShaking finished. The divice is IDLE");
-    pendingDevice.pending = true; // flag handshake has finished.
-    handShaking = false; // flag that the handShaking was finished.
+    this->validatePendingDevice(); // Decides what to do with the pending Devices.
+    //pendingDevice.pending = true; // flag handshake has finished.
+
     handShakeSucceeded = true; //TODO:: Remove
+    this->initPackets();
     // TODO:: Think that the responsePacket might need to be nullified or smth.
   }
 
 }
+
+void Radio::validatePendingDevice()
+{
+  if (pendingDevice.id[0] == 0 || pendingDevice.id[1] == 0 || pendingDevice.id[2] == 0 || pendingDevice.id[3] == 0 || pendingDevice.id[4] == 0)
+  {
+    pendingDevice.pending = false;
+  } else {
+    pendingDevice.pending = true;
+    handShaking = false; // flag that the handShaking was finished.
+  }
+
+  // TODO:: improve the validator
+}
+
 
 void Radio::readWrite()
 {
@@ -147,14 +162,16 @@ void Radio::readWrite()
     //Serial.println("RF24 Failure Detected. Re-running the setup.");
     this->setup();
   }
+  this->printAddresses();
+  //Serial.print("Channel: ");
+  Serial.println(channelSelected);
 
   if (this->tryReadBytes(&responsePacket)) { // Populates the responsePacket.
-     //this->printResponsePacket();
+     this->printResponsePacket();
      this->processResponse(); // populate the requestPacket
-
   }
   yield();
-  //this->printRequestPacket();
+  this->printRequestPacket();
   this->tryWriteBytes(&requestPacket);
 }
 
@@ -265,10 +282,16 @@ bool Radio::tryReadBytes(ControllerPacket* response)
   bool timeout = false;
   bool success = false;
   long started_waiting_at = millis();
-
   //Serial.println("tryReadBytes() :::");
   //this->printAddresses();
-
+  if (connectionLostTimer->check() == 1)
+  {
+    Serial.println("Connection has been lost");
+    Log::Instance()->write("EVENT: Connection Lost, tryReadBytes()");
+    this->resetConnection();
+    this->initPackets();
+    this->clearPendingDevice();
+  }
   while (!_receiver->available())
   {
     yield();
@@ -283,7 +306,8 @@ bool Radio::tryReadBytes(ControllerPacket* response)
   if (!timeout)
   {
     success = true;
-    // metroController->reset();
+    //Serial.println("connectionLostTimer is reseted");
+    connectionLostTimer->reset();
     _receiver->read(response, packetSize); // populate the responsePacket
     lastPacketId = response->Id;
     yield();
@@ -338,13 +362,15 @@ void Radio::clearPendingDevice()
   pendingDevice.channel = channelDefault;
   pendingDevice.pending = false;
   pendingDevice.type = 0;
-  this->printDeviceCredentials(pendingDevice);
+  //this->printDeviceCredentials(pendingDevice);
 }
 
 
 
 void Radio::initPackets()
 {
+
+  Serial.println("Initializing Packets");
   // Init.
   responsePacket.Id      = 0;
   responsePacket.Command = 0;
@@ -362,6 +388,8 @@ void Radio::initPackets()
   requestPacket.Value3  = 0;
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
+  //this->printResponsePacket();
+  //this->printRequestPacket();
 }
 
 
@@ -400,7 +428,7 @@ void Radio::printDeviceCredentials(RadioDevice d)
 
 void Radio::printRequestPacket()
 {
-  Serial.println("Radio.h Packet sent:: ");
+  Serial.println("Radio.h Current Request:: ");
   Serial.print(requestPacket.Id);
   Serial.print(" ");
   Serial.print(requestPacket.Command);
@@ -423,7 +451,7 @@ void Radio::printRequestPacket()
 
 void Radio::printResponsePacket()
 {
-  Serial.println("Radio.h Packet received:: ");
+  Serial.println("Radio.h Packet Response:: ");
   Serial.print(responsePacket.Id);
   Serial.print(" ");
   Serial.print(responsePacket.Command);

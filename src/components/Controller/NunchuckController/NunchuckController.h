@@ -15,17 +15,12 @@ private:
   /**
     Intervals
   */
-  byte _TIMEOUT_READ = 50;
-  byte _SIGNAL_CHECK_INTERVAL = 250;
-  byte _READ_INTERVAL = 10;
+  unsigned int _LOST_CONNECTION = 500;
 
   /**
     Metro Timers
   */
-  Metro* metroCommunication;
-  Metro* metroController;
-  Metro* metroHasController;
-  Metro* metroChannelChange;
+  Metro* connectionLostTimer;
 
   /**
     Identification
@@ -59,10 +54,11 @@ private:
 public:
 
   NunchuckController(ConfigController* configController, Radio* radio, RadioDevice device);
+  //~NunchuckController();
   void read();
   void write();
   bool enable();
-  void handleController();
+  bool handleController();
   void processResponse();
 
 };

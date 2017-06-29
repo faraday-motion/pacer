@@ -31,7 +31,14 @@ void FMV::loop()
   }
 
   // // Step 4. Handle the Active Controller.
-  this->controllerManager->handleController();
+  byte status = this->controllerManager->handleController();
+  if (status == 2)
+  {
+    Serial.println("FMV detected lost connection on the active controller.");
+    // We know that the connection was lost. What now?
+    //this->connectionManager->radio->initPackets();
+    this->controllerManager->unsetActiveController(); // This makes sure that we don't ask the radio to change to the active Device anymore.
+  }
   //``
   // this->controllerManager->printRegisteredControllers();
   // this->controllerManager->printActiveController();
@@ -44,21 +51,19 @@ void FMV::loop()
 */
 void FMV::handlePendingConnectionDevices()
 {
-
   if (this->connectionManager->pendingDevice.pending == true)
   {
+  Serial.println("S2");
    bool registered = this->controllerManager->registerController(this->connectionManager->pendingDevice);
-   if (registered)
+   Serial.println("S3");
+   if (!registered)
    {
+     Serial.println("S4");
      // We need an abstrac connection class here with virtual reset functions
      //this->connectionManager->radio->initPackets(); // nullify the packets.
-     this->connectionManager->radio->clearPendingDevice(); // zerofiy the pendingDevice.
+     this->connectionManager->clearPendingDevice(); // zerofiy the pendingDevice.
      stopScanning = true; // TEMP
    }
+   Serial.println("S5");
   }
-  // TODO:: Make an array of pending Devices so that we can loop through all or at least a set of them.
-  // if (this->connectionManager->pendingDevices[1].isWaiting == true)
-  // {
-  //   this->controllerManager->registerController(this->connectionManager->pendingDevices[1].type, this->connectionManager->pendingDevices[1].id);
-  // }
 }

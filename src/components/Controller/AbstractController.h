@@ -32,7 +32,7 @@ public:
   bool controlCruiseControl;
 
   //Controller Identification
-  RadioDevice controller;
+  RadioDevice controller; // used by the controllerManager
 
   // Controller Constraints
   byte defaultInputNeutral;
@@ -43,11 +43,11 @@ public:
   float defaultSmoothAlpha;
 
   AbstractController(ConfigController* configController, RadioDevice device);
-  virtual ~AbstractController() {}
+  //virtual ~AbstractController() {}
   void setup();
   void processInput(byte latestInput);
 
-  virtual void handleController() = 0; // virtual loop function
+  virtual bool handleController() = 0; // virtual loop function
 
   // TODO:: These don't really need to be virtual at least for now.
   virtual void read() = 0; // virutal read function

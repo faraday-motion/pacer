@@ -16,10 +16,8 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
   /**
    * Setiing the Metro Timers
    */
-  metroCommunication = new Metro(_READ_INTERVAL);         // read data interval
-  metroController    = new Metro(_SIGNAL_CHECK_INTERVAL); // signal check interval
-  //metroHasController = new Metro(500);
-  //metroChannelChange = new Metro(500);
+  this->connectionLostTimer = new Metro(_LOST_CONNECTION);         // read data interval
+
 
   // Init.
   responsePacket.Id      = 0;
@@ -42,15 +40,27 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
 }
 
 
-void NunchuckController::handleController()
+bool NunchuckController::handleController()
 {
+
   if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
+    this->connectionLostTimer->reset();
     //this->printResponsePacket();
     this->processResponse(); // populate the requestPacket
   }
   //this->printRequestPacket();
   this->radio->tryWriteBytes(&requestPacket);
+  // connectionLostTimer per each physical device
+  if (this->connectionLostTimer->check() == 1)
+  {
+    Serial.println(":::::::::::::::::::::::::");
+    Serial.println("CONNECTION LOST TO NunchuckController");
+    Serial.println(":::::::::::::::::::::::::");
+    return false;
+  }
+
+  return true;
 }
 
 
@@ -121,6 +131,12 @@ bool NunchuckController::enable()
 //       }
 //     }
 //   }
+// }
+
+
+// NunchuckController::~NunchuckController()
+// {
+//   Serial.println("NUNCHUCK DESTROYED");
 // }
 
 

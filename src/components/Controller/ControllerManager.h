@@ -31,13 +31,13 @@ public:
   ControllerManager(ConfigController* configController, ConnectionManager* connectionManager);
 
   bool registerController(RadioDevice device); // create a new controller based on the type [mobile, nunchuck]
-  void removeRegisteredController(AbstractController* controller); // destroys a certain controller.
+  void removeRegisteredController(byte id[]); // destroys a certain controller.
 
   // Manage Active Controllers
   bool setActiveController(byte id[]); // set one of the controllers as active based on the id of the controller
   bool unsetActiveController();
 
-  void handleController();
+  byte handleController();
 
   // Debug
 

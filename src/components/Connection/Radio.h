@@ -16,7 +16,8 @@ private:
 
   // Intervals
   byte _TIMEOUT_READ = 50;
-  int _LOST_CONNECTION = 500;
+  unsigned int _LOST_CONNECTION = 500;
+
 
   // Togglers and watchers
   byte lastPacketId = 0;
@@ -27,8 +28,12 @@ public:
   void processResponse();
   void setup();
   bool handleClientConnections();
+  void validatePendingDevice();
 
   bool changeDevice(RadioDevice device);
+
+  // Metro Timers
+  Metro* connectionLostTimer;
   // Packet Handler //TODO:: See how can we abstract this. Basically
   byte packetSize   = 7;
   byte sendCount    = 0;

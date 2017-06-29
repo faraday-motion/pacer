@@ -1,3 +1,4 @@
+#include "components/Utility/Log.h"
 #include "ControllerManager.h"
 #include "AbstractController.h"
 #include "PhoneController/PhoneController.h"
@@ -19,12 +20,22 @@ ControllerManager::ControllerManager(ConfigController* configController, Connect
   }
 }
 
-void ControllerManager::handleController()
+byte ControllerManager::handleController()
 {
+  byte status = 0; // 0 - no active controller, 1 - status ok , 2 - Lost Connection
   if (activeController != nullptr && controllerReadInterval->check() == 1){
-    activeController->handleController();
-    return;
+    bool success = activeController->handleController();
+    if (success)
+    {
+      status = 1;
+    }
+    else if (!success)
+    {
+      Log::Instance()->write("EVENT: handleController(), Connection Status 2 (Lost Connection)");
+      status = 2;
+    }
   }
+  return status;
 }
 
 /**
@@ -34,6 +45,7 @@ void ControllerManager::handleController()
 
 bool ControllerManager::setActiveController(byte id[])
 {
+  Log::Instance()->write("EVENT: handleController(), an controller was set as active");
   byte index = getControllerIndexById(id);
   activeController = availableControllers[index];
   activeController->enable(); // Enable the activeController;
@@ -43,16 +55,43 @@ bool ControllerManager::setActiveController(byte id[])
 
 bool ControllerManager::unsetActiveController()
 {
-  delete activeController; // Delete the object, hopefully... //TODO:: It might be wrong to delete the object when unsetting the as active. We lose the registered Controller.
+  Serial.println("The active controller is being unregisterd and unset.");
+  removeRegisteredController(activeController->controller.id);
+  //delete activeController; // Delete the object, hopefully... //TODO:: It might be wrong to delete the object when unsetting the as active. We lose the registered Controller.
   activeController = nullptr;
+  Log::Instance()->write("EVENT: unsetActiveController(), registered controller was unset");
+  if (this->activeController == nullptr)
+  {
+    Serial.println("Confimerd the removal of the active controller.");
+  }
   return true;
+}
+
+
+// TODO:: BUG:: After deleting the availableController Object we are still able to access it via the pointer.
+void ControllerManager::removeRegisteredController(byte id[])
+{
+  Serial.println("Uregistered a controller");
+  byte index = this->getControllerIndexById(id);
+  delete this->availableControllers[index];
+  this->availableControllers[index] = nullptr;
 }
 
 bool ControllerManager::registerController(RadioDevice device)
 {
   if (this->getControllerIndexById(device.id) != -1)
   {
-    //Serial.println("Controller Is Already Registered");
+    Serial.print("Controller With ID:: ");
+    Serial.print(device.id[0]);
+    Serial.print(" ");
+    Serial.print(device.id[1]);
+    Serial.print(" ");
+    Serial.print(device.id[2]);
+    Serial.print(" ");
+    Serial.print(device.id[3]);
+    Serial.print(" ");
+    Serial.print(device.id[4]);
+    Serial.println(" is already registerd");
     return false;
   }
 
@@ -99,8 +138,8 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
       availableControllers[i] = controller;
       registeredControllersCount = registeredControllersCount + 1; // keep track of registered controllers.
 
-      // TODO:: See if there's a better way to activate the first connected controller.
-      if (registeredControllersCount == 1)
+      // If there is no active controler we set this device as active.
+      if (this->activeController == nullptr)
       {
         this->setActiveController(controller->controller.id);
       }

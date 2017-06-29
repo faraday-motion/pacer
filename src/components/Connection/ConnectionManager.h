@@ -11,7 +11,7 @@
 class ConnectionManager
 {
   ConfigController* configController;
-  int _HANDLE_CLIENT_INTERVAL = 500;
+  int _HANDLE_CLIENT_INTERVAL = 150; // NOTE:: Must be smaller then the _LOST_CONNECTION interval in concrete connections.
 public:
   RadioDevice pendingDevice;
   Metro* handleClientInterval;
@@ -26,7 +26,7 @@ public:
   // Radio* getRadio();
   // Wifi* getWifi();
 
-  void clearPendingDevices();
+  void clearPendingDevice();
 
 };
 

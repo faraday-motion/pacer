@@ -66,10 +66,11 @@ void PhoneController::write()
 /**
   * This method is called in the main loop. It deals with reading and writing data from and to the controller.
   */
-void PhoneController::handleController()
+bool PhoneController::handleController()
 {
   Serial.println("Reading Input Data from Phone");
   read();
+  return true; // TODO:: Inmplement Lost Connection.
 }
 
 /**

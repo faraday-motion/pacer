@@ -17,7 +17,7 @@ void ConnectionManager::setup()
   this->radio->setup();
 
   handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
-  this->clearPendingDevices();
+  this->clearPendingDevice();
   Serial.println("Finished ConnectionManager Setup");
 }
 
@@ -92,10 +92,9 @@ void ConnectionManager::handleClientConnections()
 }
 
 /**
- * TODO:: Remove this. As we should not handle this here. 
  * Clear the 2 element array that is storing the pending IDs and types of devices requesting to be registered.
  */
-void ConnectionManager::clearPendingDevices()
+void ConnectionManager::clearPendingDevice()
 {
 
   pendingDevice.id[0] = 0;

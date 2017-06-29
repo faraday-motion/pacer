@@ -41,8 +41,8 @@ void setup() {
 void loop() {
   fmv.loop();
 
-
-  //wsCommunicator.wss->loop();
+  yield();
+  wsCommunicator.wss->loop();
   yield();
 
   // Check if clients want to connect to Wifi AP Server.

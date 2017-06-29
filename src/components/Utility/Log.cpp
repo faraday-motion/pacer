@@ -4,7 +4,8 @@
 Log* Log::m_pInstance = nullptr;
 
 
-/** This function is called to create an instance of the class.
+/**
+    This function is called to create an instance of the class.
     Calling the constructor publicly is not allowed. The constructor
     is private and is only called by this Instance function.
 */
@@ -25,11 +26,9 @@ Log* Log::Instance()
 
 void Log::write(String payload)
 {
-  if(isEnabled && logInterval->check() == 1)
+  if(isEnabled)
   {
-    Serial.println(payload);
-    // TODO:: Check if wsCommunicator extists.
-    wsCommunicator->wss->broadcastTXT("payload of logged data");
+    wsCommunicator->wss->broadcastTXT(payload);
   }
 }
 // void Log::write(String payload)

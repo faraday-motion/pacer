@@ -8,7 +8,16 @@ PhoneController::PhoneController(ConfigController* configController, Wifi* wifi,
  : AbstractController(configController, device)
 {
   this->wifi = wifi;
+  this->phone = device;
+  /**
+   * Setiing the Metro Timers
+   */
+  this->connectionLostTimer = new Metro(_LOST_CONNECTION);
+
 }
+
+
+//NOTE:: the wifi->client is representative of the physical device.
 void PhoneController::read()
 {
    uint8_t i;
@@ -41,7 +50,8 @@ void PhoneController::read()
        }
        Serial.println();
        yield();
-
+       // Reset the lost connection timer.
+       this->connectionLostTimer->reset();
        if (PhoneController::validateChecksum(m, packetCount))
        {
            yield();
@@ -70,6 +80,14 @@ bool PhoneController::handleController()
 {
   Serial.println("Reading Input Data from Phone");
   read();
+  if (this->connectionLostTimer->check() == 1)
+  {
+    Serial.println(":::::::::::::::::::::::::");
+    Serial.println("CONNECTION LOST TO PhoneController");
+    Serial.println(":::::::::::::::::::::::::");
+    return false;
+  }
+
   return true; // TODO:: Inmplement Lost Connection.
 }
 

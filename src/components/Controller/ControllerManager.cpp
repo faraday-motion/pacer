@@ -67,6 +67,22 @@ bool ControllerManager::unsetActiveController()
   return true;
 }
 
+bool ControllerManager::tryOtherControllers()
+{
+  if (this->activeController == nullptr)
+  {
+    // Loop through the registered controllers
+    // IDEA:: Give priorities to the controllers.
+    for (size_t i = 0; i < 5; i++) {
+      if (this->availableControllers[i] != nullptr)
+      {
+        this->setActiveController(this->availableControllers[i]->controller.id);
+      }
+    }
+  }
+  return false;
+}
+
 
 // TODO:: BUG:: After deleting the availableController Object we are still able to access it via the pointer.
 void ControllerManager::removeRegisteredController(byte id[])
@@ -91,7 +107,16 @@ bool ControllerManager::registerController(RadioDevice device)
     Serial.print(device.id[3]);
     Serial.print(" ");
     Serial.print(device.id[4]);
+    Serial.print(" Type:: ");
+    Serial.print(device.type);
     Serial.println(" is already registerd");
+
+    // If it is registered and there's no active controller set as active.
+    if (this->activeController == nullptr)
+    {
+      this->setActiveController(device.id);
+    }
+
     return false;
   }
 

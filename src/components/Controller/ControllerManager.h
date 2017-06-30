@@ -36,6 +36,7 @@ public:
   // Manage Active Controllers
   bool setActiveController(byte id[]); // set one of the controllers as active based on the id of the controller
   bool unsetActiveController();
+  bool tryOtherControllers();
 
   byte handleController();
 

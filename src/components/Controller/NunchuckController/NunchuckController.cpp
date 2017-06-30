@@ -16,8 +16,7 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
   /**
    * Setiing the Metro Timers
    */
-  this->connectionLostTimer = new Metro(_LOST_CONNECTION);         // read data interval
-
+  this->connectionLostTimer = new Metro(_LOST_CONNECTION);
 
   // Init.
   responsePacket.Id      = 0;
@@ -77,7 +76,15 @@ void NunchuckController::processResponse()
     Serial.print(":::::::::::::: Controller inputs = ");
     Serial.print(responsePacket.Value2);
     Serial.println();
-    processInput(responsePacket.Value2);
+    // This is hardcoded for
+    byte s = map(responsePacket.Value2, 48, 200, 0, 100);
+    if (s >= 45 && s <= 55)
+    {
+      s = 50;
+    }
+    Serial.println(s);
+    processInput(s);
+    // processInput(responsePacket.Value2);
   }
 }
 

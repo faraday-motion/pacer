@@ -46,7 +46,7 @@ void Radio::setup()
 
 bool Radio::handleClientConnections()
 {
-  Serial.println("START: Scanning for new devices...");
+  //Serial.println("START: Scanning for new devices...");
   // Set defaut address and channel for scanning.
   if (handShaking == false)
   {
@@ -130,7 +130,7 @@ void Radio::processResponse()
   }
   else if (responsePacket.Command == 44)
   {
-    Serial.println("Device handShaking finished. The divice is IDLE");
+    Serial.println("Radio Device handShaking finished. The divice is IDLE");
     this->validatePendingDevice(); // Decides what to do with the pending Devices.
     //pendingDevice.pending = true; // flag handshake has finished.
 
@@ -162,16 +162,16 @@ void Radio::readWrite()
     //Serial.println("RF24 Failure Detected. Re-running the setup.");
     this->setup();
   }
-  this->printAddresses();
+  //this->printAddresses();
   //Serial.print("Channel: ");
-  Serial.println(channelSelected);
+  //Serial.println(channelSelected);
 
   if (this->tryReadBytes(&responsePacket)) { // Populates the responsePacket.
-     this->printResponsePacket();
+     //this->printResponsePacket();
      this->processResponse(); // populate the requestPacket
   }
   yield();
-  this->printRequestPacket();
+  //this->printRequestPacket();
   this->tryWriteBytes(&requestPacket);
 }
 
@@ -265,7 +265,7 @@ void Radio::resetConnection()
 
 bool Radio::changeDevice(RadioDevice device)
 {
-  Serial.println("Switching Devices");
+  //Serial.println("Switching Devices");
   setChannel(device.channel);
   setAddress(device.address);
   openPipes();
@@ -286,7 +286,7 @@ bool Radio::tryReadBytes(ControllerPacket* response)
   //this->printAddresses();
   if (connectionLostTimer->check() == 1)
   {
-    Serial.println("Connection has been lost");
+    //Serial.println("Connection has been lost");
     Log::Instance()->write("EVENT: Connection Lost, tryReadBytes()");
     this->resetConnection();
     this->initPackets();
@@ -348,7 +348,7 @@ bool Radio::tryWriteBytes(ControllerPacket* request)
 
 void Radio::clearPendingDevice()
 {
-  Serial.println("Claering Pending Device");
+  //Serial.println("Clearing Radio Pending Device");
   // Setting back to default
   for (byte i = 0; i < 5; i++) {
     pendingDevice.id[i] = 0;
@@ -370,7 +370,7 @@ void Radio::clearPendingDevice()
 void Radio::initPackets()
 {
 
-  Serial.println("Initializing Packets");
+  //Serial.println("Initializing Packets");
   // Init.
   responsePacket.Id      = 0;
   responsePacket.Command = 0;

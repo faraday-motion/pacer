@@ -51,7 +51,7 @@ void Wifi::setup(ConfigController* configController)
 
 /**
  * Returns true if device is requesting registration.
- * TODO:: Have it take the id and type and store it as a temporary pending device. 
+ * TODO:: Have it take the id and type and store it as a temporary pending device.
  */
 
 bool Wifi::handleClientConnections() {
@@ -65,6 +65,15 @@ bool Wifi::handleClientConnections() {
       if (client && client.connected())
       {
         client.setNoDelay(true);
+        Serial.println("New pending wifi object received.");
+        pendingDevice.id[0] = 'W';
+        pendingDevice.id[1] = 'I';
+        pendingDevice.id[2] = 'F';
+        pendingDevice.id[3] = 'I';
+        pendingDevice.id[4] = '1';
+        pendingDevice.type  =  1; // wifi
+        pendingDevice.pending = true;
+
         return true;
       }
       else
@@ -75,4 +84,24 @@ bool Wifi::handleClientConnections() {
     return false;
   }
   yield();
+}
+
+void Wifi::clearPendingDevice()
+{
+  Serial.println("Clearing Wifi Pending Device");
+  // Setting back to default
+  for (byte i = 0; i < 5; i++) {
+    pendingDevice.id[i] = 0;
+  }
+  // For now the Wifi does not support addresses.
+  pendingDevice.address[0] = 0;
+  pendingDevice.address[1] = 0;
+  pendingDevice.address[2] = 0;
+  pendingDevice.address[3] = 0;
+  pendingDevice.address[4] = 0;
+  // For now the Wifi does not support channels.
+  pendingDevice.channel = 0;
+  pendingDevice.pending = false;
+  pendingDevice.type = 0;
+  //this->printDeviceCredentials(pendingDevice);
 }

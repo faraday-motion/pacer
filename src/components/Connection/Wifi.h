@@ -6,10 +6,12 @@
 #include <Metro.h>
 #include "../ConfigController/Config.h"
 #include "../ConfigController/ConfigController.h"
-
+#include "components/Connection/RadioDevice.h"
 class Wifi {
+
 private:
   Metro* handleClientInterval;
+
 public:
   WiFiServer*  server;
   Config*      config;
@@ -18,6 +20,9 @@ public:
   Wifi();
   void setup(ConfigController* configController);
   bool handleClientConnections();
+
+  RadioDevice pendingDevice;
+  void clearPendingDevice();
 
 };
 

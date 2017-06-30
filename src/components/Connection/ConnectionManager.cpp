@@ -30,14 +30,9 @@ void ConnectionManager::handleClientConnections()
   {
     if ( this->wifi->handleClientConnections() == true )
     {
-      // TODO:: The phone should be sending us it's ID and Type.
-      // pendingDevices[0].id[0] = 'W';
-      // pendingDevices[0].id[1] = 'I';
-      // pendingDevices[0].id[2] = 'F';
-      // pendingDevices[0].id[3] = 'I';
-      // pendingDevices[0].id[4] = '1';
-      // pendingDevices[0].type  =  1; // wifi
-      // pendingDevices[0].isWaiting = true;
+      Serial.println("Radio Detected New Pending Device");
+      // TODO:: We have an issue the pending devices are being overwritten here.
+      this->pendingDevice = this->wifi->pendingDevice; 
     }
 
     if (this->radio->handleClientConnections() == true)

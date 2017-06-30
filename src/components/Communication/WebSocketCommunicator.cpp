@@ -20,7 +20,7 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
         Serial.print("New Client Connectd with IP = ");
         Serial.println(wss->remoteIP(num));
         Serial.println("Listing Clintes:");
-        for (uint8_t i=0; i<WEBSOCKETS_SERVER_CLIENT_MAX  ; i++) {
+        for (uint8_t i=0; i < WEBSOCKETS_SERVER_CLIENT_MAX  ; i++) {
           if (wss->remoteIP(i) )
               Serial.println(wss->remoteIP(i));
         }

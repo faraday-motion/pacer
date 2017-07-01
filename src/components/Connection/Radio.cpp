@@ -7,7 +7,8 @@ defaultAddresses{"FM01R", "FM01W"},  // initialize defaultAddresses
 currentAddresses{"FM01R", "FM01W"},  // initialize currentAddresses
 foundAddresses{"FM000"}             // initialize foundAddresses
 {
-  this->_receiver = new RF24(4,15); // TODO:: These are environment pin configurations. Should get it out of the .ini file.
+  this->_receiver = new RF24(10,15); // TODO:: These are environment pin configurations. Should get it out of the .ini file.
+  //this->_receiver = new RF24(4,15); // TODO:: These are environment pin configurations. Should get it out of the .ini file.
 }
 
 void Radio::setup()

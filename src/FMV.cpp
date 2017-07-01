@@ -1,4 +1,5 @@
 #include "FMV.h"
+#include "components/Connection/RadioDevice.h"
 
 FMV::FMV()
 {
@@ -10,6 +11,15 @@ void FMV::setup() {
   this->connectionManager = new ConnectionManager(configController);
   this->connectionManager->setup();
   this->controllerManager = new ControllerManager(configController, connectionManager);
+
+  RadioDevice accelController;
+  accelController.id[0] = 'A';
+  accelController.id[1] = 'C';
+  accelController.id[2] = 'L';
+  accelController.id[3] = 'C';
+  accelController.id[4] = '1';
+  accelController.type  = 3;
+  this->controllerManager->registerController(accelController);
 }
 
 void FMV::loop()

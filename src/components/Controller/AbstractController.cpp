@@ -61,14 +61,16 @@ bool AbstractController::setMotorPower()
     float motorCurrent = currentController.getMotorAccelerationCurrent(previousInput);
     motorController->set_current(motorCurrent);
 
-    Serial.print("Accelerating:::Current = ");
-    Serial.println(motorCurrent);
+    // Serial.print("Accelerating:::Current = ");
+    // Serial.println(motorCurrent);
     return 1;
   }
 
   // braking;
   float motorCurrent = currentController.getMotorBrakingCurrent(previousInput);
   motorController->set_current_brake(motorCurrent);
+  // Serial.print("Braiking:::Current = ");
+  // Serial.println(motorCurrent);
 
   return 1;
 }

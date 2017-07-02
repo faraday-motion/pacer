@@ -34,8 +34,8 @@ void IMU10DOF::getAccel_Data()
   Axyz[2] = (double) az / 16384;
 
 
-  //Serial.println("Acceleration(g) of X,Y,Z:");
-  //Serial.println(Axyz[0]);
+  // Serial.println("Acceleration(g) of X,Y,Z:");
+  // Serial.println(Axyz[0]);
   // Serial.print(",");
   // Serial.print(Axyz[1]);
   // Serial.print(",");

@@ -8,12 +8,17 @@
 class AccelController : public AbstractController
 {
 private:
-  Metro* setPowerInterval;
+  Metro* assistingTimer;
   IMU10DOF* sensor;
 
   byte previousSpeed = 50;
   byte targetSpeed   = 50;
-  byte changeRate    = 5;
+  byte changeRate    = 10;
+  byte newSpeed      = 50;
+  float sampleSum    = 0;
+  bool assisting     = false;
+  byte lockedTarget  = 0;
+
 public:
 
   AccelController(ConfigController* configController, RadioDevice device);

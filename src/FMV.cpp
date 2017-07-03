@@ -10,6 +10,16 @@ void FMV::setup() {
   this->connectionManager = new ConnectionManager(configController);
   this->connectionManager->setup();
   this->controllerManager = new ControllerManager(configController, connectionManager);
+
+  RadioDevice wiredController;
+  wiredController.id[0] = 'W';
+  wiredController.id[1] = 'I';
+  wiredController.id[2] = 'R';
+  wiredController.id[3] = 'E';
+  wiredController.id[4] = '1';
+  wiredController.type  = 4; // 3 is accelerometer
+  this->controllerManager->registerController(wiredController);
+
 }
 
 void FMV::loop()

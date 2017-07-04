@@ -69,7 +69,7 @@ bool AccelController::handleController()
   Serial.println(this->lockedTarget);
 
   if (this->assistingTimer->check() == 1) {
-    Log::Instance()->logAccel(average, newSpeed, this->lockedTarget);
+    Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed);
   }
 
 

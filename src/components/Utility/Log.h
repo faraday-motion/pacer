@@ -17,7 +17,7 @@ public:
  void enable();
  void disable();
  void write(String payload);
- void logAccel(float average, byte newSpeed, byte targetSpeed);
+ void logAccel(float average, byte newSpeed, byte targetSpeed, byte previousSpeed );
 private:
   Log(){}; // Private so that it can not be called
   Log(Log const&){};// copy constructor is private

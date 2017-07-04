@@ -22,6 +22,7 @@ void Wifi::setup(ConfigController* configController)
 
   IPAddress address(config->wifi.ip[0], config->wifi.ip[1], config->wifi.ip[2], config->wifi.ip[3]);
   IPAddress subnet (config->wifi.subnet[0], config->wifi.subnet[1], config->wifi.subnet[2], config->wifi.subnet[3]);
+  delay(200); // give time to set the addess and subnet. Otherwise we lose the configs.
   //If we dont disable the wifi, then there will be some issues with conncting to the device sometimes
   WiFi.disconnect(true);
   byte channel = config->wifi.channel;
@@ -35,7 +36,6 @@ void Wifi::setup(ConfigController* configController)
   WiFi.persistent(false);
   WiFi.softAPConfig(address, address, subnet);
   WiFi.softAP(ssid, password, channel);
-  delay(200);
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);

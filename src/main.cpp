@@ -37,9 +37,8 @@ void setup() {
   delay(600);
   // TODO: Wire is I2C connection. We should have it started somewhere else than here.
   Wire.begin();
-
   fmv.setup();
-
+  // pinMode(13, INPUT_PULLUP);
   wsCommunicator.wss->begin();
   Log::Instance()->enableWebsocket(&wsCommunicator);
 }

@@ -28,7 +28,7 @@ void Log::write(String payload)
 {
   if(isEnabled)
   {
-    wsCommunicator->wss->broadcastTXT(payload);
+    //wsCommunicator->wss->broadcastTXT(payload);
   }
 }
 // void Log::write(String payload)
@@ -38,6 +38,17 @@ void Log::write(String payload)
 //   }
 // }
 
+void Log::logAccel(float average, byte newSpeed, byte targetSpeed)
+{
+    //if (isEnabled)
+    //{
+      String a = (String)average;
+
+      String message = "average " + (String)average + " " + " newSpeed " + (String)newSpeed +  " lockedTarget " +  (String)targetSpeed;
+      wsCommunicator->wss->broadcastTXT(message);
+    //}
+
+}
 
 
 void Log::enableWebsocket(WebSocketCommunicator* wsCommunicator)

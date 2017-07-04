@@ -20,7 +20,6 @@ void Wifi::setup(ConfigController* configController)
   const char *ssid = config->wifi.ssid;
   const char *password = config->wifi.password;
 
-  Serial.print("Configuring access point...");
   IPAddress address(config->wifi.ip[0], config->wifi.ip[1], config->wifi.ip[2], config->wifi.ip[3]);
   IPAddress subnet (config->wifi.subnet[0], config->wifi.subnet[1], config->wifi.subnet[2], config->wifi.subnet[3]);
   //If we dont disable the wifi, then there will be some issues with conncting to the device sometimes
@@ -36,8 +35,8 @@ void Wifi::setup(ConfigController* configController)
   WiFi.persistent(false);
   WiFi.softAPConfig(address, address, subnet);
   WiFi.softAP(ssid, password, channel);
+  delay(200);
   IPAddress myIP = WiFi.softAPIP();
-
   Serial.print("AP IP address: ");
   Serial.println(myIP);
 
@@ -45,7 +44,7 @@ void Wifi::setup(ConfigController* configController)
   //Set delay = true retarts the esp in version 2.1.0, check in later versions if its fixed
   server->setNoDelay(true);
 
-  //Serial.println(server->status());
+  Serial.println(server->status());
 }
 
 

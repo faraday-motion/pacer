@@ -12,10 +12,10 @@ void ConnectionManager::setup()
 
   this->wifi = new Wifi();
   this->wifi->setup(configController);
-
-  this->radio = new Radio();
-  this->radio->setup();
-
+  delay(1000);
+  //this->radio = new Radio();
+  //this->radio->setup();
+  delay(1000);
   handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
   this->clearPendingDevice();
   Serial.println("Finished ConnectionManager Setup");
@@ -32,54 +32,54 @@ void ConnectionManager::handleClientConnections()
     {
       Serial.println("Radio Detected New Pending Device");
       // TODO:: We have an issue the pending devices are being overwritten here.
-      this->pendingDevice = this->wifi->pendingDevice; 
+      this->pendingDevice = this->wifi->pendingDevice;
     }
 
-    if (this->radio->handleClientConnections() == true)
-    {
-      Serial.println("Radio Detected New Pending Device");
-      Serial.println(":::::::");
-
-      // Copy the pending Device so that we can work with it.
-      pendingDevice = radio->pendingDevice;
-
-      Serial.print("ID: ");
-      Serial.print(pendingDevice.id[0]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.id[1]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.id[2]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.id[3]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.id[4]);
-      Serial.print(" ");
-      Serial.println(pendingDevice.id[5]);
-
-      Serial.print("ADDRESS: ");
-      Serial.print(pendingDevice.address[0]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.address[1]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.address[2]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.address[3]);
-      Serial.print(" ");
-      Serial.print(pendingDevice.address[4]);
-      Serial.print(" ");
-      Serial.println(pendingDevice.address[5]);
-
-      Serial.print("CHANNEL: ");
-      Serial.println(pendingDevice.channel);
-
-
-      Serial.print("PENDING: ");
-      Serial.println(pendingDevice.pending);
-
-
-      // Clear the pending deivce on the radio object.
-      radio->clearPendingDevice();
-    }
+    // if (this->radio->handleClientConnections() == true)
+    // {
+    //   Serial.println("Radio Detected New Pending Device");
+    //   Serial.println(":::::::");
+    //
+    //   // Copy the pending Device so that we can work with it.
+    //   pendingDevice = radio->pendingDevice;
+    //
+    //   Serial.print("ID: ");
+    //   Serial.print(pendingDevice.id[0]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.id[1]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.id[2]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.id[3]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.id[4]);
+    //   Serial.print(" ");
+    //   Serial.println(pendingDevice.id[5]);
+    //
+    //   Serial.print("ADDRESS: ");
+    //   Serial.print(pendingDevice.address[0]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.address[1]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.address[2]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.address[3]);
+    //   Serial.print(" ");
+    //   Serial.print(pendingDevice.address[4]);
+    //   Serial.print(" ");
+    //   Serial.println(pendingDevice.address[5]);
+    //
+    //   Serial.print("CHANNEL: ");
+    //   Serial.println(pendingDevice.channel);
+    //
+    //
+    //   Serial.print("PENDING: ");
+    //   Serial.println(pendingDevice.pending);
+    //
+    //
+    //   // Clear the pending deivce on the radio object.
+    //   radio->clearPendingDevice();
+    // }
   }
 
   //Serial.println("::::  connectionManager.handleConnections :: FINISH");

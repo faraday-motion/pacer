@@ -50,7 +50,6 @@ void MotorController::uartInit()
 /**
  * Processesing the bytes received from the VESC.
  * @param b incoming byte
- * TODO:: find out why we don't call this function and we still are able to read the bytes.
  */
 void MotorController::processUartByte(unsigned char b)
 {

@@ -1,5 +1,15 @@
 #include "AccelController.h"
 #include "components/Utility/Log.h"
+
+
+/**
+  USE CASE THAT WE TARGET:
+  1. Driver accelerates the bike manually by pedaling
+  2. The acceleration is picked up and is maintained by PACER
+  3. In case the driver accelerates more the bike will maintain quicker speed
+  4. In case the driver brakes hard enough (TODO:: define hard enought) the motor will disengage
+  5. The driver needs to accelerate again in order to re-engage motor.
+*/
 AccelController::AccelController(ConfigController* configController, RadioDevice device)
   : AbstractController(configController, device)
 {
@@ -7,8 +17,8 @@ AccelController::AccelController(ConfigController* configController, RadioDevice
   this->sensor->setup();
   this->assistingTimer = new Metro(500);
   this->logTimer = new Metro(100);
+  this->logTimer->reset();
   this->assistingTimer->reset(); // Required. Otherwise the timer is set in the future.
-
 
 }
 
@@ -18,7 +28,6 @@ bool AccelController::handleController()
   float xAccel = this->sensor->Axyz[0];
 
   float samples[5];
-
 
   // For we are gathering samples.
   for (size_t i = 0; i < 5; i++) {
@@ -61,17 +70,19 @@ bool AccelController::handleController()
   {
     newSpeed = 100;
   }
-  Serial.print("average:");
-  Serial.print(average);
-  Serial.print(" newSpeed: ");
-  Serial.print(newSpeed);
-  Serial.print(" lockedTarget: ");
-  Serial.println(this->lockedTarget);
+
 
   if (this->assistingTimer->check() == 1) {
+    Serial.print("average:");
+    Serial.print(average);
+    Serial.print(" newSpeed: ");
+    Serial.print(newSpeed);
+    Serial.print(" lockedTarget: ");
+    Serial.println(this->lockedTarget);
+    this->motorController->get_values();
     Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed);
+    VescParams::Instance()->printMotorValues();
   }
-
 
   if (newSpeed > 60)
   {

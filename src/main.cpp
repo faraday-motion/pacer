@@ -6,9 +6,7 @@
 // #include "components/Connection/ConnectionManager.h"
 
 
-#include "components/Sensors/IMU10DOF/IMU10DOF.h"
-
-#include "components/MotorController/MotorController.h"
+#include "components/Sensors/IMU10DOF/IMU10DOF.h"  // Required for Wire.
 #include "components/Communication/WebSocketCommunicator.h"
 #include "components/Utility/Log.h"
 
@@ -52,11 +50,9 @@ void loop() {
 
   // Check if clients want to connect to Wifi AP Server.
   //connectionManager.handleClientConnections(); // TODO:: Abstract this in the connectionManager.h
-  yield();
   //controllerManager.handleController();
   yield();
-  // TODO:: Find a place for calling this method in a loop.
-  //while (Serial.available() > 0) motorController.processUartByte(Serial.read());
+  
   //while(logMetro.check() == 1) Log::Instance()->write();
 
 }

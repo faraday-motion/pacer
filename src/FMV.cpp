@@ -25,23 +25,23 @@ void FMV::setup() {
 void FMV::loop()
 {
   // Step 1. Check for a physical device that is trying to connect
-//  if (stopScanning == false)
-//  {
   this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
-//  }
 
   // Step 2. Register physical devices as a controller
   this->handlePendingConnectionDevices(); // try to register the pending controllers if any are waiting.
 
-  // Step 3. Set active a controller. // NOTE:: now we automatically enable the active controller.
+  // Step 3. Set active a controller. // NOTE:: now we automatically enable the active controller if there's no other active controller
   if(this->controllerManager->activeController != nullptr)
   {
     this->controllerManager->activeController->enable();
   }
 
+  // Step 4. Get motorcontroller values that are used by controllers.
+  while (Serial.available() > 0) this->controllerManager->motorController->processUartByte(Serial.read());
+
   // // Step 4. Handle the Active Controller.
   byte status = this->controllerManager->handleController();
-  if (status == 2)
+  if (status == 2) // Status 2 stands for success.
   {
     Serial.println("FMV detected lost connection on the active controller.");
     // We know that the connection was lost. What now?
@@ -49,8 +49,6 @@ void FMV::loop()
     // TODO: Have a metro timer. We want to give the original active controller a chance to reconnect.
     //this->controllerManager->tryOtherControllers();
   }
-  // this->controllerManager->printRegisteredControllers();
-  // this->controllerManager->printActiveController();
 
 }
 

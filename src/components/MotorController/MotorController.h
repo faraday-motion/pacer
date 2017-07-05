@@ -26,9 +26,9 @@ public:
   void set_current_brake(float current);
 
   // Communication Commands
+  void write(unsigned char *data, unsigned int len);
+  void read();
   void get_values();
-
-  void exists();
 };
 
 #endif

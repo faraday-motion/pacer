@@ -1,18 +1,14 @@
 #include "AbstractController.h"
 
-#include "../ConfigController/Config.h"
-#include "../ConfigController/ConfigController.h"
-
 
 AbstractController::AbstractController(ConfigController* configController, RadioDevice device)
 {
   Serial.println("Constructing the Abastract Controller");
   this->config = configController->config;
-  this->motorController = new MotorController;
+  this->motorController = new MotorController; // Question:: Does this mean I have a new motorController object for each instance of the AbstractController?
   this->motorController->setup();
+
   this->controller = device; // TODO:: why do we store the device on the abstract and the concrete controller?
-
-
   this->setup();
 }
 
@@ -30,21 +26,16 @@ void AbstractController::setup()
   defaultInputMaxAcceleration = config->controller.defaultInputMaxAcceleration;
   defaultSmoothAlpha          = config->controller.defaultSmoothAlpha;
 
-
   // Setting inputs to neutral;
   latestInput                 = defaultInputNeutral;
   previousInput               = defaultInputNeutral;
 
-  // Controller States
-  controlDead                 = false;
-  controlEnabled              = false;
-  controlCruiseControl        = false;
 }
 
 // Decides the state of the motor
 bool AbstractController::setMotorPower()
 {
-  // here I think we need to set the current input measurements.
+
   if (previousInput > defaultInputMinBrake && previousInput < defaultInputMinAcceleration)
   {
     // we are in neutral.
@@ -57,20 +48,15 @@ bool AbstractController::setMotorPower()
   if (previousInput >= defaultInputMinAcceleration)
   {
     //accelerating
-
     float motorCurrent = currentController.getMotorAccelerationCurrent(previousInput);
     motorController->set_current(motorCurrent);
 
-    // Serial.print("Accelerating:::Current = ");
-    // Serial.println(motorCurrent);
     return 1;
   }
 
   // braking;
   float motorCurrent = currentController.getMotorBrakingCurrent(previousInput);
   motorController->set_current_brake(motorCurrent);
-  // Serial.print("Braiking:::Current = ");
-  // Serial.println(motorCurrent);
 
   return 1;
 }
@@ -91,8 +77,3 @@ void AbstractController::processInput(byte latestInput)
   previousInput = constrain(latestInput, defaultInputMaxBrake, defaultInputMaxAcceleration);
   AbstractController::setMotorPower();
 }
-
-
-
-// TODO:: Move Controller Properties to Private group
-// set getter and setter functions

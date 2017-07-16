@@ -14,6 +14,7 @@ foundAddresses{"FM000"}             // initialize foundAddresses
 void Radio::setup()
 {
   Serial.println("Setting Up Radio Connection");
+
   // Setup Metro Intervals
   this->connectionLostTimer = new Metro(_LOST_CONNECTION);
 
@@ -38,13 +39,17 @@ void Radio::setup()
 
   this->initPackets();
   this->clearPendingDevice();
-  //this->printRequestPacket();
-  //this->printResponsePacket();
   Serial.println("Finished Setting Up Radio Connection");
   yield();
 }
 
 
+/**
+  Method that scans the default channel & address for new
+  incoming device attempting to connect.
+
+  This method manages the handShaking process.
+*/
 bool Radio::handleClientConnections()
 {
   // Set defaut address and channel for scanning.
@@ -68,31 +73,38 @@ bool Radio::handleClientConnections()
   return pendingDevice.pending; // corner cases when we send true by accident?
 }
 
+
+/**
+  Method that processes a responsePacket and assembles a new requestPacket.
+*/
 void Radio::processResponse()
 {
 
   if (responsePacket.Command == 5)
   {
+    // Handshake initiated
     handShaking = true;
+
     //We have a name packet
     Serial.println("Name recived");
+
     // Setting the pendingDevice ID.
     pendingDevice.id[0] = responsePacket.Value1 ;
     pendingDevice.id[1] = responsePacket.Value2 ;
     pendingDevice.id[2] = responsePacket.Value3 ;
     pendingDevice.id[3] = responsePacket.Value4 ;
     pendingDevice.id[4] = responsePacket.Value5 ;
-    pendingDevice.type  = 2; // nunchuck.
+    pendingDevice.type  = 2; // nunchuck. // TODO:: This should come in from the connected device.
 
-    //Send a request for address change
+    //Assemble Request Packet and request address change
     requestPacket.Command = 10;
     requestPacket.Value1  = this->foundAddresses[0];
     requestPacket.Value2  = this->foundAddresses[1];
     requestPacket.Value3  = this->foundAddresses[2];
     requestPacket.Value4  = this->foundAddresses[3];
     requestPacket.Value5  = this->foundAddresses[4];
-
   }
+
   else if (responsePacket.Command == 15)
   {
     //We have an adress change confirmation
@@ -106,45 +118,59 @@ void Radio::processResponse()
     pendingDevice.address[3] = this->foundAddresses[3];
     pendingDevice.address[4] = this->foundAddresses[4];
 
+    // Set the current read/write addresses.
     this->openPipes();
 
     //Send a request for the channel change
     requestPacket.Command = 20;
     requestPacket.Value1  = channelFound;
   }
+
   else if (responsePacket.Command == 20)
   {
     //We have a channel change request
     Serial.println("Channel change");
-    this->changeChannel();
-    requestPacket.Command = 20; // moved from changeChannel() for abstracting the Radio
+
+    // Find and set the new channel.
+    this->findChannel();
+
+    // Let the listeing devices that we are still looking for a channel.
+    requestPacket.Command = 20;
   }
   else if (responsePacket.Command == 25)
   {
     //We have a channel change confirmation
     Serial.println("Channel change confirmed");
+
     // Setting the channel of the pendingDevice.
     pendingDevice.channel = this->channelFound;
     this->setChannel(this->channelFound);
 
+    // Set idle command.
     requestPacket.Command = 40;
   }
   else if (responsePacket.Command == 44)
   {
-    Serial.println("Radio Device handShaking finished. The divice is IDLE");
-    this->validatePendingDevice(); // Decides what to do with the pending Devices.
-    //pendingDevice.pending = true; // flag handshake has finished.
+    Serial.println("Radio Device handShaking finished.");
 
-    handShakeSucceeded = true; //TODO:: Remove
+    // Validates that the connected device is valid.
+    this->validatePendingDevice();
+
+    // Reset the request/responsePacket
     this->initPackets();
     this->requestPacket.Command = 0; //Quick hack. To assure that we don't send a name request to an already pending device.
-    // TODO:: Think that the responsePacket might need to be nullified or smth.
   }
 
 }
 
+/**
+  Method that validates that the device that is trying to connect is valid,
+  as it has all the required parameters (id, address, type).
+  Only once validated is the devices passed in to be registered.
+*/
 void Radio::validatePendingDevice()
 {
+  // TODO:: have a proper validation method on the abstract device class tha we can call.
   if (pendingDevice.id[0] == 0 || pendingDevice.id[1] == 0 || pendingDevice.id[2] == 0 || pendingDevice.id[3] == 0 || pendingDevice.id[4] == 0)
   {
     pendingDevice.pending = false;
@@ -152,33 +178,38 @@ void Radio::validatePendingDevice()
     pendingDevice.pending = true;
     handShaking = false; // flag that the handShaking was finished.
   }
-
-  // TODO:: improve the validator
 }
 
-
+/**
+  Method that reads and processes a responsePacket,
+  and then assembles and write a new requestPacket.
+*/
 void Radio::readWrite()
 {
   if (_receiver->failureDetected)
   {
-    //Serial.println("RF24 Failure Detected. Re-running the setup.");
+    Serial.println("RF24 Failure Detected. Re-running the setup.");
     this->setup();
   }
-  this->printAddresses();
-  //Serial.print("Channel: ");
-  //Serial.println(channelSelected);
 
   if (this->tryReadBytes(&responsePacket)) { // Populates the responsePacket.
      this->printResponsePacket();
      delay(5);
      this->processResponse(); // populate the requestPacket
   }
+
+  // Breathing space
   yield();
   delay(5);
-  this->printRequestPacket();
+
+  // Write the requestPacket
   this->tryWriteBytes(&requestPacket);
 }
 
+
+/**
+   Finds the less crowded channel and sets it as the currentChannel.
+*/
 void Radio::findChannel()
 {
   byte currentChannel = channelSelected;
@@ -211,18 +242,20 @@ void Radio::findChannel()
   setChannel(currentChannel);
 }
 
+
+/**
+   Sets a radio channel.
+   @parameter byte channel.
+*/
 void Radio::setChannel(byte channel)
 {
   _receiver->setChannel(channel);
   channelSelected = channel;
 }
 
-void Radio::changeChannel()
-{
-  //Bug need to call findChannel() 2 times for it to work. investigate.
-  findChannel();
-}
-
+/**
+  Generates a new address block to be used for writing and reading.
+*/
 void Radio::generateRandomAddress()
 {
   randomSeed(analogRead(A0));
@@ -231,9 +264,12 @@ void Radio::generateRandomAddress()
   foundAddresses[2] = random(0, 255);
   foundAddresses[3] = random(0, 255);
   foundAddresses[4] = 0; // This is a slot for read/write flag
-  //foundAddresses[4] = random(0, 255);
 }
 
+
+/**
+   Takes an address block and sets the current read/write addresses.
+*/
 void Radio::setAddress(byte address[])
 {
   // Here we assemble address;
@@ -246,8 +282,10 @@ void Radio::setAddress(byte address[])
   currentAddresses[1][4] = 'W'; // Setting write address
 }
 
-//TODO:: In the future we need to manage the addresses per device.
-// Pipes are setting the addresses.
+
+/**
+   Enable the current read/write addresses.
+*/
 void Radio::openPipes()
 {
   _receiver->openReadingPipe(1, currentAddresses[0]);
@@ -255,79 +293,101 @@ void Radio::openPipes()
   _receiver->startListening();
 }
 
+
+/**
+   Resets the radio connection
+   1. Sets Default channel
+   2. Sets Default read/write addresses
+   3. Generates a new set of random read/write addresses
+   4. Enabbles the default read/write addresses
+*/
 void Radio::resetConnection()
 {
-  //Serial.println("START RESET RADIO CONN");
+  Serial.println("START RESET RADIO CONN");
   setChannel(channelDefault);
   setAddress(defaultAddresses[0]);
   generateRandomAddress();
   openPipes();
   delay(1);
-  //this->printAddresses();
-  //Serial.println("END RESET RADIO CONN");
 }
 
-bool Radio::changeDevice(RadioDevice device)
+/**
+  Method that changes the device we are communicating with.
+*/
+void Radio::changeDevice(RadioDevice device)
 {
-  //Serial.println("Switching Devices");
+  Serial.println("Switching Devices");
   setChannel(device.channel);
   setAddress(device.address);
   openPipes();
   delayMicroseconds(500);
-  //Serial.println("Finished Device Switch.");
-
-  //Serial.println("Listening To Device ::");
-  //this->printDeviceCredentials(device);
 }
 
 
+/**
+   Attempts to read the requestPacket.
+   @return bool
+*/
 bool Radio::tryReadBytes(ControllerPacket* response)
 {
+  // Keep track of performance
   bool timeout = false;
   bool success = false;
   long started_waiting_at = millis();
-  //Serial.println("tryReadBytes() :::");
-  //this->printAddresses();
+
+  // Check if we've been trying to write for too long.
   if (connectionLostTimer->check() == 1)
   {
-    //Serial.println("Connection has been lost");
+    Serial.println("Connection has been lost");
     Log::Instance()->write("EVENT: Connection Lost, tryReadBytes()");
+
+    // Reset the connection
     this->resetConnection();
+    // Clear the respose/requestPackets
     this->initPackets();
+    // Forget the device with whom we are failing to handshake
     this->clearPendingDevice();
   }
+
+  // Check if we have available bytes to read.
   while (!_receiver->available())
   {
     yield();
     if(millis() - started_waiting_at > _TIMEOUT_READ)
     {
       timeout = true;
-      //Serial.println("Radio Read timeout reached. On tryReadBytes()");
+      Serial.println("Radio Read timeout reached. On tryReadBytes()");
       break;
     }
   }
 
+
+  // No issues with connection
   if (!timeout)
   {
     success = true;
-    //Serial.println("connectionLostTimer is reseted");
-    connectionLostTimer->reset();
-    _receiver->read(response, packetSize); // populate the responsePacket
-    lastPacketId = response->Id;
+    connectionLostTimer->reset(); // reset lost connection timer
+
+    // Populate the responsePacket
+    _receiver->read(response, packetSize);
+    lastPacketId = response->Id; // TODO:: Make use of this.
     yield();
   }
   else
   {
-    //Serial.println("Reading from Radio Client failes. Reason: timeout");
+    Serial.println("Reading from Radio Client failes. Reason: timeout");
   }
   return success;
 }
 
 
+/**
+   Attempts to send the requestPacket over.
+   @return bool
+*/
 bool Radio::tryWriteBytes(ControllerPacket* request)
 {
   bool success = false;
-  //this->requestPacket = requestPacket; // Copy requestPacket so we always have the previous requestPacket.
 
   //Don't listen while writing
   _receiver->stopListening();
@@ -339,20 +399,24 @@ bool Radio::tryWriteBytes(ControllerPacket* request)
   }
   else
   {
-    //Serial.println("Radio Failed to Write Bytes");
+    Serial.println("Radio Failed to Write Bytes");
   }
 
   // This function should be called as soon as transmission is finished to drop the radio back to STANDBY-I mode
   _receiver->txStandBy();
   _receiver->startListening();
-  yield();
+
+  yield(); // Breathing space.
+
   return success;
 }
 
 
+/**
+   Clear the parameters of the pending device.
+*/
 void Radio::clearPendingDevice()
 {
-  //Serial.println("Clearing Radio Pending Device");
   // Setting back to default
   for (byte i = 0; i < 5; i++) {
     pendingDevice.id[i] = 0;
@@ -366,15 +430,14 @@ void Radio::clearPendingDevice()
   pendingDevice.channel = channelDefault;
   pendingDevice.pending = false;
   pendingDevice.type = 0;
-  //this->printDeviceCredentials(pendingDevice);
 }
 
 
-
+/**
+   Initialize response/requestPackets.
+*/
 void Radio::initPackets()
 {
-
-  //Serial.println("Initializing Packets");
   // Init.
   responsePacket.Id      = 0;
   responsePacket.Command = 0;
@@ -392,12 +455,11 @@ void Radio::initPackets()
   requestPacket.Value3  = 0;
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
-  //this->printResponsePacket();
-  //this->printRequestPacket();
 }
 
-
-// DEBUG
+/*********
+  Set of print methods used for debugging purposes.
+*********/
 
 void Radio::printDeviceCredentials(RadioDevice d)
 {

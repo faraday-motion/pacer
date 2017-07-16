@@ -5,8 +5,6 @@
 // #include "components/Controller/ControllerManager.h"
 // #include "components/Connection/ConnectionManager.h"
 
-
-#include "components/Sensors/IMU10DOF/IMU10DOF.h"  // Required for Wire.
 #include "components/Communication/WebSocketCommunicator.h"
 #include "components/Utility/Log.h"
 
@@ -15,7 +13,6 @@
 /** TODO:: Have a class for pin configuration (.ini) **/
 //#define PINEXTERNALRESET 16 // used in the brain only.
 #define PINDEADSWITCH 12
-#define I2CDEV_SERIAL_DEBUG
 // #define PINSERVOESC 0     //not used
 // #define PINSERVOBRAKE1 2  //not used
 // #define PINSERVOBRAKE2 14 //not used
@@ -33,7 +30,7 @@ WebSocketCommunicator wsCommunicator(81);
 void setup() {
   Serial.begin(115200);
   // TODO: Wire is I2C connection. We should have it started somewhere else than here.
-  Wire.begin();
+
   fmv.setup();
   // pinMode(13, INPUT_PULLUP);
   wsCommunicator.wss->begin();

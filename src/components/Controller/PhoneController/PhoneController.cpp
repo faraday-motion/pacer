@@ -1,7 +1,5 @@
-//#include <Arduino.h>
-#include <stdint.h> // Required to be able to use uint8_t.
 #include "PhoneController.h"
-#include "../AbstractController.h"
+
 
 // Construct the PhoneController and the AbstractController
 PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, RadioDevice device)
@@ -9,15 +7,11 @@ PhoneController::PhoneController(ConfigController* configController, Wifi* wifi,
 {
   this->wifi = wifi;
   this->phone = device;
-  /**
-   * Setiing the Metro Timers
-   */
   this->connectionLostTimer = new Metro(_LOST_CONNECTION);
-
 }
 
 
-//NOTE:: the wifi->client is representative of the physical device.
+//NOTE:: the wifi->client is representative of the physical device now.
 void PhoneController::read()
 {
    uint8_t i;
@@ -79,12 +73,11 @@ void PhoneController::write()
 bool PhoneController::handleController()
 {
   Serial.println("Reading Input Data from Phone");
-  read();
+  this->read();
+
   if (this->connectionLostTimer->check() == 1)
   {
-    Serial.println(":::::::::::::::::::::::::");
-    Serial.println("CONNECTION LOST TO PhoneController");
-    Serial.println(":::::::::::::::::::::::::");
+    Serial.println("Lost connection to the physical PhoneController");
     return false;
   }
 

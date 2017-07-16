@@ -10,21 +10,25 @@ void ConnectionManager::setup()
 {
   Serial.println("Started ConnectionManager Setup");
 
+  this->clearPendingDevice();
+  handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
+
+  // Setup Wifi
   this->wifi = new Wifi();
   this->wifi->setup(configController);
-  delay(1000);
-  //this->radio = new Radio();
-  //this->radio->setup();
-  delay(1000);
-  handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
-  this->clearPendingDevice();
+  delay(500);
+
+  // Setup NRF24
+  this->radio = new Radio();
+  this->radio->setup();
+  delay(500);
+
   Serial.println("Finished ConnectionManager Setup");
 }
 
 
 void ConnectionManager::handleClientConnections()
 {
-  //Serial.println("::::  connectionManager.handleConnections :: START");
 
   if (handleClientInterval->check() == 1)
   {
@@ -35,55 +39,17 @@ void ConnectionManager::handleClientConnections()
       this->pendingDevice = this->wifi->pendingDevice;
     }
 
-    // if (this->radio->handleClientConnections() == true)
-    // {
-    //   Serial.println("Radio Detected New Pending Device");
-    //   Serial.println(":::::::");
-    //
-    //   // Copy the pending Device so that we can work with it.
-    //   pendingDevice = radio->pendingDevice;
-    //
-    //   Serial.print("ID: ");
-    //   Serial.print(pendingDevice.id[0]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.id[1]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.id[2]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.id[3]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.id[4]);
-    //   Serial.print(" ");
-    //   Serial.println(pendingDevice.id[5]);
-    //
-    //   Serial.print("ADDRESS: ");
-    //   Serial.print(pendingDevice.address[0]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.address[1]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.address[2]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.address[3]);
-    //   Serial.print(" ");
-    //   Serial.print(pendingDevice.address[4]);
-    //   Serial.print(" ");
-    //   Serial.println(pendingDevice.address[5]);
-    //
-    //   Serial.print("CHANNEL: ");
-    //   Serial.println(pendingDevice.channel);
-    //
-    //
-    //   Serial.print("PENDING: ");
-    //   Serial.println(pendingDevice.pending);
-    //
-    //
-    //   // Clear the pending deivce on the radio object.
-    //   radio->clearPendingDevice();
-    // }
+    if (this->radio->handleClientConnections() == true)
+    {
+      Serial.println("Radio Detected New Pending Device");
+
+      // Copy the pending Device so that FMV can work with it.
+      pendingDevice = radio->pendingDevice;
+
+      // Clear the pending deivce on the radio object.
+      radio->clearPendingDevice();
+    }
   }
-
-  //Serial.println("::::  connectionManager.handleConnections :: FINISH");
-
 }
 
 /**
@@ -108,5 +74,3 @@ void ConnectionManager::clearPendingDevice()
   pendingDevice.pending= false;
 
 }
-
-//TODO:: make the connection resources private. Write getters for them.

@@ -11,34 +11,14 @@
 
 class Radio {
 private:
-  ControllerPacket responsePacket;
-  ControllerPacket requestPacket;
 
-  // Intervals
-  byte _TIMEOUT_READ = 50;
-  unsigned int _LOST_CONNECTION = 500;
-
-
-  // Togglers and watchers
-  byte lastPacketId = 0;
-public:
+  // RF24 Object Pointer
   RF24* _receiver;
-  Radio();
-  void readWrite();
-  void processResponse();
-  void setup();
-  bool handleClientConnections();
-  void validatePendingDevice();
-
-  bool changeDevice(RadioDevice device);
 
   // Metro Timers
   Metro* connectionLostTimer;
-  // Packet Handler //TODO:: See how can we abstract this. Basically
-  byte packetSize   = 7;
-  byte sendCount    = 0;
 
-  // Connection
+  // Connection defaults, flags and inits.
   byte defaultAddresses[2][6];
   byte currentAddresses[2][6];
   byte foundAddresses[6];
@@ -49,10 +29,23 @@ public:
   byte channelMin = 100;
   byte connectionStrength = 0;
   bool handShaking = false;
-  byte handShakeCount = 0;
-  byte handShakeMaxAttempts = 30;
-  bool handShakeSucceeded = false;
+  byte packetSize   = 7;
+  byte sendCount    = 0;
 
+  // response/requestPackets
+  ControllerPacket responsePacket;
+  ControllerPacket requestPacket;
+
+  // Intervals
+  byte _TIMEOUT_READ = 50;
+  unsigned int _LOST_CONNECTION = 500;
+
+  // Togglers and watchers
+  byte lastPacketId = 0;
+
+  // Communication
+  void readWrite();
+  void processResponse();
 
   // Connection
   void findChannel();
@@ -64,8 +57,17 @@ public:
   void resetConnection();
   void initPackets();
 
-  // Read/Write Packets
 
+public:
+
+  Radio();
+  void setup();
+
+  bool handleClientConnections();
+  void validatePendingDevice();
+  void changeDevice(RadioDevice device);
+
+  // Read/Write Packets
   bool tryReadBytes(ControllerPacket* response);
   bool tryWriteBytes(ControllerPacket* request);
 

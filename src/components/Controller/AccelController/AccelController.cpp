@@ -20,7 +20,6 @@ AccelController::AccelController(ConfigController* configController, RadioDevice
   this->logTimer = new Metro(500);
   this->logTimer->reset();
   this->assistingTimer->reset(); // Required. Otherwise the timer is set in the future.
-
 }
 
 unsigned int AccelController::getSensitivity()

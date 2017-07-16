@@ -1,11 +1,12 @@
 #include "FMV.h"
-#include "components/Connection/RadioDevice.h"
+#include "components/Connection/RadioDevice.h" // TODO: Make a class out of this.
 
 FMV::FMV()
 {
 }
 
 void FMV::setup() {
+  
   this->configController = new ConfigController;
   this->configController->loadConfig();
   this->connectionManager = new ConnectionManager(configController);

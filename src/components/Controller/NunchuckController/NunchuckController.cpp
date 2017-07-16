@@ -45,20 +45,18 @@ bool NunchuckController::handleController()
   if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
     this->connectionLostTimer->reset();
-    //this->printAddresses();
-    //this->printResponsePacket();
     delay(5);
     this->processResponse(); // populate the requestPacket
   }
   delay(5);
+
   //this->printRequestPacket();
   this->radio->tryWriteBytes(&requestPacket);
+
   // connectionLostTimer per each physical device
   if (this->connectionLostTimer->check() == 1)
   {
-    Serial.println(":::::::::::::::::::::::::");
-    Serial.println("CONNECTION LOST TO NunchuckController");
-    Serial.println(":::::::::::::::::::::::::");
+    Serial.println("NunchuckController has lost connection");
     return false;
   }
 
@@ -91,64 +89,11 @@ void NunchuckController::processResponse()
   }
 }
 
-
-
-
 bool NunchuckController::enable()
 {
     this->radio->changeDevice(nunchuck);
     requestPacket.Command = 50;
 }
-
-
-//
-// void NunchuckController::handleController()
-// {
-//   if (radio->_receiver->failureDetected)
-//   {
-//     Serial.println("RF24 Failure Detected. Re-running the setup.");
-//     this->setup();
-//   }
-//   else
-//   {
-//     if (metroCommunication->check() == 1)
-//     {
-//       // Read data from transmitter
-//       this->read();
-//       this->printResponsePacket();
-//
-//       // Check performance of messages
-//       if (metroController->check() == 1)
-//       {
-//         int rc = (_SIGNAL_CHECK_INTERVAL / _READ_INTERVAL) - 1;
-//         radio->connectionStrength = min(float(receiveCounter) / float(rc) * 100, 100);
-//         receiveCounter = 0;
-//       }
-//       //Serial.print("Connection Strength:: ");
-//       //Serial.println(radio->connectionStrength);
-//
-//       // Write data to transmitter
-//       //Serial.println("****************START WRITE************");
-//       this->write();
-//       this->printRequestPacket();
-//       //Serial.println("****************END WRITE************");
-//       if (metroHasController->check() == 1)
-//       {
-//         //Check if we had connection problems
-//         radio->resetConnection();
-//         // moved from resetConnection() to be able to abstract Radio.h
-//         sendCommand = 0;
-//       }
-//     }
-//   }
-// }
-
-
-// NunchuckController::~NunchuckController()
-// {
-//   Serial.println("NUNCHUCK DESTROYED");
-// }
-
 
 //TODO:: remove the interface requirements
 
@@ -215,31 +160,5 @@ void NunchuckController::printResponsePacket()
 
 void NunchuckController::printAddresses()
 {
-  Serial.println("");
-  Serial.print("Nunchuck.h READ ADDRESS :: ");
-  Serial.print(radio->currentAddresses[0][0]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[0][1]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[0][2]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[0][3]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[0][4]);
-  Serial.print(" | ");
-
-  Serial.println();
-  Serial.print("Nunchuck.h Write ADDRESS :: ");
-  Serial.print(radio->currentAddresses[1][0]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[1][1]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[1][2]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[1][3]);
-  Serial.print(" | ");
-  Serial.print(radio->currentAddresses[1][4]);
-  Serial.print(" | ");
-  Serial.println();
 
 }

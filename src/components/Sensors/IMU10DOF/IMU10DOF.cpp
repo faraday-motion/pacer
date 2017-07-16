@@ -8,6 +8,7 @@ IMU10DOF::IMU10DOF()
 
 void IMU10DOF::setup()
 {
+  Wire.begin(); // In the future we need to check if Wire was already begun.
   // initialize device
   Serial.println("Initializing I2C devices...");
   accelgyro->initialize();

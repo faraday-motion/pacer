@@ -4,6 +4,7 @@
 #include "components/ConfigController/ConfigController.h"
 #include "components/Controller/ControllerManager.h"
 #include "components/Connection/ConnectionManager.h"
+#include "components/Sensors/IMU10DOF/IMU10DOF.h"  // Required for Wire.
 #include <Metro.h>
 
 class FMV {

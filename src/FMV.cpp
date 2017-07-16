@@ -20,6 +20,16 @@ void FMV::setup() {
   accelController.id[4] = '1';
   accelController.type  = 3;
   this->controllerManager->registerController(accelController);
+
+  // RadioDevice wiredController;
+  // wiredController.id[0] = 'W';
+  // wiredController.id[1] = 'I';
+  // wiredController.id[2] = 'R';
+  // wiredController.id[3] = 'E';
+  // wiredController.id[4] = '1';
+  // wiredController.type  = 4; // 3 is accelerometer
+  // this->controllerManager->registerController(wiredController);
+
 }
 
 void FMV::loop()

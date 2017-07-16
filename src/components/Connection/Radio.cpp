@@ -47,30 +47,30 @@ void Radio::setup()
 
 bool Radio::handleClientConnections()
 {
-  //Serial.println("START: Scanning for new devices...");
   // Set defaut address and channel for scanning.
   if (handShaking == false)
   {
-    //Serial.println("No handshake initiated.");
-    this->resetConnection(); // checking for devices on default device.
+    this->resetConnection(); // checking for devices on default device address.
   }
-  //Serial.print("handShaking = ");
-  //Serial.println(handShaking);
+
+  //Quick hack. To assure that we don't send a name request to an already pending device.
+  if (requestPacket.Command == 0)
+  {
+    requestPacket.Command = 5;
+  }
   // Resuming communication with the pending Device.
   this->changeDevice(pendingDevice);
-  // Just give it some time to process stuff.
-  //delay(15);
 
+  // Read packets, assemble packet and write it.
   this->readWrite();
-  //this->printDeviceCredentials(pendingDevice);
-  //Serial.println("STOP: Scanning");
+
 
   return pendingDevice.pending; // corner cases when we send true by accident?
 }
 
 void Radio::processResponse()
 {
-  //this->printResponsePacket();
+
   if (responsePacket.Command == 5)
   {
     handShaking = true;
@@ -137,6 +137,7 @@ void Radio::processResponse()
 
     handShakeSucceeded = true; //TODO:: Remove
     this->initPackets();
+    this->requestPacket.Command = 0; //Quick hack. To assure that we don't send a name request to an already pending device.
     // TODO:: Think that the responsePacket might need to be nullified or smth.
   }
 
@@ -163,16 +164,18 @@ void Radio::readWrite()
     //Serial.println("RF24 Failure Detected. Re-running the setup.");
     this->setup();
   }
-  //this->printAddresses();
+  this->printAddresses();
   //Serial.print("Channel: ");
   //Serial.println(channelSelected);
 
   if (this->tryReadBytes(&responsePacket)) { // Populates the responsePacket.
-     //this->printResponsePacket();
+     this->printResponsePacket();
+     delay(5);
      this->processResponse(); // populate the requestPacket
   }
   yield();
-  //this->printRequestPacket();
+  delay(5);
+  this->printRequestPacket();
   this->tryWriteBytes(&requestPacket);
 }
 

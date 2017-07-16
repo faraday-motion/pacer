@@ -4,6 +4,7 @@
 #include "PhoneController/PhoneController.h"
 #include "NunchuckController/NunchuckController.h"
 #include "AccelController/AccelController.h"
+#include "WiredController/WiredController.h"
 
 ControllerManager::ControllerManager(ConfigController* configController, ConnectionManager* connectionManager)
 {
@@ -140,6 +141,13 @@ bool ControllerManager::registerController(RadioDevice device)
     Serial.println("Registering a AccelController");
     AbstractController * accelController = new AccelController(configController, device);
     allocateRegisteredController(accelController);
+    return true;
+  }
+  else if (device.type == 4)
+  {
+    Serial.println("Registering a NunchuckController");
+    AbstractController * wiredController = new WiredController(configController, device);
+    allocateRegisteredController(wiredController);
     return true;
   }
   else

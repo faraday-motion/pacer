@@ -45,9 +45,12 @@ bool NunchuckController::handleController()
   if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
     this->connectionLostTimer->reset();
+    //this->printAddresses();
     //this->printResponsePacket();
+    delay(5);
     this->processResponse(); // populate the requestPacket
   }
+  delay(5);
   //this->printRequestPacket();
   this->radio->tryWriteBytes(&requestPacket);
   // connectionLostTimer per each physical device
@@ -212,8 +215,8 @@ void NunchuckController::printResponsePacket()
 
 void NunchuckController::printAddresses()
 {
-  Serial.println();
-  Serial.print("READ ADDRESS :: ");
+  Serial.println("");
+  Serial.print("Nunchuck.h READ ADDRESS :: ");
   Serial.print(radio->currentAddresses[0][0]);
   Serial.print(" | ");
   Serial.print(radio->currentAddresses[0][1]);
@@ -226,7 +229,7 @@ void NunchuckController::printAddresses()
   Serial.print(" | ");
 
   Serial.println();
-  Serial.print("Write ADDRESS :: ");
+  Serial.print("Nunchuck.h Write ADDRESS :: ");
   Serial.print(radio->currentAddresses[1][0]);
   Serial.print(" | ");
   Serial.print(radio->currentAddresses[1][1]);

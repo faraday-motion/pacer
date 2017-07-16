@@ -22,7 +22,7 @@
     "defaultCurrentBrakeMin"        : 0   ,
     "defaultCurrentBrakeMax"        : 60  ,
     "defaultCurrentAccelerationMin" : 0.25,
-    "defaultCurrentAccelerationMax" : 20
+    "defaultCurrentAccelerationMax" : 30
   }
 
 }

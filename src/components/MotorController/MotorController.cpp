@@ -33,7 +33,6 @@ void MotorController::setup()
 
 	// Initialize Uart Communication
 	MotorController::uartInit();
-
 }
 
 /**

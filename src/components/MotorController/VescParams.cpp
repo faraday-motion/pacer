@@ -1,7 +1,7 @@
 #include <Arduino.h> // used for Serial.
 #include "VescParams.h"
 
-// Global static pointer used to ensur ea sigle instance of this class.
+// Global static pointer used to ensure a sigle instance of this class.
 VescParams* VescParams::m_pInstance = nullptr;
 
 
@@ -67,11 +67,9 @@ void VescParams::printMotorValues()
   Serial.print("Current in: ");
   Serial.println(motorValues.current_in);
   Serial.print("Current rpm: ");
-  Serial.println(motorValues.current_motor);
+  Serial.println(motorValues.rpm); // We get ERPM. To get the RPM of the Faraday Motion Lightspeed Motor we need to devide it by 7 as we have 7 pairs of magnets with opposing poles.
   Serial.print("Duty cycle: ");
-  Serial.println(motorValues.current_motor);
-  Serial.print("Duty cycle: ");
-  Serial.println(motorValues.duty_now * 100.0);
+  Serial.println(motorValues.duty_now);
   Serial.print("Ah Drawn: ");
   Serial.println(motorValues.amp_hours);
   Serial.print("Ah Regen: ");

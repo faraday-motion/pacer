@@ -21,7 +21,6 @@ void sendUartData(unsigned char *data, unsigned int len)
 
 void printValues(mc_values *val)
 {
-
   VescParams::Instance()->setMotorValues(val);
 }
 

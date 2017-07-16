@@ -32,7 +32,6 @@ WebSocketCommunicator wsCommunicator(81);
 
 void setup() {
   Serial.begin(115200);
-  delay(600);
   // TODO: Wire is I2C connection. We should have it started somewhere else than here.
   Wire.begin();
   fmv.setup();
@@ -52,7 +51,7 @@ void loop() {
   //connectionManager.handleClientConnections(); // TODO:: Abstract this in the connectionManager.h
   //controllerManager.handleController();
   yield();
-  
+
   //while(logMetro.check() == 1) Log::Instance()->write();
 
 }

@@ -38,13 +38,18 @@ void Log::write(String payload)
 //   }
 // }
 
-void Log::logAccel(float average, byte newSpeed, byte targetSpeed, byte previousSpeed)
+void Log::logAccel(float average, byte newSpeed, byte targetSpeed, byte previousSpeed, long motorRpm)
 {
     if (isEnabled)
     {
       String a = (String)average;
 
-      String message = "average " + (String)average + " " + " newSpeed " + (String)newSpeed +  " lockedTarget " +  (String)targetSpeed + " currentSpeed " + (String)previousSpeed;
+      String message =
+        "average " + (String)average + " " +
+        " newSpeed " + (String)newSpeed +
+        " lockedTarget " +  (String)targetSpeed +
+        " currentSpeed " + (String)previousSpeed +
+        " RPM: " + (String)motorRpm;
       wsCommunicator->wss->broadcastTXT(message);
     }
 

@@ -23,13 +23,14 @@ private:
   float average      = 0;
   bool assisting     = false;
   byte lockedTarget  = 0;
+  long motorRpm = 0;
   /* start not too sensitive and as we build up speed we make it more and more sensite */
   byte computeSpeed(float sensorReading);
 
 public:
 
   AccelController(ConfigController* configController, RadioDevice device);
-
+  unsigned int getSensitivity();
   void read();
   void write();
   bool enable();

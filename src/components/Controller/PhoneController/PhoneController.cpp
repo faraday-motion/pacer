@@ -11,6 +11,41 @@ PhoneController::PhoneController(ConfigController* configController, Wifi* wifi,
 }
 
 
+/**
+  * This method is called in the main loop. It deals with reading and writing data from and to the controller.
+  */
+bool PhoneController::handleController()
+{
+  Serial.println("Reading Input Data from Phone");
+  this->read();
+
+  if (this->connectionLostTimer->check() == 1)
+  {
+    Serial.println("Lost connection to the physical PhoneController");
+    return false;
+  }
+
+  return true; // TODO:: Inmplement Lost Connection.
+}
+
+/**
+  * Confirms with the physical controller that it is enbled and listened to.
+  */
+
+bool PhoneController::enable()
+{
+  //TODO:: Enable Two Way Communication with the phone.
+  //TODO:: Get Confirmation of being enabled from the phone and return true.
+  //TODO:: If no confirmation is comming in return false.
+  return true;
+}
+
+bool PhoneController::disable()
+{
+  return true;
+}
+
+
 //NOTE:: the wifi->client is representative of the physical device now.
 void PhoneController::read()
 {
@@ -65,35 +100,6 @@ void PhoneController::read()
 void PhoneController::write()
 {
   return;
-}
-
-/**
-  * This method is called in the main loop. It deals with reading and writing data from and to the controller.
-  */
-bool PhoneController::handleController()
-{
-  Serial.println("Reading Input Data from Phone");
-  this->read();
-
-  if (this->connectionLostTimer->check() == 1)
-  {
-    Serial.println("Lost connection to the physical PhoneController");
-    return false;
-  }
-
-  return true; // TODO:: Inmplement Lost Connection.
-}
-
-/**
-  * Confirms with the physical controller that it is enbled and listened to.
-  */
-
-bool PhoneController::enable()
-{
-  //TODO:: Enable Two Way Communication with the phone.
-  //TODO:: Get Confirmation of being enabled from the phone and return true.
-  //TODO:: If no confirmation is comming in return false.
-  return true;
 }
 
 byte PhoneController::getChecksum(byte* array, byte arraySize)

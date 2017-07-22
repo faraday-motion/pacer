@@ -21,14 +21,16 @@ private:
   // Functiones for reading the wifi packets.
   byte getChecksum(byte* array, byte arraySize);
   bool validateChecksum(byte* array, byte arraySize);
+  void read();
+  void write();
 
 public:
   Wifi* wifi;
   PhoneController(ConfigController* configController, Wifi* wifi, RadioDevice device);
-  void read();
-  void write();
-  bool enable();
+
   bool handleController();
+  bool enable();
+  bool disable();
 
 };
 

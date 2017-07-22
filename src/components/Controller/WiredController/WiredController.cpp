@@ -42,12 +42,7 @@ bool WiredController::enable()
   return true;
 }
 
-void WiredController::read()
+bool WiredController::disable()
 {
-  return;
-}
-
-void WiredController::write()
-{
-  return;
+  return true;
 }

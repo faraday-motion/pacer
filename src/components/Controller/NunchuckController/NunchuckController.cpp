@@ -92,20 +92,16 @@ bool NunchuckController::enable()
 {
     this->radio->changeDevice(nunchuck);
     requestPacket.Command = 50;
+    return true;
 }
 
-//TODO:: remove the interface requirements
-
-void NunchuckController::write()
+bool NunchuckController::disable()
 {
-
+  // TODO:: Implement disable command. Maybe just go back to pending.
+ this->radio->changeDevice(nunchuck);
+ requestPacket.Command = 40;
+ return true;
 }
-
-void NunchuckController::read()
-{
-
-}
-
 
 
 

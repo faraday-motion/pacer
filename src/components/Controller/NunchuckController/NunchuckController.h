@@ -45,6 +45,7 @@ private:
   bool tryWriteBytes();
 
   bool isNewOrKnownController();
+  void processResponse();
 
   // Debug
   void printRequestPacket();
@@ -55,12 +56,12 @@ private:
 public:
 
   NunchuckController(ConfigController* configController, Radio* radio, RadioDevice device);
-  //~NunchuckController();
-  void read();
-  void write();
-  bool enable();
+
   bool handleController();
-  void processResponse();
+  bool enable();
+  bool disable();
+
+
 
 };
 

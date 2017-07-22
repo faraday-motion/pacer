@@ -127,13 +127,7 @@ bool AccelController::enable()
   return true;
 }
 
-void AccelController::read()
+bool AccelController::disable()
 {
-  return;
-}
-
-
-void AccelController::write()
-{
-  return;
+  return true;
 }

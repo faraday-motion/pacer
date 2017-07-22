@@ -39,11 +39,8 @@ public:
   void processInput(byte latestInput);
 
   virtual bool handleController() = 0; // virtual loop function
-  virtual bool enable() = 0;
-
-  // TODO:: These don't really need to be virtual at least for now.
-  virtual void read() = 0; // virutal read function
-  virtual void write() = 0; // virtaul write function
+  virtual bool enable() = 0;  // Let the physical controller that it is enabled.
+  virtual bool disable() = 0; // Let the physical controller that it is disabled.
 };
 
 #endif

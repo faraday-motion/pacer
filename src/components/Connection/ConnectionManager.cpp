@@ -1,4 +1,5 @@
 #include "ConnectionManager.h"
+#include "components/Utility/Log.h"
 
 ConnectionManager::ConnectionManager(ConfigController* configController)
 {
@@ -22,6 +23,15 @@ void ConnectionManager::setup()
   this->radio = new Radio();
   this->radio->setup();
   delay(500);
+
+  //Setup WebSocketCommunicator
+  this->ws = new WebSocketCommunicator(81); // TODO:: The port should be configurable
+  this->ws->wss->begin();
+  delay(100);
+  
+  // Bind logger to websockets
+  Log::Instance()->enableWebsocket(this->ws);
+
 
   Serial.println("Finished ConnectionManager Setup");
 }

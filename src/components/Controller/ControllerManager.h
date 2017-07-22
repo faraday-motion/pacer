@@ -1,12 +1,12 @@
 #ifndef ControllerManager_h
 #define ControllerManager_h
 
-#include "AbstractController.h"
-#include "../ConfigController/ConfigController.h"
-#include "../MotorController/MotorController.h"
 #include <Metro.h>
-#include "components/Connection/ConnectionManager.h"
+#include "AbstractController.h"
 #include "components/Connection/RadioDevice.h"
+#include "components/Connection/ConnectionManager.h"
+#include "components/MotorController/MotorController.h"
+#include "components/ConfigController/ConfigController.h"
 
 class ControllerManager
 {

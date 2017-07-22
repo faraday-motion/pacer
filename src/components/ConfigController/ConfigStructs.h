@@ -12,7 +12,7 @@ struct _wifiConfig {
   int channel;
 };
 
-// Structures controller config data read from teh SPIFFS.
+// Structures controller config data read from the SPIFFS.
 struct _controllerConfig {
   byte defaultInputNeutral;
   byte defaultInputMinBrake;
@@ -22,7 +22,7 @@ struct _controllerConfig {
   float defaultSmoothAlpha;
 };
 
-// Structures currentControl config data read from teh SPIFFS.
+// Structures currentControl config data read from the SPIFFS.
 struct _currentControlConfig {
   float defaultCurrentNeutral;
   float defaultCurrentAccelerationMax;

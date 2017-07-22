@@ -1,10 +1,11 @@
 #ifndef NunchuckController_h
 #define NunchuckController_h
 
-#include "../AbstractController.h"
-#include "components/Connection/Radio.h"
-#include "ControllerPacket.h"
 #include <Metro.h>
+#include "components/Controller/AbstractController.h"
+#include "components/Connection/Radio/Radio.h"
+#include "components/Connection/Radio/RadioPacket.h"
+
 
 class NunchuckController : public AbstractController
 {
@@ -28,8 +29,8 @@ private:
   RadioDevice nunchuck;
 
   // Packet Handling
-  ControllerPacket responsePacket;
-  ControllerPacket requestPacket;
+  RadioPacket responsePacket;
+  RadioPacket requestPacket;
   byte sendCount    = 0;
   unsigned long receiveCounter = 0;
   byte packetSize   = 7;

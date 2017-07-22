@@ -26,14 +26,14 @@ unsigned int AccelController::getSensitivity()
 {
   unsigned int max = 0;
 
-  if (this->motorRpm > 1000)
+  if (this->motorRpm > 3000)
   {
     // we are at high speed the accelorometer should be much more sensitive
     max = 50;
   }
-  else if (this->motorRpm < 1000)
+  else if (this->motorRpm < 3000)
   {
-    // we are not that fast yet. It is still eassy to pick up the
+    // we are not that fast yet. It is still eassy to pick up the acceleration
     max = 100;
   }
 
@@ -42,9 +42,6 @@ unsigned int AccelController::getSensitivity()
 
 bool AccelController::handleController()
 {
-  this->sensor->getAccel_Data();
-  float xAccel = this->sensor->Axyz[0];
-
   float samples[5];
 
   // Gathering samples.
@@ -65,22 +62,13 @@ bool AccelController::handleController()
   unsigned int max = this->getSensitivity();
   int min = max * -1;
 
-  Serial.print("Min: ");
-  Serial.println(min);
-  Serial.print("Max: ");
-  Serial.println(max);
-  Serial.print("average:");
-  Serial.println(average);
-  Serial.print("Sampled RPM: ");
-  Serial.println(VescParams::Instance()->motorValues.rpm);
-  Serial.print("Setted RPM: ");
-  Serial.println(this->motorRpm);
   newSpeed = map(average, min , max, 0, 100);
-  Serial.print("newSpeed");
-  Serial.println(newSpeed);
+  // Log::Instance()->write("Mapping :: ");
+  // Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
   delay(5);
   this->motorController->get_values(); // get the data from the motorController.
   this->motorRpm = VescParams::Instance()->motorValues.rpm;
+
   // setting the boundaries for cases when the average is going out the min max.
   if (newSpeed < 0)
   {
@@ -90,21 +78,9 @@ bool AccelController::handleController()
   {
     newSpeed = 100;
   }
-  delay(5);
-  if (this->assistingTimer->check() == 1) {
-    // Serial.print(" newSpeed: ");
-    // Serial.print(newSpeed);
-    // Serial.print(" lockedTarget: ");
-    // Serial.println(this->lockedTarget);
 
-    delay(5);
-    Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
-    delay(5);
-  }
-
-  if (newSpeed > 60)
+  if (newSpeed > 55)
   {
-    Serial.println(":::::::Assist is ON! ACCEL::::::::::");
     this->lockedTarget = newSpeed;
     //this->lockedTarget = 100; // infinite speed mode :)
     this->assisting    = true;
@@ -112,12 +88,10 @@ bool AccelController::handleController()
 
   if (newSpeed < 40)
   {
-    //Serial.println("M5");
     newSpeed = 50;
     lockedTarget = 0;
     this->assisting = false;
   }
-
 
   delay(5);
   if (this->assisting == true)
@@ -127,10 +101,16 @@ bool AccelController::handleController()
     {
       // Accelerating
       previousSpeed = previousSpeed + changeRate;
+    } else {
+      previousSpeed = 100;
     }
 
-    Serial.print("currentSpeed:  ");
-    Serial.println(previousSpeed);
+    delay(5);
+    if (this->assistingTimer->check() == 1) {
+      delay(5);
+      Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
+      delay(5);
+    }
     processInput(previousSpeed);
 
   } else {

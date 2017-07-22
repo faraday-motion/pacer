@@ -1,8 +1,7 @@
 #include <Arduino.h>
-#include "Wifi.h"
-#include <ESP8266WiFi.h>
 #include <IPAddress.h>
-#include "../ConfigController/ConfigController.h"
+#include <ESP8266WiFi.h>
+#include "Wifi.h"
 
 Wifi::Wifi()
 {
@@ -64,6 +63,7 @@ bool Wifi::handleClientConnections() {
       if (client && client.connected())
       {
         client.setNoDelay(true);
+        // TODO: Once the mobile app is ready, get the id and name from there.
         Serial.println("New pending wifi object received.");
         pendingDevice.id[0] = 'W';
         pendingDevice.id[1] = 'I';

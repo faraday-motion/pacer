@@ -4,8 +4,8 @@
 #include <IPAddress.h>
 #include <ESP8266WiFi.h>
 #include <Metro.h>
-#include "../ConfigController/Config.h"
-#include "../ConfigController/ConfigController.h"
+#include "components/ConfigController/Config.h"
+#include "components/ConfigController/ConfigController.h"
 #include "components/Connection/RadioDevice.h"
 class Wifi {
 

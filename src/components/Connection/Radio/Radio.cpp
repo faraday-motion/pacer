@@ -328,7 +328,7 @@ void Radio::changeDevice(RadioDevice device)
    Attempts to read the requestPacket.
    @return bool
 */
-bool Radio::tryReadBytes(ControllerPacket* response)
+bool Radio::tryReadBytes(RadioPacket* response)
 {
   // Keep track of performance
   bool timeout = false;
@@ -385,7 +385,7 @@ bool Radio::tryReadBytes(ControllerPacket* response)
    Attempts to send the requestPacket over.
    @return bool
 */
-bool Radio::tryWriteBytes(ControllerPacket* request)
+bool Radio::tryWriteBytes(RadioPacket* request)
 {
   bool success = false;
 

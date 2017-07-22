@@ -1,4 +1,4 @@
-#include "Log.h"
+ #include "Log.h"
 #include <Arduino.h> // for Serial
 // Global static pointer used to ensure a single instance of the class.
 Log* Log::m_pInstance = nullptr;
@@ -28,15 +28,9 @@ void Log::write(String payload)
 {
   if(isEnabled)
   {
-    //wsCommunicator->wss->broadcastTXT(payload);
+    wsCommunicator->wss->broadcastTXT(payload + " ");
   }
 }
-// void Log::write(String payload)
-// {
-//   if(isEnabled){
-//     wsCommunicator->wss->broadcastTXT(payload);
-//   }
-// }
 
 void Log::logAccel(float average, byte newSpeed, byte targetSpeed, byte previousSpeed, long motorRpm)
 {
@@ -45,10 +39,10 @@ void Log::logAccel(float average, byte newSpeed, byte targetSpeed, byte previous
       String a = (String)average;
 
       String message =
-        "average " + (String)average + " " +
-        " newSpeed " + (String)newSpeed +
-        " lockedTarget " +  (String)targetSpeed +
-        " currentSpeed " + (String)previousSpeed +
+        "AVRG: " + (String)average + " " +
+        " newSpd: " + (String)newSpeed +
+        " lockTr: " +  (String)targetSpeed +
+        " currSpd: " + (String)previousSpeed +
         " RPM: " + (String)motorRpm;
       wsCommunicator->wss->broadcastTXT(message);
     }

@@ -1,10 +1,11 @@
-#include "components/Utility/Log.h"
 #include "ControllerManager.h"
-#include "AbstractController.h"
-#include "PhoneController/PhoneController.h"
-#include "NunchuckController/NunchuckController.h"
+#include "components/Utility/Log.h"
+
 #include "AccelController/AccelController.h"
 #include "WiredController/WiredController.h"
+#include "PhoneController/PhoneController.h"
+#include "NunchuckController/NunchuckController.h"
+
 
 ControllerManager::ControllerManager(ConfigController* configController, ConnectionManager* connectionManager)
 {

@@ -1,9 +1,12 @@
 #ifndef Log_h
 #define Log_h
+
+#include <Metro.h>
+#include "components/Connection/WebSocket/WebSocketCommunicator.h"
+
+
 // Source: http://www.yolinux.com/TUTORIALS/C++Singleton.html
 //Usage Logger::Instance()->method(<param>);
-#include "../Communication/WebSocketCommunicator.h"
-#include <Metro.h>
 
 class Log
 {

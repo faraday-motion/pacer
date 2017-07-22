@@ -1,8 +1,8 @@
-#ifndef ControllerPacket_h
-#define ControllerPacket_h
+#ifndef RadioPacket_h
+#define RadioPacket_h
 #include <Arduino.h>
 
-struct ControllerPacket {
+struct RadioPacket {
  byte Id;
  byte Command;
  byte Value1 ;

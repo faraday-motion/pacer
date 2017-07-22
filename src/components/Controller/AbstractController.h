@@ -2,8 +2,8 @@
 #define AbstractController_h
 #include "../ConfigController/Config.h"
 #include "components/Connection/RadioDevice.h"
-#include "../MotorController/MotorController.h"
-#include "../CurrentController/CurrentController.h"
+#include "components/MotorController/MotorController.h"
+#include "components/CurrentController/CurrentController.h"
 
 //https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
 class AbstractController

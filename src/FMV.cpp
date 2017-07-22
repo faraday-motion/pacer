@@ -1,12 +1,13 @@
 #include "FMV.h"
 #include "components/Connection/RadioDevice.h" // TODO: Make a class out of this.
 
+
 FMV::FMV()
 {
 }
 
 void FMV::setup() {
-  
+
   this->configController = new ConfigController;
   this->configController->loadConfig();
   this->connectionManager = new ConnectionManager(configController);
@@ -35,6 +36,9 @@ void FMV::setup() {
 
 void FMV::loop()
 {
+  // WebSocketLoop(); NOTE:: Maybe we can have it in another loop somewhere.
+  this->connectionManager->ws->wss->loop();
+
   // Step 1. Check for a physical device that is trying to connect
   this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
 

@@ -3,7 +3,7 @@
 
 #include <Metro.h>
 #include "../AbstractController.h"
-#include "components/Connection/Wifi.h"
+#include "components/Connection/Wifi/Wifi.h"
 
 class PhoneController : public AbstractController
 {

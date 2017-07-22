@@ -2,12 +2,11 @@
 #define Radio_h
 
 #include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
 #include <Metro.h>
-#include "RadioDevice.h"
-#include "components/Communication/Console.h"
-#include "components/Controller/NunchuckController/ControllerPacket.h"
+#include <nRF24L01.h>
+#include "../RadioDevice.h"
+#include "RadioPacket.h"
 
 class Radio {
 private:
@@ -33,8 +32,8 @@ private:
   byte sendCount    = 0;
 
   // response/requestPackets
-  ControllerPacket responsePacket;
-  ControllerPacket requestPacket;
+  RadioPacket responsePacket;
+  RadioPacket requestPacket;
 
   // Intervals
   byte _TIMEOUT_READ = 50;
@@ -68,8 +67,8 @@ public:
   void changeDevice(RadioDevice device);
 
   // Read/Write Packets
-  bool tryReadBytes(ControllerPacket* response);
-  bool tryWriteBytes(ControllerPacket* request);
+  bool tryReadBytes(RadioPacket* response);
+  bool tryWriteBytes(RadioPacket* request);
 
   RadioDevice pendingDevice;
   void clearPendingDevice();

@@ -1,10 +1,10 @@
 #ifndef FMV_h
 #define FMV_h
 #include "components/Communication/Console.h"
-#include "components/ConfigController/ConfigController.h"
 #include "components/Controller/ControllerManager.h"
 #include "components/Connection/ConnectionManager.h"
-#include "components/Sensors/IMU10DOF/IMU10DOF.h"  // Required for Wire.
+#include "components/ConfigController/ConfigController.h"
+
 #include <Metro.h>
 
 class FMV {

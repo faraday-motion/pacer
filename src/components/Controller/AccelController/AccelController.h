@@ -17,7 +17,7 @@ private:
 
   byte previousSpeed = 50;
   byte targetSpeed   = 50;
-  byte changeRate    = 1;
+  byte changeRate    = 5;
   byte newSpeed      = 50;
   float sampleSum    = 0;
   float average      = 0;

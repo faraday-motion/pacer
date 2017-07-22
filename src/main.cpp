@@ -1,11 +1,7 @@
 #include <Arduino.h>
 #include "FMV.h"
-// #include "components/Communication/Console.h"
-// #include "components/ConfigController/ConfigController.h"
-// #include "components/Controller/ControllerManager.h"
-// #include "components/Connection/ConnectionManager.h"
 
-#include "components/Communication/WebSocketCommunicator.h"
+
 #include "components/Utility/Log.h"
 
 
@@ -21,34 +17,14 @@
 /**********************************************************/
 
 FMV fmv;
-
-WebSocketCommunicator wsCommunicator(81);
-
-
 /***********************************************/
 
 void setup() {
   Serial.begin(115200);
-  // TODO: Wire is I2C connection. We should have it started somewhere else than here.
+  fmv.setup();;
 
-  fmv.setup();
-  // pinMode(13, INPUT_PULLUP);
-  wsCommunicator.wss->begin();
-  Log::Instance()->enableWebsocket(&wsCommunicator);
 }
-
-
 void loop() {
   fmv.loop();
   yield();
-  wsCommunicator.wss->loop();
-  yield();
-
-  // Check if clients want to connect to Wifi AP Server.
-  //connectionManager.handleClientConnections(); // TODO:: Abstract this in the connectionManager.h
-  //controllerManager.handleController();
-  yield();
-
-  //while(logMetro.check() == 1) Log::Instance()->write();
-
 }

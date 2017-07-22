@@ -1,12 +1,12 @@
 #ifndef ConnectionManager_h
 #define ConnectionManager_h
 
-#include "Wifi.h"
-#include "Radio.h"
 #include <Metro.h>
+#include "Wifi/Wifi.h"
 #include "RadioDevice.h"
+#include "Radio/Radio.h"
+#include "WebSocket/WebSocketCommunicator.h"
 #include "components/ConfigController/ConfigController.h"
-
 
 class ConnectionManager
 {
@@ -25,6 +25,9 @@ public:
 
   Radio* radio;
   Wifi*  wifi;
+  WebSocketCommunicator* ws;
+
+
   RadioDevice pendingDevice;
 
   void handleClientConnections();

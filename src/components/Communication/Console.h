@@ -1,11 +1,10 @@
 #ifndef Console_h
 #define Console_h
-#include "components/Controller/NunchuckController/ControllerPacket.h"
+#include "components/Connection/Radio/RadioPacket.h"
 
 class Console {
 public:
   Console();
-  void processCommand(ControllerPacket packet, ControllerPacket* requestPacket);
 };
 
 

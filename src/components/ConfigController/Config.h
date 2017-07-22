@@ -9,6 +9,8 @@ public:
   _wifiConfig             wifi;
   _controllerConfig       controller;
   _currentControlConfig   currentControl;
+  _wiredDevice            wiredDevices[];
+  byte                    wiredDevicesCount;
 };
 
 

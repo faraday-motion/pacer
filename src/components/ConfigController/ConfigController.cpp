@@ -11,12 +11,12 @@ ConfigController::ConfigController()
 }
 
 // Get a json string from the phone app and set it as the current stringConfig
-//bool ConfigController::setConfigString (char *newConfigString)
 bool ConfigController::setConfigString(String newConfigString)
 {
   configString = newConfigString;
   return true;
 }
+
 
 bool ConfigController::loadConfig()
 {
@@ -27,12 +27,27 @@ bool ConfigController::loadConfig()
 
   ConfigController::getJsonConfig();
 
-  StaticJsonBuffer<1024> jsonBuffer;
+  StaticJsonBuffer<1820> jsonBuffer;
   JsonObject& json = jsonBuffer.parseObject(configString);
 
   if (!json.success()){
     Serial.println("Failed to parse config file.");
     return false;
+  }
+
+  // Loop through all default wired devices.
+  for (JsonObject::iterator it=json.begin(); it!=json.end(); ++it)
+  {
+    if(!strcmp(it->key, "wiredDevices")){
+      byte length = it->value.size();
+      config->wiredDevicesCount = length;
+      for (size_t i = 0; i < length; i++) {
+        config->wiredDevices[i].id = it->value[i]["id"];
+        config->wiredDevices[i].type = it->value[i]["type"];
+        config->wiredDevices[i].priority = it->value[i]["priority"];
+        config->wiredDevices[i].enabled = it->value[i]["enabled"];
+      }
+    }
   }
 
   config->wifi.ssid      = json["wifi"]["ssid"];

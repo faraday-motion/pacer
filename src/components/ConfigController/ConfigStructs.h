@@ -31,5 +31,12 @@ struct _currentControlConfig {
   float defaultCurrentBrakeMin;
 };
 
+// Structures wireDevices config data read from the SPIFFS.
+struct _wiredDevice {
+  const char* id;
+  byte type;
+  byte priority;
+  bool enabled;
+};
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <Metro.h>
 #include "Wifi/Wifi.h"
-#include "RadioDevice.h"
+#include "components/Device/AbstractDevice.h"
 #include "Radio/Radio.h"
 #include "WebSocket/WebSocketCommunicator.h"
 #include "components/ConfigController/ConfigController.h"
@@ -28,7 +28,7 @@ public:
   WebSocketCommunicator* ws;
 
 
-  RadioDevice pendingDevice;
+  AbstractDevice pendingDevice;
 
   void handleClientConnections();
   void clearPendingDevice();

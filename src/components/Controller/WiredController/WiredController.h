@@ -8,7 +8,7 @@ class WiredController : public AbstractController
 
 public:
 
-  WiredController(ConfigController* configController, RadioDevice device);
+  WiredController(ConfigController* configController, AbstractDevice device);
   bool handleController();
   bool enable();
   bool disable();

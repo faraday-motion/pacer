@@ -92,14 +92,6 @@ void Wifi::clearPendingDevice()
   for (byte i = 0; i < 5; i++) {
     pendingDevice.id[i] = 0;
   }
-  // For now the Wifi does not support addresses.
-  pendingDevice.address[0] = 0;
-  pendingDevice.address[1] = 0;
-  pendingDevice.address[2] = 0;
-  pendingDevice.address[3] = 0;
-  pendingDevice.address[4] = 0;
-  // For now the Wifi does not support channels.
-  pendingDevice.channel = 0;
   pendingDevice.pending = false;
   pendingDevice.type = 0;
   //this->printDeviceCredentials(pendingDevice);

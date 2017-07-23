@@ -11,7 +11,7 @@
   4. In case the driver brakes hard enough (TODO:: define hard enought) the motor will disengage
   5. The driver needs to accelerate again in order to re-engage motor.
 */
-AccelController::AccelController(ConfigController* configController, RadioDevice device)
+AccelController::AccelController(ConfigController* configController, AbstractDevice device)
   : AbstractController(configController, device)
 {
   this->sensor = new IMU10DOF();

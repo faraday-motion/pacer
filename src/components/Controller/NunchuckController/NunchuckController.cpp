@@ -5,12 +5,12 @@
 
 
 // Construct the NunchuckController and the AbstractController
-NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, RadioDevice device)
+NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, AbstractDevice device)
  : AbstractController(configController, device)
 {
 
   this->radio = radio;
-  this->nunchuck = device;
+  this->nunchuck = device; // TODO:: Convert the abstract device pointer into a concered RadioDevice object
 
   /**
    * Setiing the Metro Timers

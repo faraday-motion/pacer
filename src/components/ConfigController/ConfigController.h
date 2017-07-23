@@ -23,7 +23,7 @@ public:
   bool saveConfig();
   bool setConfigString(String newConfigString);
   bool unsetConfigString();
-
+  void setWiredDevicesCount(size_t count);
 
 
 };

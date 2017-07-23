@@ -13,7 +13,7 @@ private:
   unsigned int _LOST_CONNECTION = 500;
 
   // Physical Device Identification.
-  RadioDevice phone;
+  AbstractDevice phone;
 
   // Object Pointers
   Metro* connectionLostTimer;
@@ -26,7 +26,7 @@ private:
 
 public:
   Wifi* wifi;
-  PhoneController(ConfigController* configController, Wifi* wifi, RadioDevice device);
+  PhoneController(ConfigController* configController, Wifi* wifi, AbstractDevice device);
 
   bool handleController();
   bool enable();

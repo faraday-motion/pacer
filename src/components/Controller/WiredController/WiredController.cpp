@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include "WiredController.h"
 
-WiredController::WiredController(ConfigController* configController, RadioDevice device)
+WiredController::WiredController(ConfigController* configController, AbstractDevice device)
  : AbstractController(configController, device)
 {
-
+  Serial.println("WiredController Constructed");
 }
 
 
@@ -20,8 +20,8 @@ bool WiredController::handleController()
 
   float m = totalMeasurement / measurements;
 
-  Serial.print("Raw measrurement. ");
-  Serial.println(m);
+  // Serial.print("Raw measrurement. ");
+  // Serial.println(m);
 
   m = m / 4;
   byte s = map(m, 48, 200, 0, 100);

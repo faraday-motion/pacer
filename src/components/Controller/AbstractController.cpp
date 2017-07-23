@@ -1,7 +1,7 @@
 #include "AbstractController.h"
 
 
-AbstractController::AbstractController(ConfigController* configController, RadioDevice device)
+AbstractController::AbstractController(ConfigController* configController, AbstractDevice device)
 {
   Serial.println("Constructing the Abastract Controller");
   this->config = configController->config;

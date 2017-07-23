@@ -29,7 +29,7 @@ private:
   unsigned int getSensitivity();
 public:
 
-  AccelController(ConfigController* configController, RadioDevice device);
+  AccelController(ConfigController* configController, AbstractDevice device);
 
   bool enable();
   bool disable();

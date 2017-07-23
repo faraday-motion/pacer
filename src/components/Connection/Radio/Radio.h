@@ -5,7 +5,7 @@
 #include <RF24.h>
 #include <Metro.h>
 #include <nRF24L01.h>
-#include "../RadioDevice.h"
+#include "components/Device/AbstractDevice.h"
 #include "RadioPacket.h"
 
 class Radio {
@@ -64,21 +64,21 @@ public:
 
   bool handleClientConnections();
   void validatePendingDevice();
-  void changeDevice(RadioDevice device);
+  void changeDevice(AbstractDevice device);
 
   // Read/Write Packets
   bool tryReadBytes(RadioPacket* response);
   bool tryWriteBytes(RadioPacket* request);
 
-  RadioDevice pendingDevice;
+  AbstractDevice pendingDevice;
   void clearPendingDevice();
-  void listenToRegisteredRadioDevice(RadioDevice device);
+  void listenToRegisteredRadioDevice(AbstractDevice device);
 
   // Debug
   void printRequestPacket();
   void printResponsePacket();
   void printAddresses();
-  void printDeviceCredentials(RadioDevice d);
+  void printDeviceCredentials(AbstractDevice d);
 };
 
 

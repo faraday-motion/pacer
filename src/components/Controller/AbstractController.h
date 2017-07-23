@@ -1,7 +1,7 @@
 #ifndef AbstractController_h
 #define AbstractController_h
 #include "../ConfigController/Config.h"
-#include "components/Connection/RadioDevice.h"
+#include "components/Device/AbstractDevice.h"
 #include "components/MotorController/MotorController.h"
 #include "components/CurrentController/CurrentController.h"
 
@@ -29,11 +29,11 @@ public:
   // MotorController
   MotorController*   motorController;
   //Controller Identification
-  RadioDevice controller; // used by the controllerManager
+  AbstractDevice controller; // used by the controllerManager
   //CurrentController
   CurrentController  currentController;
 
-  AbstractController(ConfigController* configController, RadioDevice device);
+  AbstractController(ConfigController* configController, AbstractDevice device);
 
   void setup();
   void processInput(byte latestInput);

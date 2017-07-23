@@ -28,7 +28,7 @@ void ConnectionManager::setup()
   this->ws = new WebSocketCommunicator(81); // TODO:: The port should be configurable
   this->ws->wss->begin();
   delay(100);
-  
+
   // Bind logger to websockets
   Log::Instance()->enableWebsocket(this->ws);
 
@@ -44,7 +44,7 @@ void ConnectionManager::handleClientConnections()
   {
     if ( this->wifi->handleClientConnections() == true )
     {
-      Serial.println("Radio Detected New Pending Device");
+      Serial.println("Wifi Detected New Pending Device");
       // TODO:: We have an issue the pending devices are being overwritten here.
       this->pendingDevice = this->wifi->pendingDevice;
     }
@@ -67,13 +67,16 @@ void ConnectionManager::handleClientConnections()
  */
 void ConnectionManager::clearPendingDevice()
 {
-
   pendingDevice.id[0] = 0;
   pendingDevice.id[1] = 0;
   pendingDevice.id[2] = 0;
   pendingDevice.id[3] = 0;
   pendingDevice.id[4] = 0;
   pendingDevice.id[5] = 0;
+
+  pendingDevice.pending = false;
+  pendingDevice.priority = 0;
+
   pendingDevice.address[0] = 0;
   pendingDevice.address[1] = 0;
   pendingDevice.address[2] = 0;
@@ -81,6 +84,5 @@ void ConnectionManager::clearPendingDevice()
   pendingDevice.address[4] = 0;
   pendingDevice.address[5] = 0;
   pendingDevice.channel = 0;
-  pendingDevice.pending= false;
 
 }

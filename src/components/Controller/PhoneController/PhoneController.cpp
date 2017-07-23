@@ -2,7 +2,7 @@
 
 
 // Construct the PhoneController and the AbstractController
-PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, RadioDevice device)
+PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, AbstractDevice device)
  : AbstractController(configController, device)
 {
   this->wifi = wifi;
@@ -84,6 +84,8 @@ void PhoneController::read()
        if (PhoneController::validateChecksum(m, packetCount))
        {
            yield();
+           Serial.println("PHONE SENDING DATA");
+           Serial.println(m[4]);
            processInput(m[4]);
        }
        else

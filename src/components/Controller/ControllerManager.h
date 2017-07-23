@@ -3,7 +3,7 @@
 
 #include <Metro.h>
 #include "AbstractController.h"
-#include "components/Connection/RadioDevice.h"
+#include "components/Device/AbstractDevice.h"
 #include "components/Connection/ConnectionManager.h"
 #include "components/MotorController/MotorController.h"
 #include "components/ConfigController/ConfigController.h"
@@ -30,7 +30,7 @@ public:
 
   ControllerManager(ConfigController* configController, ConnectionManager* connectionManager);
 
-  bool registerController(RadioDevice device); // create a new controller based on the type [mobile, nunchuck]
+  bool registerController(AbstractDevice device); // create a new controller based on the type [mobile, nunchuck, accel, wired controller]
   void removeRegisteredController(byte id[]); // destroys a certain controller.
 
   // Manage Active Controllers

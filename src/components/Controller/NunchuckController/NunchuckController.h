@@ -26,7 +26,7 @@ private:
   /**
     Identification
   */
-  RadioDevice nunchuck;
+  AbstractDevice nunchuck;
 
   // Packet Handling
   RadioPacket responsePacket;
@@ -55,7 +55,7 @@ private:
 
 public:
 
-  NunchuckController(ConfigController* configController, Radio* radio, RadioDevice device);
+  NunchuckController(ConfigController* configController, Radio* radio, AbstractDevice device);
 
   bool handleController();
   bool enable();

@@ -96,7 +96,7 @@ void ControllerManager::removeRegisteredController(byte id[])
   this->availableControllers[index] = nullptr;
 }
 
-bool ControllerManager::registerController(RadioDevice device)
+bool ControllerManager::registerController(AbstractDevice device)
 {
   if (this->getControllerIndexById(device.id) != -1)
   {
@@ -146,7 +146,7 @@ bool ControllerManager::registerController(RadioDevice device)
   }
   else if (device.type == 4)
   {
-    Serial.println("Registering a NunchuckController");
+    Serial.println("Registering a WiredController");
     AbstractController * wiredController = new WiredController(configController, device);
     allocateRegisteredController(wiredController);
     return true;
@@ -184,6 +184,8 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
       if (this->activeController == nullptr)
       {
         this->setActiveController(controller->controller.id);
+        this->printActiveController();
+
       }
 
       return true; // found free slot. Returning true.

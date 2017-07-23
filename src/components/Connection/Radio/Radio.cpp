@@ -28,7 +28,7 @@ void Radio::setup()
   _receiver->setPayloadSize(packetSize);
    this->setChannel(channelDefault); // we also set the currentChannel member here.
   _receiver->failureDetected = 0;
-  //_receiver->printDetails();
+  _receiver->printDetails();
   delay(50);
   findChannel();
   delay(50);
@@ -314,11 +314,12 @@ void Radio::resetConnection()
 /**
   Method that changes the device we are communicating with.
 */
-void Radio::changeDevice(RadioDevice device)
+void Radio::changeDevice(AbstractDevice device)
 {
   Serial.println("Switching Devices");
   setChannel(device.channel);
   setAddress(device.address);
+  this->printDeviceCredentials(device);
   openPipes();
   delayMicroseconds(500);
 }
@@ -461,7 +462,7 @@ void Radio::initPackets()
   Set of print methods used for debugging purposes.
 *********/
 
-void Radio::printDeviceCredentials(RadioDevice d)
+void Radio::printDeviceCredentials(AbstractDevice d)
 {
   Serial.print("ID: ");
   Serial.print(d.id[0]);

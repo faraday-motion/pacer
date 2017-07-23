@@ -17,6 +17,10 @@ bool ConfigController::setConfigString(String newConfigString)
   return true;
 }
 
+void ConfigController::setWiredDevicesCount(size_t count)
+{
+  this->config->wiredDevicesCount = count;
+}
 
 bool ConfigController::loadConfig()
 {
@@ -39,17 +43,18 @@ bool ConfigController::loadConfig()
   for (JsonObject::iterator it=json.begin(); it!=json.end(); ++it)
   {
     if(!strcmp(it->key, "wiredDevices")){
-      byte length = it->value.size();
-      config->wiredDevicesCount = length;
+      size_t length = it->value.size();
       for (size_t i = 0; i < length; i++) {
         config->wiredDevices[i].id = it->value[i]["id"];
         config->wiredDevices[i].type = it->value[i]["type"];
         config->wiredDevices[i].priority = it->value[i]["priority"];
         config->wiredDevices[i].enabled = it->value[i]["enabled"];
+
       }
     }
   }
 
+  config->wiredDevicesCount = json["wiredDevicesCount"];
   config->wifi.ssid      = json["wifi"]["ssid"];
   config->wifi.port      = json["wifi"]["port"];
   config->wifi.channel   = json["wifi"]["channel"];

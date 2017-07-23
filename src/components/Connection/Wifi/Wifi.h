@@ -6,7 +6,7 @@
 #include <Metro.h>
 #include "components/ConfigController/Config.h"
 #include "components/ConfigController/ConfigController.h"
-#include "components/Connection/RadioDevice.h"
+#include "components/Device/WifiDevice.h"
 class Wifi {
 
 private:
@@ -21,7 +21,7 @@ public:
   void setup(ConfigController* configController);
   bool handleClientConnections();
 
-  RadioDevice pendingDevice;
+  WifiDevice pendingDevice;
   void clearPendingDevice();
 
 };

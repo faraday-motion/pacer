@@ -2,17 +2,17 @@
 #include <Arduino.h>
 #include "VescUtility.h" // There is a TODO:: note in file.
 #include "MotorController.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/packet.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/packet.c"
-#include "dep/bldc_uart_comm_stm32f4_discovery/buffer.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/buffer.c"
-#include "dep/bldc_uart_comm_stm32f4_discovery/crc.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/crc.c"
-#include "dep/bldc_uart_comm_stm32f4_discovery/bldc_interface.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/bldc_interface.c"
-#include "dep/bldc_uart_comm_stm32f4_discovery/bldc_interface_uart.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/bldc_interface_uart.c"
-#include "dep/bldc_uart_comm_stm32f4_discovery/datatypes.h"
+#include "packet.h"
+#include "packet.c"
+#include "buffer.h"
+#include "buffer.c"
+#include "crc.h"
+#include "crc.c"
+#include "bldc_interface.h"
+#include "bldc_interface.c"
+#include "bldc_interface_uart.h"
+#include "bldc_interface_uart.c"
+#include "datatypes.h"
 
 
 // Settings NOT SURE IF NEEDED

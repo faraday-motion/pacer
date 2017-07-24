@@ -1,6 +1,6 @@
 #ifndef VescParams_h
 #define VescParams_h
-#include "dep/bldc_uart_comm_stm32f4_discovery/datatypes.h"
+#include "datatypes.h"
 
 class VescParams
 {

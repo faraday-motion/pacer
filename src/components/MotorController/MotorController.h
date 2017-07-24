@@ -1,10 +1,10 @@
 #ifndef MotorController_h
 #define MotorController_h
 
-#include "dep/bldc_uart_comm_stm32f4_discovery/packet.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/buffer.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/crc.h"
-#include "dep/bldc_uart_comm_stm32f4_discovery/datatypes.h"
+#include "packet.h"
+#include "buffer.h"
+#include "crc.h"
+#include "datatypes.h"
 
 
 

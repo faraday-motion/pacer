@@ -1,0 +1,21 @@
+{
+  "name": "Pacer",
+  "keywords": "electric vehicle, firmware, vesc, vehicle control unit",
+  "description": "Pacer is an open source vehicle control unit.",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/faraday-motion/pacer.git"
+  },
+  "frameworks": "arduino",
+  "Authors": [
+    {
+      "name": "Constantin Colac",
+      "email": "constantin@faradaymotion.com"
+    },
+    {
+      "name": "Sune Pedersen",
+      "email": "sune@faradaymotion.com"
+    }
+  ]
+}

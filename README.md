@@ -10,7 +10,7 @@ Pacer bundles open source software with modular hardware componets.
 Pacer was created to simplify the development of light electrict vehicles by providing out of the box trivial functionality like connectivity, controlling and state management of the vehicle. 
 
 # DISCLAIMER
-1. The current version of the Pacer is not production ready. DO NOT use it unless thoroughly tested. 
+1. The current version of Pacer is not production ready. DO NOT use it unless thoroughly tested. 
 2. This is a very stripped version of the documentation. A proper documentation is being worked on right now.
 
 # How it works?
@@ -29,7 +29,7 @@ Pacer was created to simplify the development of light electrict vehicles by pro
 
 Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp8266/Arduino#documentation) and is running on the NODEMCU ESP8266. 
 
-[PlatformIO](http://platformio.org/) is the development environmnet that is managing all the project dependencies.
+[PlatformIO](http://platformio.org/) is the development environmnet that is managing all the project dependencies for Pacer.
 
 ## Software Getting Started
 
@@ -38,12 +38,34 @@ Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp82
 2. Upload the configuration files to the ESP8266 flash memory `pio run --target uploadfs` (run this command in the root of the project)
 
 3. Build and Upload `pio run --target uploadfs` (run this command in the root of the project)
+   Note: You might want to look throught 
 
 4. You have a running Pacer instance on the NODEMCU. 
 
 ## Hardware Getting Started 
 
+### Steps
+---------
+In order to have a running vehicle in its simplest form you require the following components: 
+- BLDC Motor 
+- Motor Controller (for now we only support VESC)
+- Battery for power supply (max: 12S configuration)
+- NodeMCU
+- nRF24 module (optional)
+- MPU9150 module (optional)
+- Wired Controller (optional)
+
+Steps:
+
+1. Connect the NodeMCU, nRF24 (optional), MPU9150 (optional), Wired Controller (optional) together according to the PIN Configuration section below.
+
+2. Make sure you have uploaded the configuration files and the binary file to the NodeMCU. (see Software Getting Started.)
+
+3. You are ready to go. 
+
+
 ### PIN Configurations
+----------------------
 
 #### 1. VESC Motor Controller
 
@@ -71,6 +93,16 @@ Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp82
 | 3.3v                  | VCC           |
 
 
+#### 4. Wired Controller
+
+| NodeMCU               | Wired Joystick   |
+|-----------------------|:----------------:|
+| A0                    | X-Axis Pin       |
+| GND                   | GND              |
+| 3.3v                  | +5v              |
+
+Note: This might differ depending on the joystick you are using. Unfortunatelly the NodeMcu only has one analog pin. 
+
 
 ## Pacer Modules 
 
@@ -82,6 +114,7 @@ Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp82
 - Controllers
   - Phone Controller (Android (not public yet) , [iOS](https://itunes.apple.com/ag/app/faraday-motion-controller/id1075493675?mt=8))
   - Nunchuck Controller (source code comng soon) 
+  - Wired Joystick Controller
   - Accelerometer Controller ([MPU9150](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU9150))
   
 - Motor Controller 
@@ -99,3 +132,11 @@ There is a [forum thread](http://forum.faradaymotion.com/d/19-what-is-pacer/2) d
 # Support Us
 
 You can support the Pacer project buy purchasing hardware required for running Pacer and other products from the [Faraday Motion Web Shop](http://shop.faradaymotion.com). We highly appreciate your support. 
+
+#Contributing
+
+There is a long road of development until we get Pacer to be the go to solution. Any contributions are highly valued. 
+
+For minor fixes of code and documentation, go ahead and submit a pull request.
+
+Feature branches with lots of small commits (especially titled "oops", "fix typo", "forgot to add file", etc.) should be squashed before opening a pull request. At the same time, please refrain from putting multiple unrelated changes into a single pull request.

@@ -37,7 +37,7 @@ Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp82
 
 2. Upload the configuration files to the ESP8266 flash memory `pio run --target uploadfs` (run this command in the root of the project)
 
-3. Build and Upload `pio run --target uploadfs` (run this command in the root of the project)
+3. Build and Upload `pio run --target upload` (run this command in the root of the project)
    Note: You might want to look through the config file in `data/` directory and change relevant configurations.
 
 4. You have a running Pacer instance on the NODEMCU. 

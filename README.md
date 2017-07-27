@@ -5,9 +5,9 @@
 # What is Pacer?
 Pacer is a development platform that enables fast and cheap development of light electric vehicles.
 
-Pacer bundles open source software with modular hardware componets.
+Pacer bundles open source software with modular hardware components.
 
-Pacer was created to simplify the development of light electrict vehicles by providing out of the box trivial functionality like connectivity, controlling and state management of the vehicle. 
+Pacer was created to simplify the development of light electric vehicles by providing out of the box trivial functionality like connectivity, controlling and state management of the vehicle. 
 
 # DISCLAIMER
 1. The current version of Pacer is not production ready. DO NOT use it unless thoroughly tested. 
@@ -29,16 +29,16 @@ Pacer was created to simplify the development of light electrict vehicles by pro
 
 Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp8266/Arduino#documentation) and is running on the NODEMCU ESP8266. 
 
-[PlatformIO](http://platformio.org/) is the development environmnet that is managing all the project dependencies for Pacer.
+[PlatformIO](http://platformio.org/) is the development environment that is managing all the project dependencies for Pacer.
 
 ## Software Getting Started
 
-1. Setup a PlatformIO development environment for ESP8266. ([Check this guide](https://github.com/esp8266/Arduino#using-platformio))
+1. Set up a PlatformIO development environment for ESP8266. ([Check this guide](https://github.com/esp8266/Arduino#using-platformio))
 
 2. Upload the configuration files to the ESP8266 flash memory `pio run --target uploadfs` (run this command in the root of the project)
 
 3. Build and Upload `pio run --target uploadfs` (run this command in the root of the project)
-   Note: You might want to look throught 
+   Note: You might want to look through the config file in `data/` directory and change relevant configurations.
 
 4. You have a running Pacer instance on the NODEMCU. 
 
@@ -101,7 +101,7 @@ Steps:
 | GND                   | GND              |
 | 3.3v                  | +5v              |
 
-Note: This might differ depending on the joystick you are using. Unfortunatelly the NodeMcu only has one analog pin. 
+Note: This might differ depending on the joystick you are using. Unfortunately the NodeMcu only has one analog pin. 
 
 
 ## Pacer Modules 
@@ -121,7 +121,7 @@ Note: This might differ depending on the joystick you are using. Unfortunatelly 
   - VESC
   - more to come..
   
-- Configurartion 
+- Configuration 
   - Config Controller 
   - JSON config file stored on the flash.
 

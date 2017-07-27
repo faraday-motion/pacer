@@ -11,7 +11,7 @@ Pacer was created to simplify the development of light electrict vehicles by pro
 
 # DISCLAIMER
 1. The current version of Pacer is not production ready. DO NOT use it unless thoroughly tested. 
-2. This is a very stripped version of the documentation. A proper documentation is being worked on right now.
+2. This is a very stripped version of the documentation. A proper documentation is being worked on right now. If you need help shoot us a question on our [forum](http://forum.faradaymotion.com).
 
 # How it works?
 
@@ -133,7 +133,7 @@ There is a [forum thread](http://forum.faradaymotion.com/d/19-what-is-pacer/2) d
 
 You can support the Pacer project buy purchasing hardware required for running Pacer and other products from the [Faraday Motion Web Shop](http://shop.faradaymotion.com). We highly appreciate your support. 
 
-#Contributing
+# Contributing
 
 There is a long road of development until we get Pacer to be the go to solution. Any contributions are highly valued. 
 

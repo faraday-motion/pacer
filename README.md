@@ -45,6 +45,31 @@ Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp82
 
 ### PIN Configurations
 
+#### 1. VESC Motor Controller
+
+
+| NodeMCU  |     VESC      |
+|----------|:-------------:|
+| TX       | RX            |
+| RX       | TX            |
+| GND      | GND           |
+| VIN      | 5v            |
+
+#### 2. nRF24 Connections
+
+![nRF24](http://www.faradaymotion.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-27-at-12.09.51-PM.png)
+
+![nRF24 Pins](http://www.faradaymotion.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-27-at-12.23.36-PM.png)
+
+#### 3. MPU9150
+
+| NodeMCU               |     MPU9150   |
+|-----------------------|:-------------:|
+| D1(SCL) (GPIO 5)      | SCL           |
+| D2(SDA) (GPIO 4)      | SDA           |
+| GND                   | GND           |
+| 3.3v                  | VCC           |
+
 
 
 ## Pacer Modules 
@@ -73,4 +98,4 @@ There is a [forum thread](http://forum.faradaymotion.com/d/19-what-is-pacer/2) d
 
 # Support Us
 
-You can support the Pacer project buy purchasing hardware required for running Pacer and other products from the Faraday Motion Web Shop. We highly appreciate your support. 
+You can support the Pacer project buy purchasing hardware required for running Pacer and other products from the [Faraday Motion Web Shop](http://shop.faradaymotion.com). We highly appreciate your support. 

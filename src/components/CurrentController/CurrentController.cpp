@@ -16,12 +16,12 @@ void CurrentController::setup(Config* configuration)
   defaultCurrentBrakeMin        = config->currentControl.defaultCurrentBrakeMin;
 
   // Seting the default values and states for the controller;
-  defaultInputNeutral         = config->controller.defaultInputNeutral;
-  defaultInputMinBrake        = config->controller.defaultInputMinBrake;
-  defaultInputMaxBrake        = config->controller.defaultInputMaxBrake;
-  defaultInputMinAcceleration = config->controller.defaultInputMinAcceleration;
-  defaultInputMaxAcceleration = config->controller.defaultInputMaxAcceleration;
-  defaultSmoothAlpha          = config->controller.defaultSmoothAlpha;
+  defaultInputNeutral           = config->controller.defaultInputNeutral;
+  defaultInputMinBrake          = config->controller.defaultInputMinBrake;
+  defaultInputMaxBrake          = config->controller.defaultInputMaxBrake;
+  defaultInputMinAcceleration   = config->controller.defaultInputMinAcceleration;
+  defaultInputMaxAcceleration   = config->controller.defaultInputMaxAcceleration;
+  defaultSmoothAlpha            = config->controller.defaultSmoothAlpha;
   Serial.println("Finished Configuration of the Current Controller");
 
 }

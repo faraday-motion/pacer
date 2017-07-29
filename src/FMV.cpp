@@ -7,33 +7,14 @@ FMV::FMV()
 }
 
 void FMV::setup() {
-
+  Serial.println("Setting up the Faraday Motion Vehicle...");
   this->configController = new ConfigController;
   this->configController->loadConfig();
   this->connectionManager = new ConnectionManager(configController);
   this->connectionManager->setup();
   this->controllerManager = new ControllerManager(configController, connectionManager);
-
-
-  this->registerWiredDevices();
-  // AbstractDevice accelController;
-  // accelController.id[0] = 'A';
-  // accelController.id[1] = 'C';
-  // accelController.id[2] = 'L';
-  // accelController.id[3] = 'C';
-  // accelController.id[4] = '1';
-  // accelController.type  = 3;
-  // this->controllerManager->registerController(accelController);
-
-  // RadioDevice wiredController;
-  // wiredController.id[0] = 'W';
-  // wiredController.id[1] = 'I';
-  // wiredController.id[2] = 'R';
-  // wiredController.id[3] = 'E';
-  // wiredController.id[4] = '1';
-  // wiredController.type  = 4; // 3 is accelerometer
-  // this->controllerManager->registerController(wiredController);
-  Serial.println("END FMV setup");
+  this->registerWiredDevices(); // We need to have a safety check.
+  Serial.println("Finished setting up the Faraday Motion Vehicle");
 }
 
 void FMV::loop()
@@ -41,6 +22,9 @@ void FMV::loop()
 
   // WebSocketLoop(); NOTE:: Maybe we can have it in another loop somewhere.
   this->connectionManager->ws->wss->loop();
+  // HTTP Server Loop; NOTE:: We should group communication handling in a different loop
+  this->connectionManager->webServer->handleClient();
+
   // Step 1. Check for a physical device that is trying to connect
   this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
   // Step 2. Register physical devices as a controller
@@ -50,7 +34,6 @@ void FMV::loop()
   {
     this->controllerManager->activeController->enable();
   }
-
   // Step 4. Get motorcontroller values that are used by controllers.
   while (Serial.available() > 0) this->controllerManager->motorController->processUartByte(Serial.read());
   // // Step 4. Handle the Active Controller.
@@ -62,29 +45,20 @@ void FMV::loop()
     this->controllerManager->unsetActiveController(); // This makes sure that we don't ask the radio to change to the active Device anymore.
     // TODO: Have a metro timer. We want to give the original active controller a chance to reconnect.
     //this->controllerManager->tryOtherControllers();
+    //TODO: We should ping the idle controllers every now and then. Or should we only ping them when we actually want to activate them?
   }
 }
-
-
 
 void FMV::registerWiredDevices()
 {
   Config* config = this->configController->config;
-  Serial.println("wiredDevicesCount::");
-  Serial.println(this->configController->config->wiredDevicesCount);
   byte count = 1;
   if (count > 0) {
     for (byte i = 0; i < count; i++)
     {
-      Serial.println("ITT registerWiredDevices");
-      Serial.println(i);
       AbstractDevice wiredDevice(config->wiredDevices[i]);
-
-
       this->controllerManager->registerController(wiredDevice);
-      Serial.println("END ITT registerWiredDevices");
     }
-    /* code */
   }
 
 }

@@ -19,6 +19,10 @@ void ConnectionManager::setup()
   this->wifi->setup(configController);
   delay(500);
 
+  // Setup WebServer
+  this->webServer = new WebServer();
+  this->webServer->setup();
+
   // Setup NRF24
   this->radio = new Radio();
   this->radio->setup();

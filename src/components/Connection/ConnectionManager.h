@@ -3,9 +3,11 @@
 
 #include <Metro.h>
 #include "Wifi/Wifi.h"
-#include "components/Device/AbstractDevice.h"
 #include "Radio/Radio.h"
+#include "WebServer/WebServer.h"
 #include "WebSocket/WebSocketCommunicator.h"
+#include "components/Device/AbstractDevice.h"
+
 #include "components/ConfigController/ConfigController.h"
 
 class ConnectionManager
@@ -26,7 +28,7 @@ public:
   Radio* radio;
   Wifi*  wifi;
   WebSocketCommunicator* ws;
-
+  WebServer* webServer;
 
   AbstractDevice pendingDevice;
 

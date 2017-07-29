@@ -1,6 +1,3 @@
-#include <Arduino.h>
-#include <IPAddress.h>
-#include <ESP8266WiFi.h>
 #include "Wifi.h"
 
 Wifi::Wifi()
@@ -42,8 +39,8 @@ void Wifi::setup(ConfigController* configController)
   server->begin();
   //Set delay = true retarts the esp in version 2.1.0, check in later versions if its fixed
   server->setNoDelay(true);
+  //Serial.println(server->status());
 
-  Serial.println(server->status());
 }
 
 

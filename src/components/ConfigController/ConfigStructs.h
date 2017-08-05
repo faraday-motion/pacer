@@ -37,6 +37,8 @@ struct _wiredDevice {
   byte type;
   byte priority;
   bool enabled;
+  int  accelConstraint = 0;
+  int  brakeConstraint = 0;
 };
 
 #endif

@@ -49,6 +49,9 @@ bool ConfigController::loadConfig()
         config->wiredDevices[i].type = it->value[i]["type"];
         config->wiredDevices[i].priority = it->value[i]["priority"];
         config->wiredDevices[i].enabled = it->value[i]["enabled"];
+        // NOTE:: We always expect the keys for constraints.
+        config->wiredDevices[i].accelConstraint = it->value[i]["constraints"]["accel"];
+        config->wiredDevices[i].brakeConstraint = it->value[i]["constraints"]["brake"];
 
       }
     }
@@ -93,7 +96,7 @@ bool ConfigController::saveConfig()
     return false;
   }
 
-  StaticJsonBuffer<1024> jsonBuffer;
+  StaticJsonBuffer<1820> jsonBuffer;
   JsonObject& json = jsonBuffer.parseObject(configString);
 
   if(!json.success()) {
@@ -115,33 +118,33 @@ bool ConfigController::saveConfig()
 }
 
 
-bool ConfigController::getJsonConfig()
+File ConfigController::getJsonConfig()
 {
   if(!beginSPIFFS()) {
     return false;
   }
 
   File configFile = ConfigController::getFile("r");
-  if(!configFile) {
-    Serial.println("Failed to open config file");
-    return false;
-  }
-
-  size_t size = configFile.size();
-  if (size > 1024) {
-    Serial.println("Config file size is too large");
-    return false;
-  }
-
-  std::unique_ptr<char[]> buf(new char[size]);
-  configFile.readBytes(buf.get(), size);
-
-  StaticJsonBuffer<1024> jsonBuffer;
-  JsonObject& json = jsonBuffer.parseObject(buf.get());
-
-  json.printTo(configString);
-  configFile.close();
-  endSPIFFS();
+  // if(!configFile) {
+  //   Serial.println("Failed to open config file");
+  //   return false;
+  // }
+  //
+  // size_t size = configFile.size();
+  // if (size > 1500) {
+  //   Serial.println("Config file size is too large");
+  //   return false;
+  // }
+  //
+  // std::unique_ptr<char[]> buf(new char[size]);
+  // configFile.readBytes(buf.get(), size);
+  //
+  // StaticJsonBuffer<1500> jsonBuffer;
+  // JsonObject& json = jsonBuffer.parseObject(buf.get());
+  //
+  // json.printTo(configString);
+  // configFile.close();
+  //endSPIFFS();
   return true;
 }
 

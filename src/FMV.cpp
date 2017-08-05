@@ -19,14 +19,13 @@ void FMV::setup() {
 
 void FMV::loop()
 {
-
   // WebSocketLoop(); NOTE:: Maybe we can have it in another loop somewhere.
   this->connectionManager->ws->wss->loop();
   // HTTP Server Loop; NOTE:: We should group communication handling in a different loop
   this->connectionManager->webServer->handleClient();
 
   // Step 1. Check for a physical device that is trying to connect
-  this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
+  //this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
   // Step 2. Register physical devices as a controller
   this->handlePendingConnectionDevices(); // try to register the pending controllers if any are waiting.
   // Step 3. Set active a controller. // NOTE:: now we automatically enable the active controller if there's no other active controller

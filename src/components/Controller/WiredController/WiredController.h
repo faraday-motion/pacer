@@ -5,14 +5,24 @@
 
 class WiredController : public AbstractController
 {
+private:
 
+  // Constraints
+  int accelConstraint;
+  int brakeConstraint;
+
+  // Security
+  int previousReading = 0;
+  int sameReadingCount = 0;
+  void checkSample(int sample);
 public:
 
   WiredController(ConfigController* configController, AbstractDevice device);
+
+  // Virtual Methods
   bool handleController();
   bool enable();
   bool disable();
-
 };
 
 

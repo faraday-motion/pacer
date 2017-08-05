@@ -12,6 +12,8 @@ public:
   byte type;
   byte priority;
   bool enabled;
+  int  accelConstraint;
+  int  brakeConstraint;
   byte pending = false;
   byte address[5];
   byte channel = 100;

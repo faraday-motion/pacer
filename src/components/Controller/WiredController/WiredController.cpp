@@ -4,37 +4,44 @@
 WiredController::WiredController(ConfigController* configController, AbstractDevice device)
  : AbstractController(configController, device)
 {
-  Serial.println("WiredController Constructed");
+  Serial.println("Setting up a WiredController...");
+  accelConstraint = device.accelConstraint;
+  brakeConstraint = device.brakeConstraint;
+  Serial.println("Finished tetting up the WiredController...");
 }
 
 
 bool WiredController::handleController()
 {
-  byte measurements = 5;
-  float totalMeasurement = 0;
+  byte sampleCount = 5;
+  int sampleSum = 0;
 
-  for (byte i = 0; i < measurements; i++)
-  {
-    totalMeasurement += analogRead(A0);
+  for (byte i = 0; i < sampleCount; i++) {
+    int sample = analogRead(A0); // TODO:: GPIO should be configured
+    sampleSum += sample;
+    this->checkSample(sample);
   }
 
-  float m = totalMeasurement / measurements;
+  int sample = sampleSum / sampleCount;
+  int adjustedSample = constrain(sample, brakeConstraint, accelConstraint);
+  byte s = map(adjustedSample, brakeConstraint, accelConstraint, 0, 100);
 
-  // Serial.print("Raw measrurement. ");
-  // Serial.println(m);
-
-  m = m / 4;
-  byte s = map(m, 48, 200, 0, 100);
   if (s >= 45 && s <= 55)
-  {
     s = 50;
+
+  if (sameReadingCount > 10)
+  {
+    // Here we should return false in theory. With joystick we generate constantly the same values and that makes us have it disconnected. Which is not what we want. Think of adding a retry to connect to the controller manager or connection manager.s
+    processInput(50);
   }
-  Serial.print("WIRE CONTROLLER INPUT:: ");
-  Serial.println(s);
-  processInput(s);
+  else
+  {
+    Serial.print("process Sample: ");
+    Serial.println(s);
+    processInput(s);
+  }
 
   return true;
-
 }
 
 bool WiredController::enable()
@@ -45,4 +52,15 @@ bool WiredController::enable()
 bool WiredController::disable()
 {
   return true;
+}
+
+
+void WiredController::checkSample(int sample)
+{
+  if (previousReading == sample)
+    sameReadingCount++;
+  else
+    sameReadingCount = 0;
+  previousReading = sample;
+
 }

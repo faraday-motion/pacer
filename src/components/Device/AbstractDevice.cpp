@@ -20,8 +20,12 @@ AbstractDevice::AbstractDevice(_wiredDevice device)
   // Priority
   priority = device.priority;
 
-  //enalbed
+  // enalbed
   enabled  = device.enabled;
+
+  // constraints
+  accelConstraint = device.accelConstraint;
+  brakeConstraint = device.brakeConstraint;
 
   //pending
   pending  = 0;

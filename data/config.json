@@ -24,13 +24,27 @@
     "defaultCurrentAccelerationMin" : 0.25,
     "defaultCurrentAccelerationMax" : 30
   },
-  "wiredDevicesCount" : 1, 
+  "wiredDevicesCount" : 1,
   "wiredDevices" : [
     {
-      "id" : "WIRE1",
+      "id" : "BALA1",
       "type" : 4,
       "priority" : 1,
-      "enabled" : 1
+      "enabled" : 1,
+      "constraints" : {
+        "brake" : 200,
+        "accel" : 650
+      }
+    },
+    {
+      "id" : "JOYS1",
+      "type" : 4,
+      "priority" : 1,
+      "enabled" : 1,
+      "constraints" : {
+        "brake" : 190,
+        "accel" : 840
+      }
     }
   ]
 

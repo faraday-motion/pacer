@@ -5,6 +5,7 @@
 #include "WiredController/WiredController.h"
 #include "PhoneController/PhoneController.h"
 #include "NunchuckController/NunchuckController.h"
+#include "BalanceController/BalanceController.h"
 
 
 ControllerManager::ControllerManager(ConfigController* configController, ConnectionManager* connectionManager)
@@ -151,6 +152,12 @@ bool ControllerManager::registerController(AbstractDevice device)
     allocateRegisteredController(wiredController);
     return true;
   }
+  else if (device.type == 5)
+  {
+    Serial.println("Registering a BalanceController");
+    AbstractController * balanceController = new BalanceController(configController, device);
+    allocateRegisteredController(balanceController);
+  }
   else
   {
       Serial.println("Unknown type of controller");
@@ -179,13 +186,13 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
     if(availableControllers[i] == nullptr)  {
       availableControllers[i] = controller;
       registeredControllersCount = registeredControllersCount + 1; // keep track of registered controllers.
-
+      this->printActiveController();
       // If there is no active controler we set this device as active.
       if (this->activeController == nullptr)
       {
+        Serial.println("allocateRegisteredController:: setActive.");
         this->setActiveController(controller->controller.id);
         this->printActiveController();
-
       }
 
       return true; // found free slot. Returning true.

@@ -24,11 +24,11 @@
     "defaultCurrentAccelerationMin" : 0.25,
     "defaultCurrentAccelerationMax" : 30
   },
-  "wiredDevicesCount" : 1, 
+  "wiredDevicesCount" : 1,
   "wiredDevices" : [
     {
-      "id" : "WIRE1",
-      "type" : 4,
+      "id" : "ACCEL",
+      "type" : 3,
       "priority" : 1,
       "enabled" : 1
     }

@@ -13,7 +13,7 @@ void FMV::setup() {
   this->connectionManager = new ConnectionManager(configController);
   this->connectionManager->setup();
   this->controllerManager = new ControllerManager(configController, connectionManager);
-  this->registerWiredDevices(); // We need to have a safety check.
+  //this->registerWiredDevices(); // We need to have a safety check.
   Serial.println("Finished setting up the Faraday Motion Vehicle");
 }
 

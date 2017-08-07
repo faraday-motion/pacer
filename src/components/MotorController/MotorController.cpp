@@ -25,8 +25,9 @@ MotorController::MotorController()
 
 // TODO:: See if this can just be put in the constructor
 // Setup the MotorController Object.
-void MotorController::setup()
+void MotorController::setup(ConfigController* configController)
 {
+  this->motorCount = configController->config->motorCount;
 	// Initialize MotorController Communication Ticker
 	Ticker motorControllerTicker;
   motorControllerTicker.attach_ms(1, updateMotorController, this);
@@ -62,12 +63,25 @@ void MotorController::update()
 
 void MotorController::set_current(float current)
 {
-	bldc_interface_set_current(current);
+	if (this->motorCount == 1) {
+		bldc_interface_set_current(current);
+	} else if (this->motorCount == 2) {
+		bldc_interface_set_current_dual(current);
+	} else if (this->motorCount == 4) {
+		bldc_interface_set_current_quad(current);
+	}
 }
 
 void MotorController::set_current_brake(float current)
 {
-	bldc_interface_set_current_brake(current);
+	if (this->motorCount == 1) {
+	  bldc_interface_set_current_brake(current);
+	} else if (this->motorCount == 2) {
+		bldc_interface_set_current_brake_dual(current);
+	} else if (this->motorCount == 4) {
+		bldc_interface_set_current_brake_quad(current);
+	}
+
 }
 
 void MotorController::get_values()

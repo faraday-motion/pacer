@@ -11,6 +11,7 @@ public:
   _currentControlConfig   currentControl;
   _wiredDevice            wiredDevices[];
   byte                    wiredDevicesCount;
+  byte                    motorCount;
 };
 
 

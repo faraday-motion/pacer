@@ -53,8 +53,10 @@ bool ConfigController::loadConfig()
       }
     }
   }
-
+  // Counters
   config->wiredDevicesCount = json["wiredDevicesCount"];
+  config->motorCount = json["motorCount"];
+
   config->wifi.ssid      = json["wifi"]["ssid"];
   config->wifi.port      = json["wifi"]["port"];
   config->wifi.channel   = json["wifi"]["channel"];

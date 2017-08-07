@@ -5,16 +5,19 @@
 #include "buffer.h"
 #include "crc.h"
 #include "datatypes.h"
-
+#include "components/ConfigController/ConfigController.h"
 
 
 class MotorController
 {
+
+private:
+  byte motorCount;
 public:
 
   MotorController();
 
-  void setup();
+  void setup(ConfigController* configController);
   // Communication
   //void uartInit(void(*s_func)(unsigned char *data, unsigned int len), void(*p_func)(unsigned char b), void(*v_func)(mc_values *val));
   void uartInit();

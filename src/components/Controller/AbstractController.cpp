@@ -6,7 +6,7 @@ AbstractController::AbstractController(ConfigController* configController, Abstr
   Serial.println("Constructing the Abastract Controller");
   this->config = configController->config;
   this->motorController = new MotorController; // Question:: Does this mean I have a new motorController object for each instance of the AbstractController?
-  this->motorController->setup();
+  this->motorController->setup(configController);
 
   this->controller = device; // TODO:: why do we store the device on the abstract and the concrete controller?
   this->setup();

@@ -56,7 +56,8 @@ bool AccelController::handleController()
     sum = sum + samples[s];
   }
   float average = sum / 5; // average of 5 samples.
-
+  Serial.print("SAMPLE :::::::: ");
+  Serial.println(average);
   // For the sake of the range:
   average  = average * 100;
   unsigned int max = this->getSensitivity();

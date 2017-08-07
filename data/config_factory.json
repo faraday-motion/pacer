@@ -1,4 +1,5 @@
 {
+  "motorCount" : 1,
   "wifi" : {
     "ssid"     : "FARADAY200",
     "password" : "faraday200",

@@ -77,7 +77,7 @@ void NunchuckController::processResponse()
     Serial.print(responsePacket.Value2);
     Serial.println();
     // This is hardcoded for
-    byte s = map(responsePacket.Value2, 48, 200, 0, 100);
+    byte s = map(responsePacket.Value2, 1, 240, 0, 100);
     if (s >= 45 && s <= 55)
     {
       s = 50;

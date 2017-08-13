@@ -59,7 +59,6 @@ void FMV::registerWiredDevices()
       this->controllerManager->registerController(wiredDevice);
     }
   }
-
 }
 /**
   * Gets the pending registration devices from all connection interfaces and attempts to register them as controllers.

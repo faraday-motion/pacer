@@ -4,9 +4,9 @@
 
 using namespace std::placeholders;
 
-WebSocketCommunicator::WebSocketCommunicator(byte port)
+WebSocketCommunicator::WebSocketCommunicator(ConfigController* configController)
 {
-  this->wss = new WebSocketsServer(port);
+  this->wss = new WebSocketsServer(configController->config->websocket.port);
   this->wss->onEvent(std::bind(&WebSocketCommunicator::onWsEvent, this, _1, _2, _3, _4));
 }
 

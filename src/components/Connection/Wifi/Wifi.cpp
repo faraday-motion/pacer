@@ -13,8 +13,8 @@ void Wifi::setup(ConfigController* configController)
   //Wifi
   // Store address of the WiFiServeir
   this->server = new WiFiServer(config->wifi.port);
-  const char *ssid = config->wifi.ssid;
-  const char *password = config->wifi.password;
+  const char *ssid = config->wifi.ssid.c_str();
+  const char *password = config->wifi.password.c_str();
 
   IPAddress address(config->wifi.ip[0], config->wifi.ip[1], config->wifi.ip[2], config->wifi.ip[3]);
   IPAddress subnet (config->wifi.subnet[0], config->wifi.subnet[1], config->wifi.subnet[2], config->wifi.subnet[3]);

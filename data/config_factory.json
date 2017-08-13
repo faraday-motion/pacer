@@ -1,12 +1,14 @@
 {
-  "motorCount" : 1,
   "wifi" : {
     "ssid"     : "FARADAY200",
-    "password" : "faraday200",
     "port"     : 8899,
     "ip"       : [10, 10, 100, 254],
     "subnet"   : [255, 255, 255, 0],
-    "channel"  : 11
+    "channel"  : 11,
+    "pass"     : "faraday200"
+  },
+  "websocket" : {
+    "port" : 81
   },
 
   "controller" : {
@@ -25,11 +27,12 @@
     "defaultCurrentAccelerationMin" : 0.25,
     "defaultCurrentAccelerationMax" : 30
   },
-  "wiredDevicesCount" : 1,
+  "motorCount" : 4,
+  "wiredDevicesCount" : 2,
   "wiredDevices" : [
     {
-      "id" : "BALA1",
-      "type" : 4,
+      "id" : "ACCE1",
+      "type" : 3,
       "priority" : 1,
       "enabled" : 1,
       "constraints" : {

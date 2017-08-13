@@ -4,12 +4,16 @@
 
 // Structures wifi config data read from teh SPIFFS.
 struct _wifiConfig {
-  const char* ssid;
-  const char* password;
+  String ssid;
+  String password;
   int port;
   int ip[4];
   int subnet[4];
   int channel;
+};
+
+struct _webscocket {
+  int port;
 };
 
 // Structures controller config data read from the SPIFFS.
@@ -33,7 +37,7 @@ struct _currentControlConfig {
 
 // Structures wireDevices config data read from the SPIFFS.
 struct _wiredDevice {
-  const char* id;
+  byte id[5];
   byte type;
   byte priority;
   bool enabled;

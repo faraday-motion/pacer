@@ -29,7 +29,7 @@ void ConnectionManager::setup()
   // delay(500);
 
   //Setup WebSocketCommunicator
-  this->ws = new WebSocketCommunicator(81); // TODO:: The port should be configurable
+  this->ws = new WebSocketCommunicator(configController); // TODO:: The port should be configurable
   this->ws->wss->begin();
   delay(100);
 

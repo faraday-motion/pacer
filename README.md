@@ -131,7 +131,7 @@ There is a [forum thread](http://forum.faradaymotion.com/d/19-what-is-pacer/2) d
 
 # Support Us
 
-You can support the Pacer project buy purchasing hardware required for running Pacer and other products from the [Faraday Motion Web Shop](http://shop.faradaymotion.com). We highly appreciate your support. 
+You can support the Pacer project by purchasing hardware required for running Pacer and other products from the [Faraday Motion Web Shop](http://shop.faradaymotion.com). We highly appreciate your support. 
 
 # Contributing
 

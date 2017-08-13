@@ -16,9 +16,9 @@ bool ConfigController::loadConfig()
     return false;
   }
 
-  File data = this->getFile("r");
+  File rawConfig = this->getFile("r");
   std::unique_ptr<char[]> buf(new char[2400]);
-  data.readBytes(buf.get(), 2400);
+  rawConfig.readBytes(buf.get(), 2400);
   StaticJsonBuffer<2400> jsonBuffer;
   JsonObject& json = jsonBuffer.parseObject(buf.get());
 

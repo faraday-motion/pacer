@@ -12,19 +12,20 @@
 class ConfigController
 {
 private:
-  const char *configFilePath;
-  const char *factoryConfigPath;
+  String configFilePath;
+  String factoryConfigPath;
   File getFile(const char *permission);
 public:
   Config* config;
-  String configString;
 
   ConfigController();
   bool loadConfig();
-  bool saveConfig();
   bool setConfigString(String newConfigString);
   bool unsetConfigString();
 
+  String getRawConfig();
+  bool writeRawConfig(String rawConfig);
+  
   // Debug
   bool printConfig(JsonObject& json);
 

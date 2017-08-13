@@ -1,11 +1,11 @@
 #include "components/Utility/Log.h"
 #include "WebSocketCommunicator.h"
 
-
 using namespace std::placeholders;
 
 WebSocketCommunicator::WebSocketCommunicator(ConfigController* configController)
 {
+  this->configController = configController;
   this->wss = new WebSocketsServer(configController->config->websocket.port);
   this->wss->onEvent(std::bind(&WebSocketCommunicator::onWsEvent, this, _1, _2, _3, _4));
 }
@@ -18,6 +18,7 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
       break;
     case WStype_CONNECTED:
       {
+        this->clientId = num; // TODO:: We need to keep track of websocket clients.
         Serial.print("New Client Connectd with IP = ");
         // Serial.println(wss->remoteIP(num));
         // Serial.println("Listing Clintes:");
@@ -31,11 +32,14 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
 
     case WStype_TEXT:
       {
-        Serial.println("Received a Websocket Command");
-        Serial.println((char *) &payload[0]);
+        Serial.println("Received a Websocket Message");
+        //Serial.printf("[%u] get Text: %s\n", num, payload);
+        String message = (char *)payload;
+        byte splitIndex = message.indexOf(':');
+        String command = message.substring(0, splitIndex);
+        String data = message.substring(splitIndex + 1);
         // Text Data has been received.
-        String command = (const char *) &payload[0]; // TODO:: Find a better way of casting the payload data type.
-        wss->sendTXT(num, handleCommand(command.toInt()));
+        wss->sendTXT(num, handleCommand(command.toInt(), data));
         yield();
       }
       break;
@@ -49,23 +53,38 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
 
 
 
-const char* WebSocketCommunicator::handleCommand(unsigned int command)
+const char* WebSocketCommunicator::handleCommand(unsigned int command, String data)
 {
   const char* response;
-  Serial.print("Processing Command:: ");
-  Serial.println(command);
+  String config; // hold the raw config
   switch (command) {
-    case 8080:
+    case ENABLE_LOGGER:
       // Enable the logger
       Serial.println("Command:: Enable Logger");
       Log::Instance()->enable();
       response = "Logger Enabled";
       break;
-    case 8181:
+    case DISABLE_LOGGER:
       Serial.println("Command:: Disable Logger");
       // Disable the logger here.
       Log::Instance()->disable();
       response = "Logger Disabled";
+      break;
+    case GET_CONFIG:
+      Serial.println("Command:: Get Raw Config");
+      config = this->configController->getRawConfig();
+      wss->sendTXT(this->clientId, config);
+      break;
+    case SET_CONFIG:
+      Serial.println("Command:: Set Raw Config");
+
+      if (this->configController->writeRawConfig(data)) {
+        wss->sendTXT(this->clientId, "Succesfully saved the new config. Restarting the ESP");
+        ESP.restart();
+      } else {
+        wss->sendTXT(this->clientId, "Failed to save the new config");
+      }
+
       break;
     default: response = "Unknown Command";
   }

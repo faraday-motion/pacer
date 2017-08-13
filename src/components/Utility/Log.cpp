@@ -55,7 +55,6 @@ void Log::enableWebsocket(WebSocketCommunicator* wsCommunicator)
   this->wsCommunicator = wsCommunicator;
 }
 
-
 void Log::enable()
 {
   this->isEnabled = true;

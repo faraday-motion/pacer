@@ -1,6 +1,6 @@
 #include "FMV.h"
 #include "components/Device/AbstractDevice.h" // TODO: Make a class out of this.
-
+#include "components/Utility/Log.h"
 
 FMV::FMV()
 {
@@ -14,6 +14,8 @@ void FMV::setup() {
   this->connectionManager->setup();
   this->controllerManager = new ControllerManager(configController, connectionManager);
   //this->registerWiredDevices(); // We need to have a safety check.
+
+  this->configController->getRawConfig();
   Serial.println("Finished setting up the Faraday Motion Vehicle");
 }
 

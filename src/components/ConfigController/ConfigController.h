@@ -14,18 +14,23 @@ class ConfigController
 private:
   String configFilePath;
   String factoryConfigPath;
-  File getFile(const char *permission);
+  File getFile(const char *permission, bool factoryConfig = false);
+  bool beginSPIFFS();
+  bool endSPIFFS();
 public:
   Config* config;
 
   ConfigController();
+  bool hasLoadedConfig = false;
   bool loadConfig();
   bool setConfigString(String newConfigString);
   bool unsetConfigString();
 
-  String getRawConfig();
+  String getRawConfig(bool factoryConfig = false);
   bool writeRawConfig(String rawConfig);
-  
+
+  bool restoreFactoryConfig();
+
   // Debug
   bool printConfig(JsonObject& json);
 

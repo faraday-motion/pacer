@@ -9,14 +9,17 @@ FMV::FMV()
 void FMV::setup() {
   Serial.println("Setting up the Faraday Motion Vehicle...");
   this->configController = new ConfigController;
-  this->configController->loadConfig();
-  this->connectionManager = new ConnectionManager(configController);
-  this->connectionManager->setup();
-  this->controllerManager = new ControllerManager(configController, connectionManager);
-  //this->registerWiredDevices(); // We need to have a safety check.
-
-  this->configController->getRawConfig();
-  Serial.println("Finished setting up the Faraday Motion Vehicle");
+  if (!this->configController->hasLoadedConfig)
+  {
+    Serial.println("ERROR:: FMV could not configure itself.");
+  } else
+  {
+    this->connectionManager = new ConnectionManager(configController);
+    this->connectionManager->setup();
+    this->controllerManager = new ControllerManager(configController, connectionManager);
+    //this->registerWiredDevices(); // We need to have a safety check.
+    Serial.println("Finished setting up the Faraday Motion Vehicle");
+  }
 }
 
 void FMV::loop()

@@ -38,8 +38,8 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
         byte splitIndex = message.indexOf(':');
         String command = message.substring(0, splitIndex);
         String data = message.substring(splitIndex + 1);
-        // Text Data has been received.
-        wss->sendTXT(num, handleCommand(command.toInt(), data));
+        // Handle Received command
+        this->handleCommand(command.toInt(), data);
         yield();
       }
       break;
@@ -77,14 +77,8 @@ const char* WebSocketCommunicator::handleCommand(unsigned int command, String da
       break;
     case SET_CONFIG:
       Serial.println("Command:: Set Raw Config");
-
-      if (this->configController->writeRawConfig(data)) {
-        wss->sendTXT(this->clientId, "Succesfully saved the new config. Restarting the ESP");
-        ESP.restart();
-      } else {
-        wss->sendTXT(this->clientId, "Failed to save the new config");
-      }
-
+      this->configController->writeRawConfig(data);
+      wss->sendTXT(this->clientId, "Trying to rewrite the configuration.");
       break;
     default: response = "Unknown Command";
   }

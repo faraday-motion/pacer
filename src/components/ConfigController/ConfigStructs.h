@@ -20,6 +20,8 @@ struct _webscocket {
 // Structures the enabled/disabled modules.
 struct _modules {
   byte radio;
+  byte webServer;
+  byte webSocketServer;
 };
 
 // Structures controller config data read from the SPIFFS.

@@ -26,6 +26,7 @@ public:
 
   ConnectionManager(ConfigController* configController);
   void setup();
+  void loop();
 
   Radio* radio;
   Wifi*  wifi;

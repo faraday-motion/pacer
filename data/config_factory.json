@@ -1,6 +1,8 @@
 {
   "modules" : {
-    "radio" : 0
+    "radio" : 0,
+    "webSocketServer" : 1,
+    "webServer" : 1
   },
   "wifi" : {
     "ssid"     : "FARADAY200",

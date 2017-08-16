@@ -11,8 +11,15 @@ void ConnectionManager::setup()
 {
   Serial.println("Started ConnectionManager Setup");
   Config* config = this->configController->config;
-  this->clearPendingDevice();
   handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
+
+  this->clearPendingDevice();
+
+  // Nullify optional modules pointers.
+  this->ws        = nullptr;
+  this->radio     = nullptr;
+  this->webServer = nullptr;
+
 
   // Setup Wifi
   this->wifi = new Wifi();
@@ -20,10 +27,13 @@ void ConnectionManager::setup()
   delay(100);
 
   // Setup WebServer
-  this->webServer = new WebServer();
-  this->webServer->setup();
+  if (config->modules.webServer)
+  {
+    this->webServer = new WebServer();
+    this->webServer->setup();
+  }
+
   // Setup NRF24
-  this->radio = nullptr;
   if(config->modules.radio)
   {
     this->radio = new Radio();
@@ -32,14 +42,34 @@ void ConnectionManager::setup()
   }
 
   //Setup WebSocketCommunicator
-  this->ws = new WebSocketCommunicator(configController); // TODO:: The port should be configurable
-  this->ws->wss->begin();
-  delay(100);
+  if(config->modules.webSocketServer)
+  {
+    this->ws = new WebSocketCommunicator(configController); // TODO:: The port should be configurable
+    this->ws->wss->begin();
+    delay(100);
+  }
 
   // Bind logger to websockets
   Log::Instance()->enableWebsocket(this->ws);
 
   Serial.println("Finished ConnectionManager Setup");
+}
+
+// A loop that groups all the looped methods of different connection interfaces.
+void ConnectionManager::loop()
+{
+  //Websocket loop
+  if (this->ws != nullptr)
+  {
+    this->ws->wss->loop();
+  }
+  //HTTP Server Loop
+  if (this->webServer != nullptr)
+  {
+    this->webServer->handleClient();
+  }
+  // Handle Client Connections
+  this->handleClientConnections();
 }
 
 

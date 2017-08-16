@@ -5,9 +5,11 @@ using namespace std::placeholders;
 
 WebSocketCommunicator::WebSocketCommunicator(ConfigController* configController)
 {
+  Serial.println("Setting up webSocketServer");
   this->configController = configController;
   this->wss = new WebSocketsServer(configController->config->websocket.port);
   this->wss->onEvent(std::bind(&WebSocketCommunicator::onWsEvent, this, _1, _2, _3, _4));
+  Serial.println("Finished setting up webSocketServer");
 }
 
 

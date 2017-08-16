@@ -91,6 +91,8 @@ void Config::configureVehicle(JsonObject& json)
 void Config::configureModules(JsonObject& json)
 {
   this->modules.radio = json["modules"]["radio"];
+  this->modules.webServer = json["modules"]["webServer"];
+  this->modules.webSocketServer = json["modules"]["webSocketServer"];
 }
 
 // Debug

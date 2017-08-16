@@ -8,7 +8,8 @@
 NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, AbstractDevice device)
  : AbstractController(configController, device)
 {
-
+  Serial.println("--->");
+  Serial.println("Setting up a NunchuckController...");
   this->radio = radio;
   this->nunchuck = device; // TODO:: Convert the abstract device pointer into a concered RadioDevice object
 
@@ -34,7 +35,7 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
   requestPacket.Value3  = 0;
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
-
+  Serial.println("Finished setting up the NunchuckController.");
 }
 
 

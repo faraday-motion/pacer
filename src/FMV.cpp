@@ -12,12 +12,13 @@ void FMV::setup() {
   if (!this->configController->hasLoadedConfig)
   {
     Serial.println("ERROR:: FMV could not configure itself.");
-  } else
+  }
+  else
   {
     this->connectionManager = new ConnectionManager(configController);
     this->connectionManager->setup();
     this->controllerManager = new ControllerManager(configController, connectionManager);
-    //this->registerWiredDevices(); // We need to have a safety check.
+    this->registerWiredDevices(); // We need to have a safety check.
     Serial.println("Finished setting up the Faraday Motion Vehicle");
   }
 }
@@ -30,7 +31,7 @@ void FMV::loop()
   this->connectionManager->webServer->handleClient();
 
   // Step 1. Check for a physical device that is trying to connect
-  //this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
+  this->connectionManager->handleClientConnections(); // detects new device and sets it as pending.
   // Step 2. Register physical devices as a controller
   this->handlePendingConnectionDevices(); // try to register the pending controllers if any are waiting.
   // Step 3. Set active a controller. // NOTE:: now we automatically enable the active controller if there's no other active controller
@@ -42,7 +43,7 @@ void FMV::loop()
   while (Serial.available() > 0) this->controllerManager->motorController->processUartByte(Serial.read());
   // // Step 4. Handle the Active Controller.
   byte status = this->controllerManager->handleController();
-  if (status == 2) // Status 2 stands for success.
+  if (status == 2) // Status 2 stands for unsuccess.
   {
     Serial.println("FMV detected lost connection on the active controller.");
     // We know that the connection was lost. What now?
@@ -56,12 +57,13 @@ void FMV::loop()
 void FMV::registerWiredDevices()
 {
   Config* config = this->configController->config;
-  byte count = 1;
-  if (count > 0) {
-    for (byte i = 0; i < count; i++)
+  if (config->wiredDevicesCount > 0) {
+    for (byte i = 0; i < config->wiredDevicesCount; i++)
     {
-      AbstractDevice wiredDevice(config->wiredDevices[i]);
-      this->controllerManager->registerController(wiredDevice);
+      if(config->wiredDevices[i].enabled == 1) {
+        AbstractDevice wiredDevice(config->wiredDevices[i]);
+        this->controllerManager->registerController(wiredDevice);
+      }
     }
   }
 }

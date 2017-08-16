@@ -4,10 +4,11 @@
 WiredController::WiredController(ConfigController* configController, AbstractDevice device)
  : AbstractController(configController, device)
 {
+  Serial.println("--->");
   Serial.println("Setting up a WiredController...");
   accelConstraint = device.accelConstraint;
   brakeConstraint = device.brakeConstraint;
-  Serial.println("Finished tetting up the WiredController...");
+  Serial.println("Finished setting up the WiredController.");
 }
 
 

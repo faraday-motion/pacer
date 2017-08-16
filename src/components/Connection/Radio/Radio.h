@@ -72,7 +72,6 @@ public:
 
   AbstractDevice pendingDevice;
   void clearPendingDevice();
-  void listenToRegisteredRadioDevice(AbstractDevice device);
 
   // Debug
   void printRequestPacket();

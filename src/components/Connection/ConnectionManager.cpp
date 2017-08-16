@@ -17,16 +17,16 @@ void ConnectionManager::setup()
   // Setup Wifi
   this->wifi = new Wifi();
   this->wifi->setup(configController);
-  delay(500);
+  delay(100);
 
   // Setup WebServer
   this->webServer = new WebServer();
   this->webServer->setup();
 
   // Setup NRF24
-  // this->radio = new Radio();
-  // this->radio->setup();
-  // delay(500);
+  this->radio = new Radio();
+  this->radio->setup();
+  delay(100);
 
   //Setup WebSocketCommunicator
   this->ws = new WebSocketCommunicator(configController); // TODO:: The port should be configurable
@@ -35,7 +35,6 @@ void ConnectionManager::setup()
 
   // Bind logger to websockets
   Log::Instance()->enableWebsocket(this->ws);
-
 
   Serial.println("Finished ConnectionManager Setup");
 }
@@ -53,16 +52,16 @@ void ConnectionManager::handleClientConnections()
       this->pendingDevice = this->wifi->pendingDevice;
     }
 
-    // if (this->radio->handleClientConnections() == true)
-    // {
-    //   Serial.println("Radio Detected New Pending Device");
-    //
-    //   // Copy the pending Device so that FMV can work with it.
-    //   pendingDevice = radio->pendingDevice;
-    //
-    //   // Clear the pending deivce on the radio object.
-    //   radio->clearPendingDevice();
-    // }
+    if (this->radio->handleClientConnections() == true)
+    {
+      Serial.println("Radio Detected New Pending Device");
+
+      // Copy the pending Device so that FMV can work with it.
+      pendingDevice = radio->pendingDevice;
+
+      // Clear the pending deivce on the radio object.
+      radio->clearPendingDevice();
+    }
   }
 }
 

@@ -5,9 +5,12 @@
 PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, AbstractDevice device)
  : AbstractController(configController, device)
 {
+  Serial.println("--->");
+  Serial.println("Setting up a PhoneController...");
   this->wifi = wifi;
   this->phone = device;
   this->connectionLostTimer = new Metro(_LOST_CONNECTION);
+  Serial.println("Finished setting up the PhoneController.");
 }
 
 

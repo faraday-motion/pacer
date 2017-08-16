@@ -12,6 +12,7 @@ public:
   _currentControlConfig   currentControl;
   _wiredDevice            wiredDevices[5];
   _webscocket             websocket;
+  _modules                modules;
   byte                    wiredDevicesCount;
   byte                    motorCount;
   Config();
@@ -23,6 +24,7 @@ public:
   void configureWifi(JsonObject& json);
   void configureWebSockets(JsonObject& json);
   void configureVehicle(JsonObject& json);
+  void configureModules(JsonObject& json);
 
   // Debug
   void printConfig();

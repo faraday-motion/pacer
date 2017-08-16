@@ -19,6 +19,8 @@ private:
   // Object Pointers
   Metro* handleClientInterval;
   ConfigController* configController;
+  void handleWifiConnections();
+  void handleRadioConnections();
 
 public:
 

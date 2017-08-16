@@ -10,7 +10,7 @@ ConnectionManager::ConnectionManager(ConfigController* configController)
 void ConnectionManager::setup()
 {
   Serial.println("Started ConnectionManager Setup");
-
+  Config* config = this->configController->config;
   this->clearPendingDevice();
   handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
 
@@ -22,11 +22,14 @@ void ConnectionManager::setup()
   // Setup WebServer
   this->webServer = new WebServer();
   this->webServer->setup();
-
   // Setup NRF24
-  this->radio = new Radio();
-  this->radio->setup();
-  delay(100);
+  this->radio = nullptr;
+  if(config->modules.radio)
+  {
+    this->radio = new Radio();
+    this->radio->setup();
+    delay(100);
+  }
 
   //Setup WebSocketCommunicator
   this->ws = new WebSocketCommunicator(configController); // TODO:: The port should be configurable
@@ -42,27 +45,41 @@ void ConnectionManager::setup()
 
 void ConnectionManager::handleClientConnections()
 {
-
   if (handleClientInterval->check() == 1)
   {
-    if ( this->wifi->handleClientConnections() == true )
-    {
+    this->handleWifiConnections();
+    this->handleRadioConnections();
+  }
+}
+
+/** Checks if wifi is instantiated and checks for new clinets wanting to connect */
+void ConnectionManager::handleWifiConnections()
+{
+  if (this->wifi != nullptr)
+  {
+    if (this->wifi->handleClientConnections() == true) {
       Serial.println("Wifi Detected New Pending Device");
-      // TODO:: We have an issue the pending devices are being overwritten here.
+      // TODO:: We have an issue the pending devices are being overwritten here by handleRadioConnections()
       this->pendingDevice = this->wifi->pendingDevice;
     }
+  }
+}
 
+/** Checks if radio is instantiated and checks for new clinets wanting to connect */
+void ConnectionManager::handleRadioConnections()
+{
+  if (this->radio != nullptr)
+  {
     if (this->radio->handleClientConnections() == true)
     {
       Serial.println("Radio Detected New Pending Device");
-
       // Copy the pending Device so that FMV can work with it.
-      pendingDevice = radio->pendingDevice;
-
+      this->pendingDevice = this->radio->pendingDevice;
       // Clear the pending deivce on the radio object.
-      radio->clearPendingDevice();
+      this->radio->clearPendingDevice();
     }
   }
+
 }
 
 /**

@@ -7,12 +7,14 @@ Config::Config()
 void Config::setConfig(JsonObject& json)
 {
   this->configureWiredDevices(json);
-  delay(10);
+  delay(5);
   this->configureWifi(json);
-  delay(10);
+  delay(5);
   this->configureVehicle(json);
-  delay(10);
+  delay(5);
   this->configureWebSockets(json);
+  delay(5);
+  this->configureModules(json);
 }
 
 void Config::configureWiredDevices(JsonObject& json)
@@ -84,6 +86,11 @@ void Config::configureVehicle(JsonObject& json)
   this->currentControl.defaultCurrentBrakeMax = json["currentControl"]["defaultCurrentBrakeMax"];
   this->currentControl.defaultCurrentAccelerationMin = json["currentControl"]["defaultCurrentAccelerationMin"];
   this->currentControl.defaultCurrentAccelerationMax = json["currentControl"]["defaultCurrentAccelerationMax"];
+}
+
+void Config::configureModules(JsonObject& json)
+{
+  this->modules.radio = json["modules"]["radio"];
 }
 
 // Debug

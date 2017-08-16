@@ -12,8 +12,14 @@ struct _wifiConfig {
   int channel;
 };
 
+// Structures websocket config data
 struct _webscocket {
   int port;
+};
+
+// Structures the enabled/disabled modules.
+struct _modules {
+  byte radio;
 };
 
 // Structures controller config data read from the SPIFFS.

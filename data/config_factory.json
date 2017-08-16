@@ -1,4 +1,7 @@
 {
+  "modules" : {
+    "radio" : 0
+  },
   "wifi" : {
     "ssid"     : "FARADAY200",
     "port"     : 8899,

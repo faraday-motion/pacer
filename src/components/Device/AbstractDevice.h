@@ -18,6 +18,9 @@ public:
   byte address[5];
   byte channel = 100;
 
+  // Debug
+  void print();
+
 };
 
 #endif

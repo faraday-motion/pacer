@@ -17,6 +17,8 @@ class FMV {
   ConnectionManager* connectionManager;
   ControllerManager* controllerManager;
 
+  bool wasConfigured = 0; 
+
 public:
   bool stopScanning = false;
   FMV();

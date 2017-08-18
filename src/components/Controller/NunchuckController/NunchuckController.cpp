@@ -17,6 +17,7 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
    * Setiing the Metro Timers
    */
   this->connectionLostTimer = new Metro(_LOST_CONNECTION);
+  this->connectionLostTimer->reset(); // just to be safe
 
   // Init.
   responsePacket.Id      = 0;
@@ -41,6 +42,8 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
 
 bool NunchuckController::handleController()
 {
+  // Start listening to the physical nunchuck
+  this->radio->changeDevice(nunchuck);
 
   if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
@@ -49,8 +52,6 @@ bool NunchuckController::handleController()
     this->processResponse(); // populate the requestPacket
   }
   delay(5);
-
-  //this->printRequestPacket();
   this->radio->tryWriteBytes(&requestPacket);
 
   // connectionLostTimer per each physical device
@@ -74,23 +75,22 @@ void NunchuckController::processResponse()
   }
   else if (responsePacket.Command == 55)
   {
-    Serial.print(":::::::::::::: Controller inputs = ");
+    Serial.print(":::: Nunchuck Controller inputs = ");
     Serial.print(responsePacket.Value2);
     Serial.println();
-    // This is hardcoded for
+    // TODO:: Set constraints from config.
     byte s = map(responsePacket.Value2, 1, 240, 0, 100);
     if (s >= 45 && s <= 55)
     {
       s = 50;
     }
-    Serial.println(s);
     processInput(s);
-    // processInput(responsePacket.Value2);
   }
 }
 
 bool NunchuckController::enable()
 {
+    Serial.println("Nunchuck is enabled");
     this->radio->changeDevice(nunchuck);
     requestPacket.Command = 50;
     return true;

@@ -20,7 +20,6 @@ void ConnectionManager::setup()
   this->radio     = nullptr;
   this->webServer = nullptr;
 
-
   // Setup Wifi
   this->wifi = new Wifi();
   this->wifi->setup(configController);

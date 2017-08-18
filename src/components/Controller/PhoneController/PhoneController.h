@@ -22,7 +22,6 @@ private:
   byte getChecksum(byte* array, byte arraySize);
   bool validateChecksum(byte* array, byte arraySize);
   void read();
-  void write();
 
 public:
   Wifi* wifi;

@@ -25,6 +25,8 @@ public:
   ConfigController* configController;
   MotorController*  motorController;
 
+  void loop();
+
   bool allocateRegisteredController(AbstractController* controller);
   int getControllerIndexById(byte id[]);
 
@@ -38,10 +40,9 @@ public:
   bool unsetActiveController();
   bool tryOtherControllers();
 
-  byte handleController();
+  byte handleActiveController();
 
   // Debug
-
   void printRegisteredControllers();
   void printActiveController();
 

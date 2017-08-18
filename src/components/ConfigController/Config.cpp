@@ -19,20 +19,19 @@ void Config::setConfig(JsonObject& json)
 
 void Config::configureWiredDevices(JsonObject& json)
 {
-  // Counters
-  this->wiredDevicesCount = json["wiredDevicesCount"];
   // // Loop through all default wired devices.
   for (JsonObject::iterator it=json.begin(); it!=json.end(); ++it)
   {
     if(!strcmp(it->key, "wiredDevices")){
-      size_t length = it->value.size();
-      for (size_t i = 0; i < length; i++) {
+      size_t wiredDevicesCount = it->value.size();
+      this->wiredDevicesCount = wiredDevicesCount;
+      for (size_t i = 0; i < wiredDevicesCount; i++) {
         const char* id = it->value[i]["id"];
-        this->wiredDevices[i].id[0] = id[0];
-        this->wiredDevices[i].id[1] = id[1];
-        this->wiredDevices[i].id[2] = id[2];
-        this->wiredDevices[i].id[3] = id[3];
-        this->wiredDevices[i].id[4] = id[4];
+        this->wiredDevices[i].id[0] = id[0]; // Casting const char* to byte[]
+        this->wiredDevices[i].id[1] = id[1]; // Casting const char* to byte[]
+        this->wiredDevices[i].id[2] = id[2]; // Casting const char* to byte[]
+        this->wiredDevices[i].id[3] = id[3]; // Casting const char* to byte[]
+        this->wiredDevices[i].id[4] = id[4]; // Casting const char* to byte[]
         this->wiredDevices[i].type = it->value[i]["type"];
         this->wiredDevices[i].priority = it->value[i]["priority"];
         this->wiredDevices[i].enabled = it->value[i]["enabled"];

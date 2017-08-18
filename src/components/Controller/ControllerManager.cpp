@@ -16,6 +16,7 @@ ControllerManager::ControllerManager(ConfigController* configController, Connect
 
   activeController = nullptr;
   controllerReadInterval = new Metro(10);
+  controllerReadInterval->reset(); // Just to be safe.
   printInterval = new Metro(500);
 
   for (byte i = 0; i < 5; i++)
@@ -24,19 +25,29 @@ ControllerManager::ControllerManager(ConfigController* configController, Connect
   }
 }
 
-byte ControllerManager::handleController()
+// Main loop of this object. Handles the active controller.
+void ControllerManager::loop()
 {
-  byte status = 0; // 0 - no active controller, 1 - status ok , 2 - Lost Connection
+  byte status = this->handleActiveController();
+  if (status == 2)
+  {
+    Serial.println("Connection Lost to controller");
+    this->unsetActiveController();
+  }
+}
+
+
+byte ControllerManager::handleActiveController()
+{
+  byte status = 0; // 0 - No activeController ; 1 - all good ; 2 - connection lost on activeController
   if (activeController != nullptr && controllerReadInterval->check() == 1){
-    bool success = activeController->handleController();
-    if (success)
-    {
+    if (activeController->handleController()) {
       status = 1;
     }
-    else if (!success)
+    else
     {
-      Log::Instance()->write("EVENT: handleController(), Connection Status 2 (Lost Connection)");
       status = 2;
+      Log::Instance()->write("EVENT: handleController(), Connection Status 2 (Lost Connection)");
     }
   }
   return status;
@@ -61,7 +72,6 @@ bool ControllerManager::unsetActiveController()
 {
   Serial.println("The active controller is being unregisterd and unset.");
   removeRegisteredController(activeController->controller.id);
-  //delete activeController; // Delete the object, hopefully... //TODO:: It might be wrong to delete the object when unsetting the as active. We lose the registered Controller.
   activeController = nullptr;
   Log::Instance()->write("EVENT: unsetActiveController(), registered controller was unset");
   if (this->activeController == nullptr)
@@ -75,8 +85,7 @@ bool ControllerManager::tryOtherControllers()
 {
   if (this->activeController == nullptr)
   {
-    // Loop through the registered controllers
-    // IDEA:: Give priorities to the controllers.
+    // Loop through the registered controllers // IDEA:: Give priorities to the controllers.
     for (size_t i = 0; i < 5; i++) {
       if (this->availableControllers[i] != nullptr)
       {
@@ -101,19 +110,9 @@ bool ControllerManager::registerController(AbstractDevice device)
 {
   if (this->getControllerIndexById(device.id) != -1)
   {
-    Serial.print("Controller With ID:: ");
-    Serial.print(device.id[0]);
-    Serial.print(" ");
-    Serial.print(device.id[1]);
-    Serial.print(" ");
-    Serial.print(device.id[2]);
-    Serial.print(" ");
-    Serial.print(device.id[3]);
-    Serial.print(" ");
-    Serial.print(device.id[4]);
-    Serial.print(" Type:: ");
-    Serial.print(device.type);
-    Serial.println(" is already registerd");
+    Serial.println("Controller With ID:: ");
+    device.print();
+    Serial.println(" is already registerd.");
 
     // If it is registered and there's no active controller set as active.
     if (this->activeController == nullptr)
@@ -126,17 +125,17 @@ bool ControllerManager::registerController(AbstractDevice device)
 
   if (device.type == 1)
   {
-      Serial.println("Registering a PhoneController");
-      AbstractController * phoneController = new PhoneController(configController, connectionManager->wifi, device);
-      allocateRegisteredController(phoneController);
-      return true;
+    Serial.println("Registering a PhoneController");
+    AbstractController * phoneController = new PhoneController(configController, connectionManager->wifi, device);
+    allocateRegisteredController(phoneController);
+    return true;
   }
   else if (device.type == 2)
   {
-      Serial.println("Registering a NunchuckController");
-      AbstractController * nunchuckController = new NunchuckController(configController, connectionManager->radio, device);
-      allocateRegisteredController(nunchuckController);
-      return true;
+    Serial.println("Registering a NunchuckController");
+    AbstractController * nunchuckController = new NunchuckController(configController, connectionManager->radio, device);
+    allocateRegisteredController(nunchuckController);
+    return true;
   }
   else if (device.type == 3)
   {
@@ -160,8 +159,8 @@ bool ControllerManager::registerController(AbstractDevice device)
   }
   else
   {
-      Serial.println("Unknown type of controller");
-      return false;
+    Serial.println("Unknown type of controller");
+    return false;
   }
 }
 

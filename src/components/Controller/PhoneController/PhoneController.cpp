@@ -48,7 +48,8 @@ bool PhoneController::disable()
   return true;
 }
 
-
+// TODO:: This reading of client should be handled by the wifi and not the phone.
+// TODO:: see Radio.h and Nunchuck.h implementation.
 //NOTE:: the wifi->client is representative of the physical device now.
 void PhoneController::read()
 {
@@ -87,7 +88,7 @@ void PhoneController::read()
        if (PhoneController::validateChecksum(m, packetCount))
        {
            yield();
-           Serial.println("PHONE SENDING DATA");
+           Serial.print(":::: PhoneController inputs = ");
            Serial.println(m[4]);
            processInput(m[4]);
        }
@@ -100,12 +101,6 @@ void PhoneController::read()
 
 } // end readFromWifiClient
 
-
-// Placeholder for now.
-void PhoneController::write()
-{
-  return;
-}
 
 byte PhoneController::getChecksum(byte* array, byte arraySize)
 {

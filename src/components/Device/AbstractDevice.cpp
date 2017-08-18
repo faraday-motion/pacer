@@ -29,7 +29,21 @@ AbstractDevice::AbstractDevice(_wiredDevice device)
 
   //pending
   pending  = 0;
+}
 
-
-
+// Debub
+void AbstractDevice::print()
+{
+  Serial.println();
+  Serial.print(id[0]);
+  Serial.print(" ");
+  Serial.print(id[1]);
+  Serial.print(" ");
+  Serial.print(id[2]);
+  Serial.print(" ");
+  Serial.print(id[3]);
+  Serial.print(" ");
+  Serial.print(id[4]);
+  Serial.print(" Type:: ");
+  Serial.println(type);
 }

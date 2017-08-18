@@ -140,3 +140,6 @@ There is a long road of development until we get Pacer to be the go to solution.
 For minor fixes of code and documentation, go ahead and submit a pull request.
 
 Feature branches with lots of small commits (especially titled "oops", "fix typo", "forgot to add file", etc.) should be squashed before opening a pull request. At the same time, please refrain from putting multiple unrelated changes into a single pull request.
+
+# Authors 
+Constantin Colac and Sune Pedersen

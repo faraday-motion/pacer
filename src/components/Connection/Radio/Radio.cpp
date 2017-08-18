@@ -24,7 +24,8 @@ void Radio::setup()
   _receiver->setRetries(0, 0);
   //_receiver->setDataRate(RF24_250KBPS);
   //_receiver->setPALevel(RF24_1MBPS);
-  _receiver->setPALevel(RF24_1MBPS); // Uncomment for more power
+  //_receiver->setPALevel(RF24_1MBPS); // Uncomment for more power
+  _receiver->setPALevel(RF24_PA_MAX);
   _receiver->setPayloadSize(packetSize);
    this->setChannel(channelDefault); // we also set the currentChannel member here.
   _receiver->failureDetected = 0;
@@ -193,7 +194,7 @@ void Radio::readWrite()
   }
 
   if (this->tryReadBytes(&responsePacket)) { // Populates the responsePacket.
-     this->printResponsePacket();
+     //this->printResponsePacket();
      delay(5);
      this->processResponse(); // populate the requestPacket
   }
@@ -319,7 +320,7 @@ void Radio::changeDevice(AbstractDevice device)
   Serial.println("Switching Devices");
   setChannel(device.channel);
   setAddress(device.address);
-  this->printDeviceCredentials(device);
+  //this->printDeviceCredentials(device);
   openPipes();
   delayMicroseconds(500);
 }

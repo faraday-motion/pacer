@@ -4,6 +4,7 @@
     "webSocketServer" : 1,
     "webServer" : 1
   },
+
   "wifi" : {
     "ssid"     : "FARADAY200",
     "port"     : 8899,
@@ -12,6 +13,7 @@
     "channel"  : 11,
     "pass"     : "faraday200"
   },
+
   "websocket" : {
     "port" : 81
   },
@@ -32,6 +34,7 @@
     "defaultCurrentAccelerationMin" : 0.25,
     "defaultCurrentAccelerationMax" : 30
   },
+
   "motorCount" : 4,
   "wiredDevicesCount" : 2,
   "wiredDevices" : [
@@ -39,7 +42,7 @@
       "id" : "ACCE1",
       "type" : 3,
       "priority" : 1,
-      "enabled" : 1,
+      "enabled" : 0,
       "constraints" : {
         "brake" : 200,
         "accel" : 650
@@ -49,12 +52,11 @@
       "id" : "JOYS1",
       "type" : 4,
       "priority" : 1,
-      "enabled" : 1,
+      "enabled" : 0,
       "constraints" : {
         "brake" : 190,
         "accel" : 840
       }
     }
   ]
-
 }

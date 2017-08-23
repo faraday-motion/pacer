@@ -14,15 +14,38 @@ Log* Log::Logger()
 {
   if(!log){ // Only allow one instance of class to be generated.
     log = new Log;
+    log->addTarget(Log::Target::SERIAL_LOG);
   }
 
   return log;
 }
 
 
-void Log::setTarget(Log::Target target)
+void Log::addTarget(Log::Target target)
 {
-  this->logTarget = target;
+  for (byte i = 0; i < 3; i++)
+  {
+    if (this->logTargets[i] == target)
+      break; // target already added.
+
+    if (this->logTargets[i] == Log::Target::NULL_TARGET) {
+      this->logTargets[i] = target;
+      return;
+    }
+  }
+
+  this->write(Log::Level::DEBUG, "No more log target slots");
+}
+
+void Log::removeTarget(Log::Target target)
+{
+  for (byte i = 0; i < 3; i++)
+  {
+    if (this->logTargets[i] == target) {
+      this->logTargets[i] = Log::Target::NULL_TARGET;
+    }
+  }
+
 }
 
 void Log::setLevel(Log::Level level)
@@ -76,47 +99,36 @@ void Log::write(Log::Level level, String message)
   // Append the message to our log statement
   toLog += ":: " + message;
 
-  // Log to Serial.
-  if ((this->logTarget & Log::Target::SERIAL_LOG)  == Log::Target::SERIAL_LOG) {
-    Serial.println(toLog);
+  for (byte i = 0; i < 3; i++) {
+    // Log to Serial.
+    if ((this->logTargets[i] & Log::Target::SERIAL_LOG)  == Log::Target::SERIAL_LOG) {
+      Serial.println(toLog);
+    }
+
+    // Log to Websocksets
+    if ((this->logTargets[i] & Log::Target::WEBSOCKETS) == Log::Target::WEBSOCKETS) {
+      if (this->wsCommunicator == nullptr) {
+        return;
+      }
+
+      // TODO:: The wsCommunicator should keep track of clients. We should not broadcast
+      this->wsCommunicator->wss->broadcastTXT(toLog);
+    }
+
+    // Log to file
+    if ((this->logTargets[i] & Log::Target::LOG_FILE) == Log::Target::LOG_FILE) {
+      // TOOD:: Log to file
+      Serial.println("This should be logged to file");
+      Serial.println(toLog);
+    }
   }
 
-  // Log to Websocksets
-  if ((this->logTarget & Log::Target::WEBSOCKETS) == Log::Target::WEBSOCKETS) {
-    // TODO:: Log to websockets
-    Serial.println("This should be logged to websockets");
-    Serial.println(toLog);
-  }
 
-  // Log to file
-  if ((this->logTarget & Log::Target::LOG_FILE) == Log::Target::LOG_FILE) {
-    // TOOD:: Log to file
-    Serial.println("This should be logged to file");
-    Serial.println(toLog);
-  }
 
 }
 
 
-// void Log::logAccel(float average, byte newSpeed, byte targetSpeed, byte previousSpeed, long motorRpm)
-// {
-//     if (isEnabled)
-//     {
-//       String a = (String)average;
-//
-//       String message =
-//         "AVRG: " + (String)average + " " +
-//         " newSpd: " + (String)newSpeed +
-//         " lockTr: " +  (String)targetSpeed +
-//         " currSpd: " + (String)previousSpeed +
-//         " RPM: " + (String)motorRpm;
-//       wsCommunicator->wss->broadcastTXT(message);
-//     }
-//
-// }
-
-
-void Log::enableWebsocket(WebSocketCommunicator* wsCommunicator)
+void Log::bindWebscoket(WebSocketCommunicator* wsCommunicator)
 {
   this->wsCommunicator = wsCommunicator;
 }

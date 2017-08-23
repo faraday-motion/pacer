@@ -12,6 +12,7 @@ public:
 
   // Available Targets.
  enum Target : byte {
+    NULL_TARGET = 0,
     SERIAL_LOG = 1, // can't use SERIAL.
     WEBSOCKETS = 2,
     LOG_FILE = 3
@@ -29,9 +30,13 @@ public:
  // Get signleton instance
  static Log* Logger();
 
- // Set the location to log messages.
+ // Add the location to log messages.
  // @param Target, the log Target.
- void setTarget(Target target);
+ void addTarget(Target target);
+
+ // Remove the location to log messages.
+ // @param Target, the log Target.
+ void removeTarget(Target target);
 
  // Set the severity of the message to log.
  // @param Level, the log level to set
@@ -56,13 +61,12 @@ public:
  // @param String, the message.
  void write(Level level, String message);
 
-
- // Public Methods..
- void enableWebsocket(WebSocketCommunicator* wsCommunicator);
+ // Bind the WebsocketServer Object to the logger as a target.
+ // @param WebSocketCommunicator, the WebSocketCommunicator Object
+ void bindWebscoket(WebSocketCommunicator* wsCommunicator);
  void enable();
  void disable();
  void write(String payload);
- void logAccel(float average, byte newSpeed, byte targetSpeed, byte previousSpeed, long motorRpm);
 
 protected:
   Log(){}; // Private so that it can not be called
@@ -72,14 +76,14 @@ private:
   static Log* log; // The log instance.
 
   // write() uses these variables to determine which messages should be written where.
-  Level logLevel = Level::DEBUG; // default log level.
-  Target logTarget = Target::SERIAL_LOG; // default log target.
+  Level logLevel = Level::WARNING; // default log level.
+  Target logTargets[3]; // default log target.
   String logFile = "";
 
   // TODO:: Manually convert levels to strings.
 
   bool isEnabled = false;
-  WebSocketCommunicator* wsCommunicator;
+  WebSocketCommunicator* wsCommunicator = nullptr;
 };
 
 

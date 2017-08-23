@@ -64,14 +64,42 @@ const char* WebSocketCommunicator::handleCommand(unsigned int command, String da
     case ENABLE_LOGGER:
       // Enable the logger
       Log::Logger()->write(Log::Level::DEBUG, "Command:: Enable Logger");
-      // Log::Instance()->enable();
+      Log::Logger()->enable();
       response = "Logger Enabled";
       break;
     case DISABLE_LOGGER:
-      Log::Logger()->write(Log::Level::DEBUG, "Command:: Disable Logger");
       // Disable the logger here.
-      // Log::Instance()->disable();
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: Disable Logger");
+      Log::Logger()->disable();
       response = "Logger Disabled";
+      break;
+    case ADD_LOGGER_TARGET:
+      if(data == "SERIAL_LOG")
+        Log::Logger()->addTarget(Log::Target::SERIAL_LOG);
+      if(data == "WEBSOCKETS")
+        Log::Logger()->addTarget(Log::Target::WEBSOCKETS);
+      if(data == "LOG_FILE")
+        Log::Logger()->addTarget(Log::Target::LOG_FILE);
+      break;
+    case REMOVE_LOGGER_TARGET:
+      if(data == "SERIAL_LOG")
+        Log::Logger()->removeTarget(Log::Target::SERIAL_LOG);
+      if(data == "WEBSOCKETS")
+        Log::Logger()->removeTarget(Log::Target::WEBSOCKETS);
+      if(data == "LOG_FILE")
+        Log::Logger()->removeTarget(Log::Target::LOG_FILE);
+      break;
+    case SET_LOGGER_LEVEL:
+      if(data == "DEBUG")
+        Log::Logger()->setLevel(Log::Level::DEBUG);
+      if(data == "INFO")
+        Log::Logger()->setLevel(Log::Level::INFO);
+      if(data == "NOTICE")
+        Log::Logger()->setLevel(Log::Level::NOTICE);
+      if(data == "WARNING")
+        Log::Logger()->setLevel(Log::Level::WARNING);
+      if(data == "ERR")
+        Log::Logger()->setLevel(Log::Level::ERR);
       break;
     case GET_CONFIG:
       Log::Logger()->write(Log::Level::DEBUG, "Command:: Get Config");

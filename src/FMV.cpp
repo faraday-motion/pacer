@@ -8,7 +8,7 @@ FMV::FMV()
 
 void FMV::setup() {
 
-  Log::Logger()->enable(); // TODO:: Have it configured and changeble at runtime.
+  Log::Logger()->enable();
   Log::Logger()->setLevel(Log::Level::DEBUG);
   Log::Logger()->write(Log::Level::INFO, "Setting up the Faraday Motion Vehicle...");
 

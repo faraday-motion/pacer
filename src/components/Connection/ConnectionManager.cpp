@@ -46,9 +46,9 @@ void ConnectionManager::setup()
     this->ws->wss->begin();
     delay(100);
   }
-  //
-  // // Bind logger to websockets
-  // Log::log->enableWebsocket(this->ws);
+
+  // Bind logger to websockets
+  Log::Logger()->bindWebscoket(this->ws);
 
   Log::Logger()->write(Log::Level::INFO, "Finished ConnectionManager Setup");
 }

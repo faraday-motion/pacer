@@ -1,22 +1,24 @@
 #include "AbstractController.h"
+#include "components/Utility/Log.h"
 
 
 AbstractController::AbstractController(ConfigController* configController, AbstractDevice device)
 {
-  Serial.println("Constructing the Abastract Controller");
+  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of AbstractController: ");
   this->config = configController->config;
   this->motorController = new MotorController; // Question:: Does this mean I have a new motorController object for each instance of the AbstractController?
   this->motorController->setup(configController);
 
   this->controller = device; // TODO:: why do we store the device on the abstract and the concrete controller?
   this->setup();
+  Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of AbstractController: ");
 }
 
 void AbstractController::setup()
 {
   // Setting the pointers to Motor and Wifi.
   //this->motorController = motorController;
-  Serial.println("Controller is setting up the CurrentController");
+  Log::Logger()->write(Log::Level::DEBUG, "Setting up the AbstractController...");
   currentController.setup(config);
   // Seting the default values and states for the controller;
   defaultInputNeutral         = config->controller.defaultInputNeutral;
@@ -29,6 +31,7 @@ void AbstractController::setup()
   // Setting inputs to neutral;
   latestInput                 = defaultInputNeutral;
   previousInput               = defaultInputNeutral;
+  Log::Logger()->write(Log::Level::DEBUG, "Finished Setting up the AbstractController...");
 
 }
 
@@ -75,5 +78,5 @@ void AbstractController::processInput(byte latestInput)
     latestInput = defaultInputNeutral;
   }
   previousInput = constrain(latestInput, defaultInputMaxBrake, defaultInputMaxAcceleration);
-  AbstractController::setMotorPower();
+  this->setMotorPower();
 }

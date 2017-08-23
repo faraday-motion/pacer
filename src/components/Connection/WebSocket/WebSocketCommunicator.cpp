@@ -5,11 +5,11 @@ using namespace std::placeholders;
 
 WebSocketCommunicator::WebSocketCommunicator(ConfigController* configController)
 {
-  Serial.println("Setting up webSocketServer");
+  Log::Logger()->write(Log::Level::INFO, "Setting up webSocketServer");
   this->configController = configController;
   this->wss = new WebSocketsServer(configController->config->websocket.port);
   this->wss->onEvent(std::bind(&WebSocketCommunicator::onWsEvent, this, _1, _2, _3, _4));
-  Serial.println("Finished setting up webSocketServer");
+  Log::Logger()->write(Log::Level::INFO, "Finished setting up webSocketServer");
 }
 
 
@@ -21,7 +21,7 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
     case WStype_CONNECTED:
       {
         this->clientId = num; // TODO:: We need to keep track of websocket clients.
-        Serial.print("New Client Connectd with IP = ");
+        //Serial.print("New Client Connectd with IP = ");
         // Serial.println(wss->remoteIP(num));
         // Serial.println("Listing Clintes:");
         // for (uint8_t i=0; i < WEBSOCKETS_SERVER_CLIENT_MAX  ; i++) {
@@ -34,7 +34,8 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
 
     case WStype_TEXT:
       {
-        Serial.println("Received a Websocket Message");
+        Log::Logger()->write(Log::Level::DEBUG, "Received Websocket Message");
+
         //Serial.printf("[%u] get Text: %s\n", num, payload);
         String message = (char *)payload;
         byte splitIndex = message.indexOf(':');
@@ -62,23 +63,23 @@ const char* WebSocketCommunicator::handleCommand(unsigned int command, String da
   switch (command) {
     case ENABLE_LOGGER:
       // Enable the logger
-      Serial.println("Command:: Enable Logger");
-      Log::Instance()->enable();
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: Enable Logger");
+      // Log::Instance()->enable();
       response = "Logger Enabled";
       break;
     case DISABLE_LOGGER:
-      Serial.println("Command:: Disable Logger");
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: Disable Logger");
       // Disable the logger here.
-      Log::Instance()->disable();
+      // Log::Instance()->disable();
       response = "Logger Disabled";
       break;
     case GET_CONFIG:
-      Serial.println("Command:: Get Raw Config");
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: Get Config");
       config = this->configController->getRawConfig();
       wss->sendTXT(this->clientId, config);
       break;
     case SET_CONFIG:
-      Serial.println("Command:: Set Raw Config");
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: Set Config");
       this->configController->writeRawConfig(data);
       wss->sendTXT(this->clientId, "Trying to rewrite the configuration.");
       break;

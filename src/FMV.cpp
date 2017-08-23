@@ -7,7 +7,10 @@ FMV::FMV()
 }
 
 void FMV::setup() {
-  Serial.println("Setting up the Faraday Motion Vehicle...");
+
+  Log::Logger()->enable(); // TODO:: Have it configured and changeble at runtime.
+  Log::Logger()->setLevel(Log::Level::DEBUG);
+  Log::Logger()->write(Log::Level::INFO, "Setting up the Faraday Motion Vehicle...");
 
   this->configController = new ConfigController;
   this->wasConfigured = this->configController->hasLoadedConfig;
@@ -17,7 +20,7 @@ void FMV::setup() {
     this->connectionManager->setup();
     this->controllerManager = new ControllerManager(configController, connectionManager);
     this->registerWiredDevices(); // We need to have a safety check.
-    Serial.println("Finished setting up the Faraday Motion Vehicle");
+    Log::Logger()->write(Log::Level::INFO, "Finished setting up the Faraday Motion Vehicle");
   }
 }
 
@@ -38,7 +41,7 @@ void FMV::loop()
   }
   else
   {
-    Serial.println("FATAL ERROR:: Faraday Motion Pacer Vehicle was not correctly configured.");
+    Log::Logger()->write(Log::Level::ERR, "FATAL: Faraday Motion Pacer Vehicle was not correctly configured.");
     delay(5);
   }
 }

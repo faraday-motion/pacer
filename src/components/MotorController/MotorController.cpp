@@ -13,7 +13,7 @@
 #include "bldc_interface_uart.h"
 #include "bldc_interface_uart.c"
 #include "datatypes.h"
-
+#include "components/Utility/Log.h"
 
 // Settings NOT SURE IF NEEDED
 //#define PACKET_HANDLER
@@ -27,6 +27,7 @@ MotorController::MotorController()
 // Setup the MotorController Object.
 void MotorController::setup(ConfigController* configController)
 {
+  Log::Logger()->write(Log::Level::INFO, "Setting up the VESC MotorController");
   this->motorCount = configController->config->motorCount;
 	// Initialize MotorController Communication Ticker
 	Ticker motorControllerTicker;
@@ -34,6 +35,7 @@ void MotorController::setup(ConfigController* configController)
 
 	// Initialize Uart Communication
 	MotorController::uartInit();
+  Log::Logger()->write(Log::Level::INFO, "Finished setting up the VESC MotorController");
 }
 
 /**

@@ -13,7 +13,7 @@ foundAddresses{"FM000"}             // initialize foundAddresses
 
 void Radio::setup()
 {
-  Serial.println("Setting Up Radio Connection");
+  Log::Logger()->write(Log::Level::INFO, "Setting Up Radio Connection");
 
   // Setup Metro Intervals
   this->connectionLostTimer = new Metro(_LOST_CONNECTION);
@@ -40,7 +40,7 @@ void Radio::setup()
 
   this->initPackets();
   this->clearPendingDevice();
-  Serial.println("Finished Setting Up Radio Connection");
+  Log::Logger()->write(Log::Level::INFO, "Finished Setting Up Radio Connection");
   yield();
 }
 
@@ -87,7 +87,7 @@ void Radio::processResponse()
     handShaking = true;
 
     //We have a name packet
-    Serial.println("Name recived");
+    Log::Logger()->write(Log::Level::DEBUG, "Name recived");
 
     // Setting the pendingDevice ID.
     pendingDevice.id[0] = responsePacket.Value1 ;
@@ -109,7 +109,7 @@ void Radio::processResponse()
   else if (responsePacket.Command == 15)
   {
     //We have an adress change confirmation
-    Serial.println("Address change confirmed");
+    Log::Logger()->write(Log::Level::DEBUG, "Address change confirmed");
     this->setAddress(this->foundAddresses);
 
     // Storing the address of the pending device.
@@ -130,7 +130,7 @@ void Radio::processResponse()
   else if (responsePacket.Command == 20)
   {
     //We have a channel change request
-    Serial.println("Channel change");
+    Log::Logger()->write(Log::Level::DEBUG, "Channel Change");
 
     // Find and set the new channel.
     this->findChannel();
@@ -141,7 +141,7 @@ void Radio::processResponse()
   else if (responsePacket.Command == 25)
   {
     //We have a channel change confirmation
-    Serial.println("Channel change confirmed");
+    Log::Logger()->write(Log::Level::DEBUG, "Channel change confirmed");
 
     // Setting the channel of the pendingDevice.
     pendingDevice.channel = this->channelFound;
@@ -152,7 +152,7 @@ void Radio::processResponse()
   }
   else if (responsePacket.Command == 44)
   {
-    Serial.println("Radio Device handShaking finished.");
+    Log::Logger()->write(Log::Level::DEBUG, "Radio Device handShaking finished.");
 
     // Validates that the connected device is valid.
     this->validatePendingDevice();
@@ -189,7 +189,7 @@ void Radio::readWrite()
 {
   if (_receiver->failureDetected)
   {
-    Serial.println("RF24 Failure Detected. Re-running the setup.");
+    Log::Logger()->write(Log::Level::WARNING, "RF24 Failure Detected. Re-running the setup.");
     this->setup();
   }
 
@@ -304,7 +304,7 @@ void Radio::openPipes()
 */
 void Radio::resetConnection()
 {
-  Serial.println("START RESET RADIO CONN");
+  Log::Logger()->write(Log::Level::DEBUG, "START RESET RADIO CONN");
   setChannel(channelDefault);
   setAddress(defaultAddresses[0]);
   generateRandomAddress();
@@ -317,7 +317,7 @@ void Radio::resetConnection()
 */
 void Radio::changeDevice(AbstractDevice device)
 {
-  Serial.println("Switching Devices");
+  Log::Logger()->write(Log::Level::DEBUG, "Switching Devices");
   setChannel(device.channel);
   setAddress(device.address);
   //this->printDeviceCredentials(device);
@@ -340,8 +340,8 @@ bool Radio::tryReadBytes(RadioPacket* response)
   // Check if we've been trying to write for too long.
   if (connectionLostTimer->check() == 1)
   {
-    Serial.println("Connection has been lost");
-    Log::Instance()->write("EVENT: Connection Lost, tryReadBytes()");
+    Log::Logger()->write(Log::Level::WARNING, "Radio Connection has been lost");
+    //Log::Instance()->write("EVENT: Connection Lost, tryReadBytes()");
 
     // Reset the connection
     this->resetConnection();
@@ -358,7 +358,7 @@ bool Radio::tryReadBytes(RadioPacket* response)
     if(millis() - started_waiting_at > _TIMEOUT_READ)
     {
       timeout = true;
-      Serial.println("Radio Read timeout reached. On tryReadBytes()");
+      Log::Logger()->write(Log::Level::WARNING, "Radio Read timeout reached. On tryReadBytes()");
       break;
     }
   }
@@ -377,7 +377,7 @@ bool Radio::tryReadBytes(RadioPacket* response)
   }
   else
   {
-    Serial.println("Reading from Radio Client failes. Reason: timeout");
+    Log::Logger()->write(Log::Level::WARNING, "Reading from Radio Client failes. Reason: timeout");
   }
   return success;
 }
@@ -401,7 +401,7 @@ bool Radio::tryWriteBytes(RadioPacket* request)
   }
   else
   {
-    Serial.println("Radio Failed to Write Bytes");
+    Log::Logger()->write(Log::Level::ERR, "Radio Failed to Write Bytes");
   }
 
   // This function should be called as soon as transmission is finished to drop the radio back to STANDBY-I mode

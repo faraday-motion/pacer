@@ -1,4 +1,6 @@
 #include "CurrentController.h"
+#include "components/Utility/Log.h"
+
 CurrentController::CurrentController()
 {
 }
@@ -6,6 +8,7 @@ CurrentController::CurrentController()
 
 void CurrentController::setup(Config* configuration)
 {
+  Log::Logger()->write(Log::Level::DEBUG, "Setting up the CurrentController...");
   config = configuration;
 
   //Current control
@@ -22,7 +25,7 @@ void CurrentController::setup(Config* configuration)
   defaultInputMinAcceleration   = config->controller.defaultInputMinAcceleration;
   defaultInputMaxAcceleration   = config->controller.defaultInputMaxAcceleration;
   defaultSmoothAlpha            = config->controller.defaultSmoothAlpha;
-  Serial.println("Finished Configuration of the Current Controller");
+  Log::Logger()->write(Log::Level::DEBUG, "Finished setting up the CurrentController...");
 
 }
 

@@ -1,4 +1,5 @@
 #include "ConfigController.h"
+#include "components/Utility/Log.h"
 
 ConfigController::ConfigController()
 {
@@ -20,14 +21,14 @@ ConfigController::ConfigController()
 
 bool ConfigController::loadConfig()
 {
-  Serial.println("Loading configuration...");
+  Log::Logger()->write(Log::Level::INFO, "Loading configuration...");
   if(!this->beginSPIFFS()) {
     return false;
   }
 
   File configFile = this->getFile("r");
   if(!configFile){
-    Serial.println("Failed to open the config file. Aborting");
+    Log::Logger()->write(Log::Level::ERR, "Failed to open the config file. Aborting");
     return false;
   }
 
@@ -36,20 +37,20 @@ bool ConfigController::loadConfig()
 
   if (!json.success()){
     SPIFFS.end();
-    Serial.println("Failed to parse config file.");
+    Log::Logger()->write(Log::Level::ERR, "Failed to parse config file.");
     return false;
   }
 
   this->config->setConfig(json);
   configFile.close();
   SPIFFS.end();
-  Serial.println("Configuratin loaded successfuly.");
+  Log::Logger()->write(Log::Level::INFO, "Configuratin loaded successfuly.");
   return true;
 }
 
 String ConfigController::getRawConfig(bool factoryConfig)
 {
-  Serial.println("Reading confinguration from file...");
+  Log::Logger()->write(Log::Level::DEBUG, "Reading confinguration from file...");
   this->beginSPIFFS();
 
   File configFile = this->getFile("r", factoryConfig);
@@ -61,7 +62,6 @@ String ConfigController::getRawConfig(bool factoryConfig)
       rawConfig += char(configFile.read());;
     }
     configFile.close();
-    Serial.println("Configuration was read.");
     return rawConfig;
   }
 
@@ -70,24 +70,25 @@ String ConfigController::getRawConfig(bool factoryConfig)
 
 bool ConfigController::writeRawConfig(String rawConfig)
 {
-  Serial.println("Writing new conifguration...");
-
+  Log::Logger()->write(Log::Level::DEBUG, "Writing new conifguration...");
   if(!this->beginSPIFFS()) {
     return false;
   }
 
   File configFile = ConfigController::getFile("w");
   if (!configFile) {
-    Serial.println("Failed to open config file for writing");
+    Log::Logger()->write(Log::Level::ERR, "Failed to open config file for writing");
     return false;
   }
-  configFile.print(rawConfig);
 
+  // Write config to file.
+  configFile.print(rawConfig);
   configFile.flush();
   configFile.close();
+
   this->endSPIFFS();
 
-  Serial.println("Finished writing the new configuration. The ESP8266 will reboot now...");
+  Log::Logger()->write(Log::Level::DEBUG, "Finished writing the new configuration. The ESP8266 will reboot now...");
 
   ESP.restart();
 
@@ -102,9 +103,7 @@ File ConfigController::getFile(const char *permission, bool factory) {
    }
    if (!SPIFFS.exists(this->configFilePath))
    {
-     Serial.print("File: '");
-     Serial.print(this->factoryConfigPath);
-     Serial.println("' does not exist.");
+     Log::Logger()->write(Log::Level::ERR, "File: ''" + this->factoryConfigPath + "'  does not exist." );
    }
    return SPIFFS.open(path, permission);
 }
@@ -112,11 +111,12 @@ File ConfigController::getFile(const char *permission, bool factory) {
 
 bool ConfigController::restoreFactoryConfig()
 {
-  Serial.println("::::::::::::::::::::::::::::::::::::::::::::::::::");
-  Serial.println("                      PANIC                       ");
-  Serial.println("::::::::::::::::::::::::::::::::::::::::::::::::::");
-  Serial.println("Could not read the json config file.");
-  Serial.println("Reverting to factory configuration...");
+
+  Log::Logger()->write(Log::Level::ERR, "::::::::::::::::::::::::::::::::::::::::::::::::::" );
+  Log::Logger()->write(Log::Level::ERR, "                      PANIC                       " );
+  Log::Logger()->write(Log::Level::ERR, "::::::::::::::::::::::::::::::::::::::::::::::::::" );
+  Log::Logger()->write(Log::Level::ERR, "Could not read the json config file.");
+  Log::Logger()->write(Log::Level::ERR, "Reverting to factory configuration..." );
 
   String config = this->getRawConfig(true);
   bool result = this->writeRawConfig(config);
@@ -128,7 +128,7 @@ bool ConfigController::restoreFactoryConfig()
 bool ConfigController::beginSPIFFS()
 {
   if(!SPIFFS.begin()) {
-    Serial.println("Error: Could not begin SPIFFS in ConfigController.cpp");
+      Log::Logger()->write(Log::Level::ERR, "Error: Could not begin SPIFFS in ConfigController.cpp" );
     return false;
   }
   return true;

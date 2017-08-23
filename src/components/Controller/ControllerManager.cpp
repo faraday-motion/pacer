@@ -10,6 +10,7 @@
 
 ControllerManager::ControllerManager(ConfigController* configController, ConnectionManager* connectionManager)
 {
+  Log::Logger()->write(Log::Level::INFO, "Started Setting up the ControllerManager...");
   // TODO:: It seems a bit redundant to pass all these pointers to the controllerManager and then to the AbstractController. Investigate on how to optimize this.
   this->configController  = configController;
   this->connectionManager = connectionManager;
@@ -23,6 +24,7 @@ ControllerManager::ControllerManager(ConfigController* configController, Connect
   {
     availableControllers[i] = nullptr;
   }
+  Log::Logger()->write(Log::Level::INFO, "Finished Setting up the ControllerManager.");
 }
 
 // Main loop of this object. Handles the active controller.
@@ -32,6 +34,7 @@ void ControllerManager::loop()
   if (status == 2)
   {
     Serial.println("Connection Lost to controller");
+    Log::Logger()->write(Log::Level::WARNING, "Lost Connection to the Active Controller. Unsetting the active controller");
     this->unsetActiveController();
   }
 }
@@ -47,7 +50,6 @@ byte ControllerManager::handleActiveController()
     else
     {
       status = 2;
-      Log::Instance()->write("EVENT: handleController(), Connection Status 2 (Lost Connection)");
     }
   }
   return status;
@@ -60,7 +62,7 @@ byte ControllerManager::handleActiveController()
 
 bool ControllerManager::setActiveController(byte id[])
 {
-  Log::Instance()->write("EVENT: handleController(), an controller was set as active");
+  //Log::Instance()->write("EVENT: handleController(), an controller was set as active");
   byte index = getControllerIndexById(id);
   activeController = availableControllers[index];
   activeController->enable(); // Enable the activeController;
@@ -70,13 +72,13 @@ bool ControllerManager::setActiveController(byte id[])
 
 bool ControllerManager::unsetActiveController()
 {
-  Serial.println("The active controller is being unregisterd and unset.");
+  Log::Logger()->write(Log::Level::DEBUG, "The active controller is being unregisterd and unset.");
   removeRegisteredController(activeController->controller.id);
   activeController = nullptr;
-  Log::Instance()->write("EVENT: unsetActiveController(), registered controller was unset");
+  //Log::Instance()->write("EVENT: unsetActiveController(), registered controller was unset");
   if (this->activeController == nullptr)
   {
-    Serial.println("Confimerd the removal of the active controller.");
+    Log::Logger()->write(Log::Level::DEBUG, "Confimerd the removal of the active controller.");
   }
   return true;
 }
@@ -100,7 +102,7 @@ bool ControllerManager::tryOtherControllers()
 // TODO:: BUG:: After deleting the availableController Object we are still able to access it via the pointer.
 void ControllerManager::removeRegisteredController(byte id[])
 {
-  Serial.println("Uregistered a controller");
+  Log::Logger()->write(Log::Level::DEBUG, "Uregistered a controller");
   byte index = this->getControllerIndexById(id);
   delete this->availableControllers[index];
   this->availableControllers[index] = nullptr;
@@ -125,41 +127,41 @@ bool ControllerManager::registerController(AbstractDevice device)
 
   if (device.type == 1)
   {
-    Serial.println("Registering a PhoneController");
+    Log::Logger()->write(Log::Level::DEBUG, "Uregistered a controller");
     AbstractController * phoneController = new PhoneController(configController, connectionManager->wifi, device);
     allocateRegisteredController(phoneController);
     return true;
   }
   else if (device.type == 2)
   {
-    Serial.println("Registering a NunchuckController");
+    Log::Logger()->write(Log::Level::DEBUG, "Registering a NunchuckControlle");
     AbstractController * nunchuckController = new NunchuckController(configController, connectionManager->radio, device);
     allocateRegisteredController(nunchuckController);
     return true;
   }
   else if (device.type == 3)
   {
-    Serial.println("Registering a AccelController");
+    Log::Logger()->write(Log::Level::DEBUG, "Registering a AccelController");
     AbstractController * accelController = new AccelController(configController, device);
     allocateRegisteredController(accelController);
     return true;
   }
   else if (device.type == 4)
   {
-    Serial.println("Registering a WiredController");
+    Log::Logger()->write(Log::Level::DEBUG, "Registering a WiredController");
     AbstractController * wiredController = new WiredController(configController, device);
     allocateRegisteredController(wiredController);
     return true;
   }
   else if (device.type == 5)
   {
-    Serial.println("Registering a BalanceController");
+    Log::Logger()->write(Log::Level::DEBUG, "Registering a BalanceController");
     AbstractController * balanceController = new BalanceController(configController, device);
     allocateRegisteredController(balanceController);
   }
   else
   {
-    Serial.println("Unknown type of controller");
+    Log::Logger()->write(Log::Level::WARNING, "Can't register controller. Unknown type of controller.");
     return false;
   }
 }
@@ -189,7 +191,6 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
       // If there is no active controler we set this device as active.
       if (this->activeController == nullptr)
       {
-        Serial.println("allocateRegisteredController:: setActive.");
         this->setActiveController(controller->controller.id);
         this->printActiveController();
       }
@@ -198,7 +199,7 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
     }
   }
   // No free slots where found
-  Serial.println("Maximum controllers have beed added already");
+  Log::Logger()->write(Log::Level::WARNING, "Maximum controllers have beed added already");
   return false;
 }
 

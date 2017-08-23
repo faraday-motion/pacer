@@ -1,4 +1,5 @@
 #include "Wifi.h"
+#include "components/Utility/Log.h"
 
 Wifi::Wifi()
 {
@@ -6,7 +7,7 @@ Wifi::Wifi()
 
 void Wifi::setup(ConfigController* configController)
 {
-  Serial.println("Wifi Setup Started");
+  Log::Logger()->write(Log::Level::INFO, "Started Wifi Setup");
   config = configController->config;
   handleClientInterval = new Metro(250);
 
@@ -33,13 +34,12 @@ void Wifi::setup(ConfigController* configController)
   WiFi.softAPConfig(address, address, subnet);
   WiFi.softAP(ssid, password, channel);
   IPAddress myIP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
-  Serial.println(myIP);
 
   server->begin();
   //Set delay = true retarts the esp in version 2.1.0, check in later versions if its fixed
   server->setNoDelay(true);
-  //Serial.println(server->status());
+
+  Log::Logger()->write(Log::Level::INFO, "Finished Wifi Setup");
 
 }
 
@@ -61,7 +61,8 @@ bool Wifi::handleClientConnections() {
       {
         client.setNoDelay(true);
         // TODO: Once the mobile app is ready, get the id and name from there.
-        Serial.println("New pending wifi object received.");
+        Log::Logger()->write(Log::Level::DEBUG, "New pending wifi object received.");
+
         pendingDevice.id[0] = 'W';
         pendingDevice.id[1] = 'I';
         pendingDevice.id[2] = 'F';
@@ -84,7 +85,7 @@ bool Wifi::handleClientConnections() {
 
 void Wifi::clearPendingDevice()
 {
-  Serial.println("Clearing Wifi Pending Device");
+  Log::Logger()->write(Log::Level::DEBUG, "Clearing Wifi Pending Device");
   // Setting back to default
   for (byte i = 0; i < 5; i++) {
     pendingDevice.id[i] = 0;

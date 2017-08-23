@@ -4,12 +4,11 @@
 ConnectionManager::ConnectionManager(ConfigController* configController)
 {
   this->configController = configController;
-  Serial.println("ConnectionManger Instantiated");
 }
 
 void ConnectionManager::setup()
 {
-  Serial.println("Started ConnectionManager Setup");
+  Log::Logger()->write(Log::Level::INFO, "Started ConnectionManager Setup");
   Config* config = this->configController->config;
   handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
 
@@ -47,11 +46,11 @@ void ConnectionManager::setup()
     this->ws->wss->begin();
     delay(100);
   }
+  //
+  // // Bind logger to websockets
+  // Log::log->enableWebsocket(this->ws);
 
-  // Bind logger to websockets
-  Log::Instance()->enableWebsocket(this->ws);
-
-  Serial.println("Finished ConnectionManager Setup");
+  Log::Logger()->write(Log::Level::INFO, "Finished ConnectionManager Setup");
 }
 
 // A loop that groups all the looped methods of different connection interfaces.
@@ -87,7 +86,7 @@ void ConnectionManager::handleWifiConnections()
   if (this->wifi != nullptr)
   {
     if (this->wifi->handleClientConnections() == true) {
-      Serial.println("Wifi Detected New Pending Device");
+      Log::Logger()->write(Log::Level::DEBUG, "Wifi Detected New Pending Device");
       // TODO:: We have an issue the pending devices are being overwritten here by handleRadioConnections()
       this->pendingDevice = this->wifi->pendingDevice;
     }
@@ -101,7 +100,7 @@ void ConnectionManager::handleRadioConnections()
   {
     if (this->radio->handleClientConnections() == true)
     {
-      Serial.println("Radio Detected New Pending Device");
+      Log::Logger()->write(Log::Level::DEBUG, "Radio Detected New Pending Device");
       // Copy the pending Device so that FMV can work with it.
       this->pendingDevice = this->radio->pendingDevice;
       // Clear the pending deivce on the radio object.

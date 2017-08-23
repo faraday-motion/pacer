@@ -14,12 +14,14 @@
 AccelController::AccelController(ConfigController* configController, AbstractDevice device)
   : AbstractController(configController, device)
 {
+  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of AccelController: ");
   this->sensor = new IMU10DOF();
   this->sensor->setup();
   this->assistingTimer = new Metro(500);
   this->logTimer = new Metro(500);
   this->logTimer->reset();
   this->assistingTimer->reset(); // Required. Otherwise the timer is set in the future.
+  Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of AccelController: ");
 }
 
 unsigned int AccelController::getSensitivity()
@@ -56,8 +58,9 @@ bool AccelController::handleController()
     sum = sum + samples[s];
   }
   float average = sum / 5; // average of 5 samples.
-  Serial.print("SAMPLE :::::::: ");
-  Serial.println(average);
+
+  Log::Logger()->write(Log::Level::DEBUG, "Accelerometer Read Sample: " + (String)average);
+
   // For the sake of the range:
   average  = average * 100;
   unsigned int max = this->getSensitivity();
@@ -109,7 +112,7 @@ bool AccelController::handleController()
     delay(5);
     if (this->assistingTimer->check() == 1) {
       delay(5);
-      Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
+      //Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
       delay(5);
     }
     processInput(previousSpeed);

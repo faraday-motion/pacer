@@ -1,14 +1,14 @@
 #include <Arduino.h>
 #include "WiredController.h"
+#include "components/Utility/Log.h"
 
 WiredController::WiredController(ConfigController* configController, AbstractDevice device)
  : AbstractController(configController, device)
 {
-  Serial.println("--->");
-  Serial.println("Setting up a WiredController...");
+  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of WiredController: ");
   accelConstraint = device.accelConstraint;
   brakeConstraint = device.brakeConstraint;
-  Serial.println("Finished setting up the WiredController.");
+  Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of WiredController: ");
 }
 
 
@@ -37,8 +37,7 @@ bool WiredController::handleController()
   }
   else
   {
-    Serial.print("process Sample: ");
-    Serial.println(s);
+    Log::Logger()->write(Log::Level::DEBUG, "WiredController Read Sample: " + (String)s);
     processInput(s);
   }
 

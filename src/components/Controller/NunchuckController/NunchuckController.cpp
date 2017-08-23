@@ -8,8 +8,8 @@
 NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, AbstractDevice device)
  : AbstractController(configController, device)
 {
-  Serial.println("--->");
-  Serial.println("Setting up a NunchuckController...");
+  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of NunchuckController: ");
+
   this->radio = radio;
   this->nunchuck = device; // TODO:: Convert the abstract device pointer into a concered RadioDevice object
 
@@ -36,7 +36,7 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
   requestPacket.Value3  = 0;
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
-  Serial.println("Finished setting up the NunchuckController.");
+  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of NunchuckController: ");
 }
 
 
@@ -57,7 +57,7 @@ bool NunchuckController::handleController()
   // connectionLostTimer per each physical device
   if (this->connectionLostTimer->check() == 1)
   {
-    Serial.println("NunchuckController has lost connection");
+    Log::Logger()->write(Log::Level::WARNING, "NunchuckController has lost connection to physical device");
     return false;
   }
 
@@ -70,14 +70,14 @@ void NunchuckController::processResponse()
   // This gets triggered only on active controller. So it is safe to take the physical controller out of idle mode;
   if(responsePacket.Command == 44)
   {
-    Serial.println("Physical controller still in IDLE mode. Requesting Inputs");
+    Log::Logger()->write(Log::Level::DEBUG, "Physical controller is in IDLE mode. Requesting Inputs");
     requestPacket.Command = 50; // request input values.
   }
   else if (responsePacket.Command == 55)
   {
-    Serial.print(":::: Nunchuck Controller inputs = ");
-    Serial.print(responsePacket.Value2);
-    Serial.println();
+
+    Log::Logger()->write(Log::Level::DEBUG, "NunchuckController Read Sample: " + (String)responsePacket.Value2);
+
     // TODO:: Set constraints from config.
     byte s = map(responsePacket.Value2, 1, 240, 0, 100);
     if (s >= 45 && s <= 55)
@@ -90,7 +90,7 @@ void NunchuckController::processResponse()
 
 bool NunchuckController::enable()
 {
-    Serial.println("Nunchuck is enabled");
+    Log::Logger()->write(Log::Level::DEBUG, "NunchuckController in being enabled.");
     this->radio->changeDevice(nunchuck);
     requestPacket.Command = 50;
     return true;

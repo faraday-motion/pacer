@@ -1,16 +1,16 @@
 #include "PhoneController.h"
+#include "components/Utility/Log.h"
 
 
 // Construct the PhoneController and the AbstractController
 PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, AbstractDevice device)
  : AbstractController(configController, device)
 {
-  Serial.println("--->");
-  Serial.println("Setting up a PhoneController...");
+  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of PhoneController: ");
   this->wifi = wifi;
   this->phone = device;
   this->connectionLostTimer = new Metro(_LOST_CONNECTION);
-  Serial.println("Finished setting up the PhoneController.");
+  Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of PhoneController: ");
 }
 
 
@@ -19,12 +19,11 @@ PhoneController::PhoneController(ConfigController* configController, Wifi* wifi,
   */
 bool PhoneController::handleController()
 {
-  Serial.println("Reading Input Data from Phone");
   this->read();
 
   if (this->connectionLostTimer->check() == 1)
   {
-    Serial.println("Lost connection to the physical PhoneController");
+    Log::Logger()->write(Log::Level::WARNING, "PhoneController has lost connection to physical device");
     return false;
   }
 
@@ -88,8 +87,8 @@ void PhoneController::read()
        if (PhoneController::validateChecksum(m, packetCount))
        {
            yield();
-           Serial.print(":::: PhoneController inputs = ");
-           Serial.println(m[4]);
+
+           Log::Logger()->write(Log::Level::DEBUG, "PhoneController Read Sample: " + (String)m[4]);
            processInput(m[4]);
        }
        else

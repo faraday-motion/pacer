@@ -3,9 +3,6 @@
 
 #include "components/Connection/WebSocket/WebSocketCommunicator.h"
 
-// Source: http://www.yolinux.com/TUTORIALS/C++Singleton.html
-//Usage Logger::Instance()->method(<param>);
-
 class Log
 {
 public:

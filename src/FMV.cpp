@@ -10,6 +10,7 @@ void FMV::setup() {
 
   Log::Logger()->enable();
   Log::Logger()->setLevel(Log::Level::DEBUG);
+
   Log::Logger()->write(Log::Level::INFO, "Setting up the Faraday Motion Vehicle...");
   Log::Logger()->write(Log::Level::DEBUG, "Setting the console");
   Console::Cmd()->setFMV(this);
@@ -44,7 +45,7 @@ void FMV::loop()
   else
   {
     Log::Logger()->write(Log::Level::ERR, "FATAL: Faraday Motion Pacer Vehicle was not correctly configured.");
-    delay(5);
+    delay(2000);
   }
 }
 

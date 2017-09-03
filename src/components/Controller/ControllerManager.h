@@ -1,6 +1,7 @@
 #ifndef ControllerManager_h
 #define ControllerManager_h
 
+#include <Arduino.h>
 #include <Metro.h>
 #include "AbstractController.h"
 #include "components/Device/AbstractDevice.h"
@@ -17,8 +18,6 @@ private:
    ConnectionManager* connectionManager;
 
 public:
-  // Some sort of abstract controller.
-  // TODO:: read this https://en.wikibooks.org/wiki/C%2B%2B_Programming/Classes/Abstract_Classes
   AbstractController*  activeController;
   AbstractController*  availableControllers[5];  // Not sure if I should store the entire object or just the pointers.
   byte registeredControllersCount = 0;
@@ -36,11 +35,12 @@ public:
   void removeRegisteredController(byte id[]); // destroys a certain controller.
 
   // Manage Active Controllers
+  AbstractController* getActiveControllerId();
   bool setActiveController(byte id[]); // set one of the controllers as active based on the id of the controller
   bool unsetActiveController();
   bool tryOtherControllers();
-
   byte handleActiveController();
+  
 
   // Debug
   void printRegisteredControllers();

@@ -1,6 +1,6 @@
 #include "Console.h"
 #include "components/Utility/Log.h"
-
+#include "components/Controller/AbstractController.h"
 // Global static pointer used to ensure a single instance of the class.
 Console* Console::console = nullptr;
 
@@ -48,6 +48,13 @@ String Console::handle(unsigned int command, String data)
     case CONFIG_GET:
     case CONFIG_SET:
       return this->execConfigCommand(command, data);
+
+    // Constroller Commands
+    case CTRL_GET_ACTIVE:
+    case CTRL_SET_ACTIVE:
+    case CTRL_UNSET_ACTIVE:
+    case CTRL_GET_ALL:
+      return this->execControllerCommand(command, data);
 
     default:
       return "Unknown Command";
@@ -116,12 +123,12 @@ String Console::execConfigCommand(unsigned int command, String data)
   switch (command) {
 
     case CONFIG_GET:
-      Log::Logger()->write(Log::Level::DEBUG, "Command:: Get Config");
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: CONFIG_GET");
       return _fmv->configController->getRawConfig();
       break;
 
     case CONFIG_SET:
-      Log::Logger()->write(Log::Level::DEBUG, "Command:: Set Config");
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: CONFIG_SET");
 
       if (_fmv->configController->writeRawConfig(data));
         return "Succeeded to write new config.";
@@ -131,5 +138,74 @@ String Console::execConfigCommand(unsigned int command, String data)
 
     default:
       return "Unknown Config Command"; // Very unlikely to happen.
+  }
+}
+
+String Console::execControllerCommand(unsigned int command, String data)
+{
+  String registeredControllers;
+  switch (command) {
+
+    case CTRL_GET_ALL:
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: CTRL_UNSET_ACTIVE");
+      for (byte i = 0; i < 5; i++)
+      {
+        if (_fmv->controllerManager->availableControllers[i] != nullptr)
+        {
+          registeredControllers = registeredControllers +
+                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[0] + ":" +
+                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[1] + ":" +
+                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[2] + ":" +
+                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[3] + ":" +
+                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[4] + "|";
+        }
+      }
+      return registeredControllers;
+      break;
+
+    case CTRL_UNSET_ACTIVE:
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: CTRL_UNSET_ACTIVE");
+      if (_fmv->controllerManager->unsetActiveController()) {
+        return "Controller was unset";
+        break;
+      }
+      return "Failed to unset active controller";
+      break;
+
+    case CTRL_SET_ACTIVE:
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: CTRL_SET_ACTIVE");
+
+      byte id[5];
+      id[0] = (char)data[0];
+      id[1] = (char)data[1];
+      id[2] = (char)data[2];
+      id[3] = (char)data[3];
+      id[4] = (char)data[4];
+
+      if (_fmv->controllerManager->setActiveController(id)) {
+        Log::Logger()->write(Log::Level::DEBUG, data + " controller was set as active");
+        return data + " controller was set as active";
+      }
+
+      Log::Logger()->write(Log::Level::DEBUG, "Failed to set " + data + " controller as active");
+      return "Failed to set " + data + " controller as active";
+      break;
+
+
+    case CTRL_GET_ACTIVE:
+      Log::Logger()->write(Log::Level::DEBUG, "Command:: CTRL_GET_ACTIVE");
+      AbstractController* activeCtrl = _fmv->controllerManager->getActiveControllerId();
+      if (activeCtrl != nullptr) {
+        return (String)activeCtrl->controller.id[0] + ":" +
+               (String)activeCtrl->controller.id[1] + ":" +
+               (String)activeCtrl->controller.id[2] + ":" +
+               (String)activeCtrl->controller.id[3] + ":" +
+               (String)activeCtrl->controller.id[4];
+        break;
+      }
+
+      return "No active controller";
+      break;
+
   }
 }

@@ -55,32 +55,58 @@ byte ControllerManager::handleActiveController()
   return status;
 }
 
+
+/**
+ * Gets the current active device and returns it's obejct pointer.
+ * returns nullptr if no active is set.
+**/
+
+AbstractController* ControllerManager::getActiveControllerId()
+{
+  return this->activeController;
+}
+
+
 /**
  * Takes a registered controller id and sets it as active.
  * Calls the AbstractCotnroller->enable() method to let the controller receiver know it is active.
- */
+**/
 
 bool ControllerManager::setActiveController(byte id[])
 {
-  //Log::Instance()->write("EVENT: handleController(), an controller was set as active");
-  byte index = getControllerIndexById(id);
-  activeController = availableControllers[index];
-  activeController->enable(); // Enable the activeController;
-  return true;
+  if (this->activeController == nullptr)
+  {
+    Log::Logger()->write(Log::Level::DEBUG, " No active controller. Ready to set new active controller");
+
+    int index = getControllerIndexById(id);
+
+    if (index == -1)
+    {
+      Log::Logger()->write(Log::Level::DEBUG, "Controller is NOT registered and NOT authorized. Cannot set as acitve.");
+      return false;
+    }
+
+    Log::Logger()->write(Log::Level::DEBUG, "Controller is registered and authorized. Setting it as active.");
+    activeController = availableControllers[index];
+    activeController->enable(); // Enable the activeController;
+    return true;
+  }
+
+  Log::Logger()->write(Log::Level::DEBUG, " A controller is already active");
+  return false;
 }
 
 
 bool ControllerManager::unsetActiveController()
 {
-  Log::Logger()->write(Log::Level::DEBUG, "The active controller is being unregisterd and unset.");
-  removeRegisteredController(activeController->controller.id);
+  Log::Logger()->write(Log::Level::DEBUG, "The active controller is being and unset.");
   activeController = nullptr;
-  //Log::Instance()->write("EVENT: unsetActiveController(), registered controller was unset");
   if (this->activeController == nullptr)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Confimerd the removal of the active controller.");
+    return true;
   }
-  return true;
+  return false;
 }
 
 bool ControllerManager::tryOtherControllers()
@@ -112,10 +138,7 @@ bool ControllerManager::registerController(AbstractDevice device)
 {
   if (this->getControllerIndexById(device.id) != -1)
   {
-    Serial.println("Controller With ID:: ");
-    device.print();
-    Serial.println(" is already registerd.");
-
+    Log::Logger()->write(Log::Level::DEBUG, "This controller was already registered");
     // If it is registered and there's no active controller set as active.
     if (this->activeController == nullptr)
     {
@@ -169,10 +192,14 @@ bool ControllerManager::registerController(AbstractDevice device)
 int ControllerManager::getControllerIndexById(byte id[])
 {
   //Serial.println("Checking if the ControllerID is already registered.");
-  for (byte i = 0; i < 5; i++) {
+  for (int i = 0; i < 5; i++)
+  {
     if(availableControllers[i] != nullptr){  // not a null pointer
-      if(availableControllers[i]->controller.id[0] == id[0] && availableControllers[i]->controller.id[1] == id[1] && availableControllers[i]->controller.id[2] == id[2] && availableControllers[i]->controller.id[3] == id[3] && availableControllers[i]->controller.id[4] == id[4])
-      {
+      if( availableControllers[i]->controller.id[0] == id[0] &&
+          availableControllers[i]->controller.id[1] == id[1] &&
+          availableControllers[i]->controller.id[2] == id[2] &&
+          availableControllers[i]->controller.id[3] == id[3] &&
+          availableControllers[i]->controller.id[4] == id[4]) {
         return i;
       }
     }

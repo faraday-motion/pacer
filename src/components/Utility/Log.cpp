@@ -121,9 +121,6 @@ void Log::write(Log::Level level, String message)
       Serial.println(toLog);
     }
   }
-
-
-
 }
 
 

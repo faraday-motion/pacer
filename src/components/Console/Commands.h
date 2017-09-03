@@ -12,4 +12,9 @@ enum {
 
   CONFIG_GET            = 8006,
   CONFIG_SET            = 8007,
+
+  CTRL_GET_ACTIVE       = 8008,
+  CTRL_SET_ACTIVE       = 8009,
+  CTRL_UNSET_ACTIVE     = 8010,
+  CTRL_GET_ALL          = 8011,
 };

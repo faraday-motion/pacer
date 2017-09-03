@@ -18,6 +18,9 @@ public:
   // Execute Config Commands
   String execConfigCommand(unsigned int command, String data);
 
+  // Execute Controller Commands
+  String execControllerCommand(unsigned int command, String data);
+
 
 protected:
   Console(){}; // Constructor is protected

@@ -11,12 +11,12 @@ class FMV {
 
   /* Metro timers */
   Metro* handleClientInterval;
-  ConnectionManager* connectionManager;
-  ControllerManager* controllerManager;
 
   bool wasConfigured = 0;
 
 public:
+  ConnectionManager* connectionManager;
+  ControllerManager* controllerManager;
   ConfigController* configController;
   const String version = "0.1";
 

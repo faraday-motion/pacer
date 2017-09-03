@@ -1,5 +1,5 @@
-#include "components/Utility/Log.h"
 #include "WebSocketCommunicator.h"
+#include "components/Utility/Log.h"
 #include "components/Console/Console.h"
 
 using namespace std::placeholders;
@@ -35,8 +35,6 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
 
     case WStype_TEXT:
       {
-        Log::Logger()->write(Log::Level::DEBUG, "Received Websocket Message");
-
         //Serial.printf("[%u] get Text: %s\n", num, payload);
         String message = (char *)payload;
         byte splitIndex = message.indexOf(':');
@@ -45,7 +43,7 @@ void WebSocketCommunicator::onWsEvent(uint8_t num, WStype_t type, uint8_t * payl
 
         // Handle Received command
         String response = Console::Cmd()->handle(command.toInt(), data);
-        Log::Logger()->write(Log::Level::DEBUG, "repsonse after Console:handleCommand() :: ");
+        Log::Logger()->write(Log::Level::DEBUG, "Received Websocket Message :: ");
         Log::Logger()->write(Log::Level::DEBUG, response);
 
         yield();

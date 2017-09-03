@@ -1,7 +1,8 @@
 #ifndef WebSocket_h
 #define WebSocket_h
-#include <Hash.h>
+
 #include <Arduino.h>
+#include <Hash.h> // Important! Hash.h needs to be included after <Arduino.h>
 #include <ESP8266WiFi.h>
 #include "ArduinoJson.h"
 #include <WebSocketsServer.h>

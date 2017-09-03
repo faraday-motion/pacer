@@ -61,12 +61,15 @@ public:
  // Bind the WebsocketServer Object to the logger as a target.
  // @param WebSocketCommunicator, the WebSocketCommunicator Object
  void bindWebscoket(WebSocketCommunicator* wsCommunicator);
+
+ // Enable Logger
  void enable();
+
+ // Disable Logger
  void disable();
- void write(String payload);
 
 protected:
-  Log(){}; // Private so that it can not be called
+  Log(){}; // Constructor is protected
   Log(Log const&){};// copy constructor is protected
   Log& operator=(Log const&){}; //assignment operator is protected.
 private:
@@ -77,9 +80,10 @@ private:
   Target logTargets[3]; // default log target.
   String logFile = "";
 
-  // TODO:: Manually convert levels to strings.
-
+  // Logger enable/disable switch;
   bool isEnabled = false;
+
+  // Pointer to websocket server target.
   WebSocketCommunicator* wsCommunicator = nullptr;
 };
 

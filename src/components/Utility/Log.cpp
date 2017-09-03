@@ -3,7 +3,6 @@
 // Global static pointer used to ensure a single instance of the class.
 Log* Log::log = nullptr;
 
-
 /**
     This function is called to create an instance of the class.
     Calling the constructor publicly is not allowed. The constructor

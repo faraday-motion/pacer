@@ -11,6 +11,8 @@ void FMV::setup() {
   Log::Logger()->enable();
   Log::Logger()->setLevel(Log::Level::DEBUG);
   Log::Logger()->write(Log::Level::INFO, "Setting up the Faraday Motion Vehicle...");
+  Log::Logger()->write(Log::Level::DEBUG, "Setting the console");
+  Console::Cmd()->setFMV(this);
 
   this->configController = new ConfigController;
   this->wasConfigured = this->configController->hasLoadedConfig;

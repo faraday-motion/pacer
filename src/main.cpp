@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "FMV.h"
+#include "components/Console/Console.h"
 
 FMV fmv;
 

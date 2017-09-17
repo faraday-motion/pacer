@@ -36,7 +36,6 @@
   },
 
   "motorCount" : 4,
-  "wiredDevicesCount" : 2,
   "wiredDevices" : [
     {
       "id" : "ACCE1",

@@ -7,7 +7,7 @@ class AbstractDevice {
 
 public:
   AbstractDevice();
-  AbstractDevice(_wiredDevice device);
+  AbstractDevice(_registeredController device);
   byte id[5];
   byte type;
   byte priority;

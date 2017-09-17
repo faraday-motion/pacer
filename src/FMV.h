@@ -26,7 +26,7 @@ public:
 
   // Tasks?
   void handlePendingConnectionDevices();
-  void registerWiredDevices();
+  void registerControllers();
 
 };
 

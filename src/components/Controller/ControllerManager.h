@@ -17,6 +17,8 @@ private:
    Metro* printInterval;
    ConnectionManager* connectionManager;
 
+   bool validateController(AbstractDevice device);
+
 public:
   AbstractController*  activeController;
   AbstractController*  availableControllers[5];  // Not sure if I should store the entire object or just the pointers.
@@ -40,7 +42,7 @@ public:
   bool unsetActiveController();
   bool tryOtherControllers();
   byte handleActiveController();
-  
+
 
   // Debug
   void printRegisteredControllers();

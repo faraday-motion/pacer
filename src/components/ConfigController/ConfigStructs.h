@@ -43,8 +43,13 @@ struct _currentControlConfig {
   float defaultCurrentBrakeMin;
 };
 
-// Structures wireDevices config data read from the SPIFFS.
-struct _wiredDevice {
+// Structures authorizedControllers for registration config data read from the SPIFFS.
+struct _authorizedControllers {
+  byte type; // holds the type of controller.
+};
+
+// Structures registeredControllers config data read from the SPIFFS.
+struct _registeredController {
   byte id[5];
   byte type;
   byte priority;

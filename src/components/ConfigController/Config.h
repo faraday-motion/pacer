@@ -10,17 +10,21 @@ public:
   _wifiConfig             wifi;
   _controllerConfig       controller;
   _currentControlConfig   currentControl;
-  _wiredDevice            wiredDevices[5];
   _webscocket             websocket;
   _modules                modules;
-  byte                    wiredDevicesCount;
   byte                    motorCount;
+
+  byte                    authorizedControllersCount;
+  _authorizedControllers  authorizedControllers[5];
+
+  byte                    registeredControllersCount;
+  _registeredController   registeredControllers[5];
+
   Config();
   void setConfig(JsonObject& json);
 
-
   // Configurators
-  void configureWiredDevices(JsonObject& json);
+  void configureRegisteredControllers(JsonObject& json);
   void configureWifi(JsonObject& json);
   void configureWebSockets(JsonObject& json);
   void configureVehicle(JsonObject& json);
@@ -29,7 +33,7 @@ public:
   // Debug
   void printConfig();
   void printWifi();
-  void printWiredDevices();
+  void printRegisteredControllers();
 };
 
 

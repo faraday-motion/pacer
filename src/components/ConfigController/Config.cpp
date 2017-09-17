@@ -6,7 +6,7 @@ Config::Config()
 
 void Config::setConfig(JsonObject& json)
 {
-  this->configureWiredDevices(json);
+  this->configureRegisteredControllers(json);
   delay(5);
   this->configureWifi(json);
   delay(5);
@@ -17,29 +17,36 @@ void Config::setConfig(JsonObject& json)
   this->configureModules(json);
 }
 
-void Config::configureWiredDevices(JsonObject& json)
+void Config::configureRegisteredControllers(JsonObject& json)
 {
-  // // Loop through all default wired devices.
+  // Loop through all registered controllers.
   for (JsonObject::iterator it=json.begin(); it!=json.end(); ++it)
   {
-    if(!strcmp(it->key, "wiredDevices")){
-      size_t wiredDevicesCount = it->value.size();
-      this->wiredDevicesCount = wiredDevicesCount;
-      for (size_t i = 0; i < wiredDevicesCount; i++) {
+    if(!strcmp(it->key, "registeredControllers")){
+      size_t registeredControllersCount = it->value.size();
+      this->registeredControllersCount = registeredControllersCount;
+      for (size_t i = 0; i < registeredControllersCount; i++) {
         const char* id = it->value[i]["id"];
-        this->wiredDevices[i].id[0] = id[0]; // Casting const char* to byte[]
-        this->wiredDevices[i].id[1] = id[1]; // Casting const char* to byte[]
-        this->wiredDevices[i].id[2] = id[2]; // Casting const char* to byte[]
-        this->wiredDevices[i].id[3] = id[3]; // Casting const char* to byte[]
-        this->wiredDevices[i].id[4] = id[4]; // Casting const char* to byte[]
-        this->wiredDevices[i].type = it->value[i]["type"];
-        this->wiredDevices[i].priority = it->value[i]["priority"];
-        this->wiredDevices[i].enabled = it->value[i]["enabled"];
+        this->registeredControllers[i].id[0] = id[0]; // Casting const char* to byte[]
+        this->registeredControllers[i].id[1] = id[1]; // Casting const char* to byte[]
+        this->registeredControllers[i].id[2] = id[2]; // Casting const char* to byte[]
+        this->registeredControllers[i].id[3] = id[3]; // Casting const char* to byte[]
+        this->registeredControllers[i].id[4] = id[4]; // Casting const char* to byte[]
+        this->registeredControllers[i].type  = it->value[i]["type"];
+        this->registeredControllers[i].priority = it->value[i]["priority"];
+        this->registeredControllers[i].enabled  = it->value[i]["enabled"];
         // NOTE:: We always expect the keys for constraints.
-        this->wiredDevices[i].accelConstraint = it->value[i]["constraints"]["accel"];
-        this->wiredDevices[i].brakeConstraint = it->value[i]["constraints"]["brake"];
+        this->registeredControllers[i].accelConstraint = it->value[i]["constraints"]["accel"];
+        this->registeredControllers[i].brakeConstraint = it->value[i]["constraints"]["brake"];
       }
     }
+  }
+
+  // Configure authorizedControllers
+  this->authorizedControllersCount = json["authorizedControllers"].size();
+  for (size_t a = 0; a < this->authorizedControllersCount; a++)
+  {
+    this->authorizedControllers[a].type = json["authorizedControllers"][a];
   }
 }
 
@@ -100,7 +107,7 @@ void Config::printConfig()
 {
   this->printWifi();
   delay(10);
-  this->printWiredDevices();
+  this->printRegisteredControllers();
 }
 
 
@@ -138,37 +145,37 @@ void Config::printWifi()
 }
 
 
-void Config::printWiredDevices()
+void Config::printRegisteredControllers()
 {
   Serial.println(":::WiredDevices Configuration:::");
 
   Serial.print("Configured Devices Count: ");
-  Serial.println(this->wiredDevicesCount);
-  for (size_t i = 0; i < this->wiredDevicesCount; i++)
+  Serial.println(this->registeredControllersCount);
+  for (size_t i = 0; i < this->registeredControllersCount; i++)
   {
     Serial.print("Iteration = ");
     Serial.println(i);
 
     Serial.print("ID: ");
-    Serial.print(this->wiredDevices[i].id[0]);
+    Serial.print(this->registeredControllers[i].id[0]);
     Serial.print(" ");
-    Serial.print(this->wiredDevices[i].id[1]);
+    Serial.print(this->registeredControllers[i].id[1]);
     Serial.print(" ");
-    Serial.print(this->wiredDevices[i].id[2]);
+    Serial.print(this->registeredControllers[i].id[2]);
     Serial.print(" ");
-    Serial.print(this->wiredDevices[i].id[3]);
+    Serial.print(this->registeredControllers[i].id[3]);
     Serial.print(" ");
-    Serial.print(this->wiredDevices[i].id[4]);
+    Serial.print(this->registeredControllers[i].id[4]);
     Serial.println();
     Serial.print("Type: ");
-    Serial.println(this->wiredDevices[i].type);
+    Serial.println(this->registeredControllers[i].type);
     Serial.print("Priority: ");
-    Serial.println(this->wiredDevices[i].priority);
+    Serial.println(this->registeredControllers[i].priority);
     Serial.print("Enabled: ");
-    Serial.println(this->wiredDevices[i].enabled);
+    Serial.println(this->registeredControllers[i].enabled);
     Serial.print("Brake Constraints");
-    Serial.println(this->wiredDevices[i].brakeConstraint);
+    Serial.println(this->registeredControllers[i].brakeConstraint);
     Serial.print("Acceleration Constraints");
-    Serial.println(this->wiredDevices[i].accelConstraint);
+    Serial.println(this->registeredControllers[i].accelConstraint);
   }
 }

@@ -36,7 +36,10 @@
   },
 
   "motorCount" : 4,
-  "wiredDevices" : [
+
+  "authorizedControllers" : [1, 2, 3, 4, 5],
+
+  "registeredControllers" : [
     {
       "id" : "ACCE1",
       "type" : 3,

@@ -136,17 +136,16 @@ void ControllerManager::removeRegisteredController(byte id[])
 
 bool ControllerManager::registerController(AbstractDevice device)
 {
-  if (this->getControllerIndexById(device.id) != -1)
-  {
-    Log::Logger()->write(Log::Level::DEBUG, "This controller was already registered");
-    // If it is registered and there's no active controller set as active.
-    if (this->activeController == nullptr)
-    {
-      this->setActiveController(device.id);
-    }
-
+  // If the controller is not validated abort the registration and log event.
+  Serial.println("Registering a controller");
+  if (!this->validateController(device))
     return false;
-  }
+
+  // // If it is registered and there's no active controller set as active.
+  // if (this->activeController == nullptr)
+  // {
+  //   this->setActiveController(device.id);
+  // }
 
   if (device.type == 1)
   {
@@ -191,7 +190,6 @@ bool ControllerManager::registerController(AbstractDevice device)
 
 int ControllerManager::getControllerIndexById(byte id[])
 {
-  //Serial.println("Checking if the ControllerID is already registered.");
   for (int i = 0; i < 5; i++)
   {
     if(availableControllers[i] != nullptr){  // not a null pointer
@@ -207,6 +205,8 @@ int ControllerManager::getControllerIndexById(byte id[])
   return -1;
 }
 
+// Stores the Abstract Cotnroller object in the array of registered controllers.
+// TODO:: Implement priority of controllers here.
 bool ControllerManager::allocateRegisteredController(AbstractController* controller)
 {
   // TODO:: We need to tell the Controller that it is already registered and there's no need to ask for registration.
@@ -216,7 +216,7 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
       registeredControllersCount = registeredControllersCount + 1; // keep track of registered controllers.
       this->printActiveController();
       // If there is no active controler we set this device as active.
-      if (this->activeController == nullptr)
+      if (this->activeController == nullptr && controller->controller.enabled == true)
       {
         this->setActiveController(controller->controller.id);
         this->printActiveController();
@@ -230,6 +230,37 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
   return false;
 }
 
+
+bool ControllerManager::validateController(AbstractDevice device)
+{
+  // Stage One. Is this controller authorized?
+  bool isAuthorized = false;
+  Serial.println("Validating controller");
+  for (byte i = 0; i < this->configController->config->authorizedControllersCount; i ++)
+  {
+    if (device.type == this->configController->config->authorizedControllers[i].type) {
+      isAuthorized = true;
+      break;
+    }
+  }
+
+  if (!isAuthorized)
+  {
+    Log::Logger()->write(Log::Level::DEBUG, "This controller type is not authorized for this vehicle.");
+    return false;
+  }
+
+
+  // Stage two. Is this controller already registered?
+  if (this->getControllerIndexById(device.id) != -1 && isAuthorized)
+  {
+    Log::Logger()->write(Log::Level::DEBUG, "This controller was already registered");
+    return false;
+  }
+
+  // All good. Proceed.
+  return true;
+}
 
 // Debug
 

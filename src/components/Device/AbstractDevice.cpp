@@ -5,7 +5,7 @@ AbstractDevice::AbstractDevice()
 
 }
 
-AbstractDevice::AbstractDevice(_wiredDevice device)
+AbstractDevice::AbstractDevice(_registeredController device)
 {
   // ID
   id[0] = device.id[0];

@@ -22,7 +22,7 @@ void FMV::setup() {
     this->connectionManager = new ConnectionManager(configController);
     this->connectionManager->setup();
     this->controllerManager = new ControllerManager(configController, connectionManager);
-    this->registerWiredDevices(); // We need to have a safety check.
+    this->registerControllers(); // We need to have a safety check.
     Log::Logger()->write(Log::Level::INFO, "Finished setting up the Faraday Motion Vehicle");
   }
 }
@@ -52,16 +52,15 @@ void FMV::loop()
 /***
    * Register all enabled devices from the configuration.
 ***/
-void FMV::registerWiredDevices()
+void FMV::registerControllers()
 {
   Config* config = this->configController->config;
-  if (config->wiredDevicesCount > 0) {
-    for (byte i = 0; i < config->wiredDevicesCount; i++)
+  //config->printRegisteredControllers();
+  if (config->registeredControllersCount > 0) {
+    for (byte i = 0; i < config->registeredControllersCount; i++)
     {
-      if(config->wiredDevices[i].enabled == 1) {
-        AbstractDevice wiredDevice(config->wiredDevices[i]);
-        this->controllerManager->registerController(wiredDevice);
-      }
+      AbstractDevice registeredController(config->registeredControllers[i]);
+      this->controllerManager->registerController(registeredController);
     }
   }
 }

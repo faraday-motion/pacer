@@ -24,55 +24,34 @@ AccelController::AccelController(ConfigController* configController, AbstractDev
   Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of AccelController: ");
 }
 
-unsigned int AccelController::getSensitivity()
-{
-  unsigned int max = 0;
-
-  if (this->motorRpm > 3000)
-  {
-    // we are at high speed the accelorometer should be much more sensitive
-    max = 50;
-  }
-  else if (this->motorRpm < 3000)
-  {
-    // we are not that fast yet. It is still eassy to pick up the acceleration
-    max = 100;
-  }
-
-  return max;
-}
-
 bool AccelController::handleController()
 {
-  float samples[5];
+  float samples[25];
 
   // Gathering samples.
-  for (size_t i = 0; i < 5; i++) {
+  for (size_t i = 0; i < 25; i++) {
     this->sensor->getAccel_Data();
     samples[i] = this->sensor->Axyz[0];
   }
 
   // Get the average X axeleration
   float sum = 0;
-  for (size_t s = 0; s < 5; s++) {
+  for (size_t s = 0; s < 25; s++) {
     sum = sum + samples[s];
   }
-  float average = sum / 5; // average of 5 samples.
-
-  Log::Logger()->write(Log::Level::DEBUG, "Accelerometer Read Sample: " + (String)average);
+  float average = sum / 25; // average of 5 samples.
 
   // For the sake of the range:
   average  = average * 100;
-  unsigned int max = this->getSensitivity();
-  int min = max * -1;
 
-  newSpeed = map(average, min , max, 0, 100);
-  // Log::Instance()->write("Mapping :: ");
-  // Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
-  delay(5);
-  this->motorController->get_values(); // get the data from the motorController.
-  this->motorRpm = VescParams::Instance()->motorValues.rpm;
-
+  newSpeed = map(average, -100 , 100, 0, 100);
+    delay(5);
+    this->motorController->get_values(); // get the data from the motorController.
+    delay(5);
+    if (VescParams::Instance()->motorValues.rpm < 100)
+    {
+      newSpeed = 49;
+    }
   // setting the boundaries for cases when the average is going out the min max.
   if (newSpeed < 0)
   {
@@ -83,14 +62,13 @@ bool AccelController::handleController()
     newSpeed = 100;
   }
 
-  if (newSpeed > 55)
+  if (newSpeed > 50)
   {
     this->lockedTarget = newSpeed;
-    //this->lockedTarget = 100; // infinite speed mode :)
     this->assisting    = true;
   }
 
-  if (newSpeed < 40)
+  if (newSpeed < 50)
   {
     newSpeed = 50;
     lockedTarget = 0;
@@ -110,11 +88,6 @@ bool AccelController::handleController()
     }
 
     delay(5);
-    if (this->assistingTimer->check() == 1) {
-      delay(5);
-      //Log::Instance()->logAccel(average, newSpeed, this->lockedTarget, previousSpeed, this->motorRpm);
-      delay(5);
-    }
     processInput(previousSpeed);
 
   } else {
@@ -122,7 +95,6 @@ bool AccelController::handleController()
   }
 
   return true;
-
 }
 
 

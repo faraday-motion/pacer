@@ -23,10 +23,9 @@ private:
   float average      = 0;
   bool assisting     = false;
   byte lockedTarget  = 0;
-  long motorRpm = 0;
+  float motorRpm = 0.0;
   /* start not too sensitive and as we build up speed we make it more and more sensite */
   byte computeSpeed(float sensorReading);
-  unsigned int getSensitivity();
 public:
 
   AccelController(ConfigController* configController, AbstractDevice device);

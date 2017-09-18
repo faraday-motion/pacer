@@ -149,7 +149,7 @@ bool ControllerManager::registerController(AbstractDevice device)
 
   if (device.type == 1)
   {
-    Log::Logger()->write(Log::Level::DEBUG, "Uregistered a controller");
+    Log::Logger()->write(Log::Level::DEBUG, "Registering a PhoneController");
     AbstractController * phoneController = new PhoneController(configController, connectionManager->wifi, device);
     allocateRegisteredController(phoneController);
     return true;

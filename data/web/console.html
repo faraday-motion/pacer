@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Faraday Motion Web App v. 0.1</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container content-box">
+      <div class="row">
+        <span>Menu:</span>
+        <a href="index.html">Setup</a>
+        <a href="console.html">Console</a>
+      </div>
+   </div>
+    <div class="container content-box">
+      <div class="row">
+        <h1>Faraday Motion Web App version 0.1</h1>
+        <div class="col-50">
+            <h3>Request</h3>
+            <div class="form-group">
+              <p class="strong">Command</p>
+              <select name="" id="command">
+                <option value="8001">Log:: Enable </option>
+                <option value="8002">Log:: Disable </option>
+                <option value="8003">Log:: Add Target</option>
+                <option value="8004">Log:: Remove Target</option>
+                <option value="8005">Log:: Set Level</option>
+                <option value="8006">Configuration:: Get </option>
+                <option value="8007">Configuration:: Set</option>
+                <option value="8008">Controller: Get Active</option>
+                <option value="8009">Controller: Set Active</option>
+                <option value="8010">Controller: Unset Active</option>
+                <option value="8011">Controller: Get All Registered</option>
+              </select>
+              
+              <p class="strong">Payload (Optional)</p>
+              <textarea id="payload" style="width:100%" rows="25"></textarea>
+
+              <button onClick="event.preventDefault();sendRequest()" class="btn btn-default">Send Command</button>
+              <button onClick="event.preventDefault();connect()" class="btn btn-default">Connect</button>
+            </div>
+
+            <br><br>
+            <pre style="margin:0 auto;">
+              Available Commands: 
+              LOGGER_ENABLE         = 8001,
+              LOGGER_DISABLE        = 8002,
+              LOGGER_ADD_TARGET     = 8003,
+              LOGGER_REMOVE_TARGET  = 8004,
+              LOGGER_SET_LEVEL      = 8005,
+
+              CONFIG_GET            = 8006,
+              CONFIG_SET            = 8007,
+
+              CTRL_GET_ACTIVE       = 8008,
+              CTRL_SET_ACTIVE       = 8009,
+              CTRL_UNSET_ACTIVE     = 8010,
+              CTRL_GET_ALL          = 8011,
+            </pre>
+        </div>
+        <div class="col-50">
+          <h3>Response</h3>
+           <pre id="response">empty</pre>
+        </div>
+      </div>
+    </div>
+
+    <script src="default_config.js"></script>
+    <script src="console.js"></script>
+    <script src="websocket.js"></script>
+
+  </body>
+</html>

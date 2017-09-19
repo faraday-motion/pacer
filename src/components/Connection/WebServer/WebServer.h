@@ -6,6 +6,10 @@
 
 class WebServer
 {
+private:
+  bool handleFileStream(String path);
+  String getContentType(String filename);
+  void setRoutes();
 public:
   ESP8266WebServer* webServer;
   ESP8266HTTPUpdateServer httpUpdater;

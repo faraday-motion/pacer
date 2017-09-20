@@ -1,5 +1,6 @@
 #ifndef AbstractController_h
 #define AbstractController_h
+#include "Metro.h"
 #include "../ConfigController/Config.h"
 #include "components/Device/AbstractDevice.h"
 #include "components/MotorController/MotorController.h"
@@ -16,6 +17,7 @@ private:
   byte defaultInputMinAcceleration;
   byte defaultInputMaxAcceleration;
   float defaultSmoothAlpha;
+  Metro* checkIfInMotion;
 
   // Controller Inputs
   byte  latestInput;
@@ -38,6 +40,7 @@ public:
   void setup();
   void processInput(byte latestInput);
 
+  bool isInMotion = false; // Flags the the vehicle is being in motion.
   virtual bool handleController() = 0; // virtual loop function
   virtual bool enable() = 0;  // Let the physical controller that it is enabled.
   virtual bool disable() = 0; // Let the physical controller that it is disabled.

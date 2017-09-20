@@ -20,6 +20,7 @@ void AbstractController::setup()
   //this->motorController = motorController;
   Log::Logger()->write(Log::Level::DEBUG, "Setting up the AbstractController...");
   currentController.setup(config);
+
   // Seting the default values and states for the controller;
   defaultInputNeutral         = config->controller.defaultInputNeutral;
   defaultInputMinBrake        = config->controller.defaultInputMinBrake;
@@ -31,6 +32,11 @@ void AbstractController::setup()
   // Setting inputs to neutral;
   latestInput                 = defaultInputNeutral;
   previousInput               = defaultInputNeutral;
+
+  // Metro Timer
+  this->checkIfInMotion = new Metro(15000);
+  this->checkIfInMotion->reset();
+
   Log::Logger()->write(Log::Level::DEBUG, "Finished Setting up the AbstractController...");
 
 }
@@ -44,6 +50,10 @@ bool AbstractController::setMotorPower()
     // we are in neutral.
     float motorCurrent = currentController.getNeutralCurrent();
     motorController->set_current(motorCurrent);
+    // For more the x seconds we've been in neutral. We are not in motion anymore.
+    if (this->checkIfInMotion->check() == 1) {
+      this->isInMotion = false;
+    }
 
     return 0;
   }
@@ -53,6 +63,8 @@ bool AbstractController::setMotorPower()
     //accelerating
     float motorCurrent = currentController.getMotorAccelerationCurrent(previousInput);
     motorController->set_current(motorCurrent);
+    this->checkIfInMotion->reset(); // We are in motion. Reset the time watch.
+    this->isInMotion = true;
 
     return 1;
   }
@@ -60,7 +72,8 @@ bool AbstractController::setMotorPower()
   // braking;
   float motorCurrent = currentController.getMotorBrakingCurrent(previousInput);
   motorController->set_current_brake(motorCurrent);
-
+  this->checkIfInMotion->reset(); // We are in motion. Reset the time watch.
+  this->isInMotion = true;
   return 1;
 }
 

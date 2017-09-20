@@ -26,6 +26,7 @@ bool WiredController::handleController()
   int sample = sampleSum / sampleCount;
   int adjustedSample = constrain(sample, brakeConstraint, accelConstraint);
   byte s = map(adjustedSample, brakeConstraint, accelConstraint, 0, 100);
+  Log::Logger()->write(Log::Level::DEBUG, "WiredController Sample Read: " + (String)sample);
 
   if (s >= 45 && s <= 55)
     s = 50;
@@ -37,7 +38,7 @@ bool WiredController::handleController()
   }
   else
   {
-    Log::Logger()->write(Log::Level::DEBUG, "WiredController Read Sample: " + (String)s);
+    Log::Logger()->write(Log::Level::DEBUG, "WiredController Sending Value: " + (String)s);
     processInput(s);
   }
 

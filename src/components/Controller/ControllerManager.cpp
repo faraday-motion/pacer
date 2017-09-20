@@ -66,7 +66,6 @@ AbstractController* ControllerManager::getActiveControllerId()
   return this->activeController;
 }
 
-
 /**
  * Takes a registered controller id and sets it as active.
  * Calls the AbstractCotnroller->enable() method to let the controller receiver know it is active.
@@ -96,10 +95,18 @@ bool ControllerManager::setActiveController(byte id[])
   return false;
 }
 
-
+// TODO:: Please make me look more beautiful and readable.
 bool ControllerManager::unsetActiveController()
 {
   Log::Logger()->write(Log::Level::DEBUG, "The active controller is being and unset.");
+  // Check if there's an active controller at all.
+  if (this->activeController != nullptr) {
+    // Check if we are in motion and it is save to unset the controller.
+    if(this->activeController->isInMotion){
+      Log::Logger()->write(Log::Level::DEBUG, "Cannot unset the active controller. FMV is in motion");
+      return false;
+    }
+  }
   activeController = nullptr;
   if (this->activeController == nullptr)
   {
@@ -137,7 +144,6 @@ void ControllerManager::removeRegisteredController(byte id[])
 bool ControllerManager::registerController(AbstractDevice device)
 {
   // If the controller is not validated abort the registration and log event.
-  Serial.println("Registering a controller");
   if (!this->validateController(device))
     return false;
 
@@ -235,7 +241,6 @@ bool ControllerManager::validateController(AbstractDevice device)
 {
   // Stage One. Is this controller authorized?
   bool isAuthorized = false;
-  Serial.println("Validating controller");
   for (byte i = 0; i < this->configController->config->authorizedControllersCount; i ++)
   {
     if (device.type == this->configController->config->authorizedControllers[i].type) {

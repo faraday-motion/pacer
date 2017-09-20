@@ -70,20 +70,19 @@ void NunchuckController::processResponse()
   // This gets triggered only on active controller. So it is safe to take the physical controller out of idle mode;
   if(responsePacket.Command == 44)
   {
-    Log::Logger()->write(Log::Level::DEBUG, "Physical controller is in IDLE mode. Requesting Inputs");
+    Log::Logger()->write(Log::Level::DEBUG, "Nunchuck is IDLE. Requesting Inputs");
     requestPacket.Command = 50; // request input values.
   }
   else if (responsePacket.Command == 55)
   {
-
     Log::Logger()->write(Log::Level::DEBUG, "NunchuckController Read Sample: " + (String)responsePacket.Value2);
 
     // TODO:: Set constraints from config.
     byte s = map(responsePacket.Value2, 1, 240, 0, 100);
+
     if (s >= 45 && s <= 55)
-    {
       s = 50;
-    }
+
     processInput(s);
   }
 }

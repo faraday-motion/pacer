@@ -16,7 +16,7 @@ private:
 
 // Note that the pin is hardcoded for now to D4/GPIO2
 public:
-  BalanceController(ConfigController* configController, AbstractDevice device);
+  BalanceController(AbstractDevice device);
   bool handleController();
   bool enable();
   bool disable();

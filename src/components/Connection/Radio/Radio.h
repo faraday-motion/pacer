@@ -18,22 +18,17 @@ private:
   Metro* connectionLostTimer;
 
   // Connection defaults, flags and inits.
-  byte defaultAddresses[2][6];
   byte currentAddresses[2][6];
-  byte foundAddresses[6];
-  byte channelDefault  = 100;
-  byte channelSelected = 100;
-  byte channelFound = 255;
+
+  // Channel
   byte channelMax = 125;
   byte channelMin = 100;
+  byte currentChannel = 100;
+
   byte connectionStrength = 0;
   bool handShaking = false;
   byte packetSize   = 7;
   byte sendCount    = 0;
-
-  // response/requestPackets
-  RadioPacket responsePacket;
-  RadioPacket requestPacket;
 
   // Intervals
   byte _TIMEOUT_READ = 50;
@@ -42,42 +37,31 @@ private:
   // Togglers and watchers
   byte lastPacketId = 0;
 
-  // Communication
-  void readWrite();
-  void processResponse();
-
   // Connection
-  void findChannel();
-  void setChannel(byte channel);
-  void changeChannel();
-  void generateRandomAddress();
-  void setAddress(byte address[]);
   void openPipes();
   void resetConnection();
-  void initPackets();
-
 
 public:
+  // Public defaults
+  byte channelDefault  = 100;
+  byte defaultAddress[5];
 
   Radio();
   void setup();
 
-  bool handleClientConnections();
-  void validatePendingDevice();
-  void changeDevice(AbstractDevice device);
+  byte findChannel();
+
+  void setAddress(byte address[]);
+  void setChannel(byte channel);
 
   // Read/Write Packets
   bool tryReadBytes(RadioPacket* response);
   bool tryWriteBytes(RadioPacket* request);
 
-  AbstractDevice pendingDevice;
-  void clearPendingDevice();
-
   // Debug
-  void printRequestPacket();
-  void printResponsePacket();
+
   void printAddresses();
-  void printDeviceCredentials(AbstractDevice d);
+  void printPacket(RadioPacket* packet, bool isRequest = true);
 };
 
 

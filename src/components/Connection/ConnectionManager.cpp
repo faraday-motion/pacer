@@ -1,15 +1,16 @@
 #include "ConnectionManager.h"
 #include "components/Utility/Log.h"
+#include "components/Config/Config.h"
 
-ConnectionManager::ConnectionManager(ConfigController* configController)
+ConnectionManager::ConnectionManager()
 {
-  this->configController = configController;
+
 }
 
 void ConnectionManager::setup()
 {
   Log::Logger()->write(Log::Level::INFO, "Started ConnectionManager Setup");
-  Config* config = this->configController->config;
+  Config* config = Config::get();
   handleClientInterval = new Metro(_HANDLE_CLIENT_INTERVAL);
 
   this->clearPendingDevice();
@@ -21,7 +22,7 @@ void ConnectionManager::setup()
 
   // Setup Wifi
   this->wifi = new Wifi();
-  this->wifi->setup(configController);
+  this->wifi->setup();
   delay(100);
 
   // Setup WebServer
@@ -36,13 +37,14 @@ void ConnectionManager::setup()
   {
     this->radio = new Radio();
     this->radio->setup();
+    this->radioHandshake = new RadioHandshake(this->radio);
     delay(100);
   }
 
   //Setup WebSocketCommunicator
   if(config->modules.webSocketServer)
   {
-    this->ws = new WebSocketCommunicator(configController); // TODO:: The port should be configurable
+    this->ws = new WebSocketCommunicator(); // TODO:: The port should be configurable
     this->ws->wss->begin();
     delay(100);
   }
@@ -70,6 +72,10 @@ void ConnectionManager::loop()
   this->handleClientConnections();
 }
 
+void ConnectionManager::bindControllerManager(ControllerManager* controllerManager)
+{
+  this->controllerManager = controllerManager;
+}
 
 void ConnectionManager::handleClientConnections()
 {
@@ -98,13 +104,14 @@ void ConnectionManager::handleRadioConnections()
 {
   if (this->radio != nullptr)
   {
-    if (this->radio->handleClientConnections() == true)
+    this->radioHandshake->handleHandshake();
+    if (this->radioHandshake->pendingDevice.pending == true)
     {
-      Log::Logger()->write(Log::Level::DEBUG, "Radio Detected New Pending Device");
+      Log::Logger()->write(Log::Level::DEBUG, "Flagging a pending radio device.");
       // Copy the pending Device so that FMV can work with it.
-      this->pendingDevice = this->radio->pendingDevice;
-      // Clear the pending deivce on the radio object.
-      this->radio->clearPendingDevice();
+      bool registerd = this->controllerManager->registerController(this->radioHandshake->pendingDevice);
+      if (registerd)
+        this->radioHandshake->pendingDevice.isRegisterd = true; // Flag registration succeeded.
     }
   }
 

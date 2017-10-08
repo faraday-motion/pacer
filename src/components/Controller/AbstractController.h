@@ -1,7 +1,7 @@
 #ifndef AbstractController_h
 #define AbstractController_h
 #include "Metro.h"
-#include "../ConfigController/Config.h"
+#include "components/Config/Config.h"
 #include "components/Device/AbstractDevice.h"
 #include "components/MotorController/MotorController.h"
 #include "components/CurrentController/CurrentController.h"
@@ -35,7 +35,7 @@ public:
   //CurrentController
   CurrentController  currentController;
 
-  AbstractController(ConfigController* configController, AbstractDevice device);
+  AbstractController(AbstractDevice device);
 
   void setup();
   void processInput(byte latestInput);

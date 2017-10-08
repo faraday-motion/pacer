@@ -1,7 +1,7 @@
 #ifndef AbstractDevice_H
 #define AbstractDevice_H
 #include <Arduino.h>
-#include "components/ConfigController/ConfigStructs.h"
+#include "components/Config/ConfigStructs.h"
 
 class AbstractDevice {
 
@@ -14,7 +14,9 @@ public:
   bool enabled;
   int  accelConstraint;
   int  brakeConstraint;
-  byte pending = false;
+  bool pending = false;
+  bool isRegisterd = false;
+
   byte address[5];
   byte channel = 100;
 

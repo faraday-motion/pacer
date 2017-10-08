@@ -2,12 +2,12 @@
 #include "components/Utility/Log.h"
 
 
-AbstractController::AbstractController(ConfigController* configController, AbstractDevice device)
+AbstractController::AbstractController(AbstractDevice device)
 {
   Log::Logger()->write(Log::Level::DEBUG, "Started Construction of AbstractController: ");
-  this->config = configController->config;
+  this->config = Config::get();
   this->motorController = new MotorController; // Question:: Does this mean I have a new motorController object for each instance of the AbstractController?
-  this->motorController->setup(configController);
+  this->motorController->setup();
 
   this->controller = device; // TODO:: why do we store the device on the abstract and the concrete controller?
   this->setup();
@@ -19,7 +19,7 @@ void AbstractController::setup()
   // Setting the pointers to Motor and Wifi.
   //this->motorController = motorController;
   Log::Logger()->write(Log::Level::DEBUG, "Setting up the AbstractController...");
-  currentController.setup(config);
+  currentController.setup();
 
   // Seting the default values and states for the controller;
   defaultInputNeutral         = config->controller.defaultInputNeutral;

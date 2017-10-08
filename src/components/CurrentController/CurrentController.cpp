@@ -6,10 +6,10 @@ CurrentController::CurrentController()
 }
 
 
-void CurrentController::setup(Config* configuration)
+void CurrentController::setup()
 {
   Log::Logger()->write(Log::Level::DEBUG, "Setting up the CurrentController...");
-  config = configuration;
+  Config* config = Config::get();
 
   //Current control
   defaultCurrentNeutral         = config->currentControl.defaultCurrentNeutral;

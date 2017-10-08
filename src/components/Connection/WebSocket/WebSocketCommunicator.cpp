@@ -4,11 +4,11 @@
 
 using namespace std::placeholders;
 
-WebSocketCommunicator::WebSocketCommunicator(ConfigController* configController)
+WebSocketCommunicator::WebSocketCommunicator()
 {
+  Config* config = Config::get();
   Log::Logger()->write(Log::Level::INFO, "Setting up webSocketServer");
-  this->configController = configController;
-  this->wss = new WebSocketsServer(configController->config->websocket.port);
+  this->wss = new WebSocketsServer(config->websocket.port);
   this->wss->onEvent(std::bind(&WebSocketCommunicator::onWsEvent, this, _1, _2, _3, _4));
   Log::Logger()->write(Log::Level::INFO, "Finished setting up webSocketServer");
 }

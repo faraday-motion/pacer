@@ -3,12 +3,12 @@
 #include <Arduino.h>
 
 struct RadioPacket {
- byte Id;
- byte Command;
- byte Value1 ;
- byte Value2 ;
- byte Value3 ;
- byte Value4 ;
- byte Value5 ;
+ byte Id = 0;
+ byte Command = 0;
+ byte Value1  = 0;
+ byte Value2  = 0;
+ byte Value3  = 0;
+ byte Value4  = 0;
+ byte Value5  = 0;
 };
 #endif

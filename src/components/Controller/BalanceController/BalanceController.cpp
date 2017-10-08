@@ -1,7 +1,7 @@
 #include "BalanceController.h"
 
-BalanceController::BalanceController(ConfigController* configController, AbstractDevice device)
-  : AbstractController(configController, device)
+BalanceController::BalanceController(AbstractDevice device)
+  : AbstractController(device)
 {
 }
 

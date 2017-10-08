@@ -5,10 +5,10 @@ Wifi::Wifi()
 {
 }
 
-void Wifi::setup(ConfigController* configController)
+void Wifi::setup()
 {
   Log::Logger()->write(Log::Level::INFO, "Started Wifi Setup");
-  config = configController->config;
+  config = Config::get();
   handleClientInterval = new Metro(250);
 
   //Wifi

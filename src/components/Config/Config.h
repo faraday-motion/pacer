@@ -4,9 +4,14 @@
 #include "ConfigStructs.h"
 #include "ArduinoJson.h"
 
+
+// TODO:: Make so that only configController can set parameters.
 class Config
 {
 public:
+  // Get Instance
+  static Config* get();
+
   _wifiConfig             wifi;
   _controllerConfig       controller;
   _currentControlConfig   currentControl;
@@ -20,8 +25,20 @@ public:
   byte                    registeredControllersCount;
   _registeredController   registeredControllers[5];
 
-  Config();
   void setConfig(JsonObject& json);
+
+  // Debug
+  void printConfig();
+  void printWifi();
+  void printRegisteredControllers();
+  void printAuthorizedControllerTypes();
+protected:
+  Config() {}; // Constructor is protected
+  Config(Config const&) {}; // Copy constructor is protected
+
+private:
+  Config* _config = nullptr;
+  static Config* config;
 
   // Configurators
   void configureRegisteredControllers(JsonObject& json);
@@ -29,11 +46,6 @@ public:
   void configureWebSockets(JsonObject& json);
   void configureVehicle(JsonObject& json);
   void configureModules(JsonObject& json);
-
-  // Debug
-  void printConfig();
-  void printWifi();
-  void printRegisteredControllers();
 };
 
 

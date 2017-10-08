@@ -1,12 +1,13 @@
 #include <Arduino.h> // for the min // TODO:: See if we need this here.
 #include "NunchuckController.h"
 #include "components/Utility/Log.h"
+#include "components/Connection/Radio/Commands.h"
 #define min(a,b) ((a)<(b)?(a):(b)) // TODO:: Figure out why we don't get the min() function here.
 
 
 // Construct the NunchuckController and the AbstractController
-NunchuckController::NunchuckController(ConfigController* configController, Radio* radio, AbstractDevice device)
- : AbstractController(configController, device)
+NunchuckController::NunchuckController(Radio* radio, AbstractDevice device)
+ : AbstractController(device)
 {
   Log::Logger()->write(Log::Level::DEBUG, "Started Construction of NunchuckController: ");
 
@@ -36,14 +37,15 @@ NunchuckController::NunchuckController(ConfigController* configController, Radio
   requestPacket.Value3  = 0;
   requestPacket.Value4  = 0;
   requestPacket.Value5  = 0;
-  Log::Logger()->write(Log::Level::DEBUG, "Started Construction of NunchuckController: ");
+  Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of NunchuckController: ");
 }
 
 
 bool NunchuckController::handleController()
 {
   // Start listening to the physical nunchuck
-  this->radio->changeDevice(nunchuck);
+  this->radio->setAddress(nunchuck.address);
+  this->radio->setChannel(nunchuck.channel);
 
   if (this->radio->tryReadBytes(&responsePacket)) // populate the responsePacket
   {
@@ -58,6 +60,7 @@ bool NunchuckController::handleController()
   if (this->connectionLostTimer->check() == 1)
   {
     Log::Logger()->write(Log::Level::WARNING, "NunchuckController has lost connection to physical device");
+    this->isInMotion = false; // Flagging not in motion to be able to unset as active.
     return false;
   }
 
@@ -67,6 +70,37 @@ bool NunchuckController::handleController()
 
 void NunchuckController::processResponse()
 {
+  switch (responsePacket.Command)
+  {
+    // Making sure the controller is still in idle mode.
+    case CONFIRM_SET_MODE_IDLE:
+      Log::Logger()->write(Log::Level::DEBUG, "CONFIRM_SET_MODE_IDLE");
+      Log::Logger()->write(Log::Level::DEBUG, "SRC: Nunchuck CTRL");
+      requestPacket.Command = SET_MODE_ACTIVE;
+      break;
+    // Controller was set as active.
+    case CONFIRM_SET_MODE_ACTIVE:
+      Log::Logger()->write(Log::Level::DEBUG, "CONFIRM_SET_MODE_ACTIVE");
+      requestPacket.Command = REQUEST_INPUT;
+      break;
+    // Controller is sending input signal.
+    case CTRL_HAS_INPUT:
+      Log::Logger()->write(Log::Level::DEBUG, "CTRL_HAS_INPUT");
+      Log::Logger()->write(Log::Level::DEBUG, "NunchuckController Read Sample: " + (String)responsePacket.Value2);
+
+      // TODO:: Set constraints from config.
+      byte s = map(responsePacket.Value2, 1, 240, 0, 100);
+
+      if (s >= 45 && s <= 55)
+        s = 50;
+
+      processInput(s);
+
+      // Keep Asking for inputs
+      requestPacket.Command = REQUEST_INPUT;
+      break;
+  }
+
   // This gets triggered only on active controller. So it is safe to take the physical controller out of idle mode;
   if(responsePacket.Command == 44)
   {
@@ -76,84 +110,20 @@ void NunchuckController::processResponse()
   else if (responsePacket.Command == 55)
   {
     Log::Logger()->write(Log::Level::DEBUG, "NunchuckController Read Sample: " + (String)responsePacket.Value2);
-
-    // TODO:: Set constraints from config.
-    byte s = map(responsePacket.Value2, 1, 240, 0, 100);
-
-    if (s >= 45 && s <= 55)
-      s = 50;
-
-    processInput(s);
   }
 }
 
 bool NunchuckController::enable()
 {
     Log::Logger()->write(Log::Level::DEBUG, "NunchuckController in being enabled.");
-    this->radio->changeDevice(nunchuck);
-    requestPacket.Command = 50;
+    this->radio->setAddress(nunchuck.address);
+    this->radio->setChannel(nunchuck.channel);
+    requestPacket.Command = SET_MODE_ACTIVE;
     return true;
 }
 
 bool NunchuckController::disable()
 {
-  // TODO:: Implement disable command. Maybe just go back to pending.
- this->radio->changeDevice(nunchuck);
- requestPacket.Command = 40;
+ // TODO:: Implement disable command. Maybe just go back to pending.
  return true;
-}
-
-
-
-// Debug
-
-void NunchuckController::printRequestPacket()
-{
-  Serial.println("Nunchuck Packet sent:: ");
-  Serial.print(requestPacket.Id);
-  Serial.print(" ");
-  Serial.print(requestPacket.Command);
-  Serial.print(" ");
-  Serial.print(requestPacket.Value1);
-  Serial.print(" ");
-  Serial.print(requestPacket.Value2);
-  Serial.print(" ");
-  Serial.print(requestPacket.Value3);
-  Serial.print(" ");
-  Serial.print(requestPacket.Value4);
-  Serial.print(" ");
-  Serial.print(requestPacket.Value5);
-  Serial.print(" ");
-
-  Serial.print("WriteBytes: ");
-  Serial.println(packetSize);
-  Serial.println();
-}
-
-void NunchuckController::printResponsePacket()
-{
-  Serial.println("Nunchuck Packet received:: ");
-  Serial.print(responsePacket.Id);
-  Serial.print(" ");
-  Serial.print(responsePacket.Command);
-  Serial.print(" ");
-  Serial.print(responsePacket.Value1);
-  Serial.print(" ");
-  Serial.print(responsePacket.Value2);
-  Serial.print(" ");
-  Serial.print(responsePacket.Value3);
-  Serial.print(" ");
-  Serial.print(responsePacket.Value4);
-  Serial.print(" ");
-  Serial.print(responsePacket.Value5);
-  Serial.print(" ");
-  Serial.println();
-
-  Serial.print("WriteBytes: ");
-  Serial.println(packetSize);
-}
-
-void NunchuckController::printAddresses()
-{
-
 }

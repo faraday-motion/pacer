@@ -2,8 +2,8 @@
 #include "WiredController.h"
 #include "components/Utility/Log.h"
 
-WiredController::WiredController(ConfigController* configController, AbstractDevice device)
- : AbstractController(configController, device)
+WiredController::WiredController(AbstractDevice device)
+ : AbstractController(device)
 {
   Log::Logger()->write(Log::Level::DEBUG, "Started Construction of WiredController: ");
   accelConstraint = device.accelConstraint;

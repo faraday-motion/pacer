@@ -3,7 +3,8 @@
 
 ConfigController::ConfigController()
 {
-  this->config = new Config();
+  this->config = Config::get();
+  
   configFilePath = "/config.json";
   factoryConfigPath = "/config_factory.json";
 

@@ -1,6 +1,6 @@
 #include "FMV.h"
-#include "components/Device/AbstractDevice.h" // TODO: Make a class out of this.
 #include "components/Utility/Log.h"
+#include "components/Device/AbstractDevice.h"
 
 FMV::FMV()
 {
@@ -19,9 +19,10 @@ void FMV::setup() {
   this->wasConfigured = this->configController->hasLoadedConfig;
 
   if (this->wasConfigured) {
-    this->connectionManager = new ConnectionManager(configController);
+    this->connectionManager = new ConnectionManager();
     this->connectionManager->setup();
-    this->controllerManager = new ControllerManager(configController, connectionManager);
+    this->controllerManager = new ControllerManager(connectionManager);
+    this->connectionManager->bindControllerManager(this->controllerManager);
     this->registerControllers(); // We need to have a safety check.
     Log::Logger()->write(Log::Level::INFO, "Finished setting up the Faraday Motion Vehicle");
   }
@@ -51,10 +52,11 @@ void FMV::loop()
 
 /***
    * Register all enabled devices from the configuration.
+   * TODO:: This should happend on the controller manager.
 ***/
 void FMV::registerControllers()
 {
-  Config* config = this->configController->config;
+  Config* config = Config::get();
   //config->printRegisteredControllers();
   if (config->registeredControllersCount > 0) {
     for (byte i = 0; i < config->registeredControllersCount; i++)
@@ -74,8 +76,6 @@ void FMV::handlePendingConnectionDevices()
   {
    bool registered = this->controllerManager->registerController(this->connectionManager->pendingDevice);
    if (!registered)
-   {
      this->connectionManager->clearPendingDevice(); // zerofy the pendingDevice.
-   }
   }
 }

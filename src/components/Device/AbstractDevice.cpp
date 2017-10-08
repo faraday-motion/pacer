@@ -28,7 +28,8 @@ AbstractDevice::AbstractDevice(_registeredController device)
   brakeConstraint = device.brakeConstraint;
 
   //pending
-  pending  = 0;
+  pending = false;
+  isRegisterd = false;
 }
 
 // Debub

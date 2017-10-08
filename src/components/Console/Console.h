@@ -1,6 +1,7 @@
 #ifndef Console_h
 #define Console_h
 #include "FMV.h"
+#include <Arduino.h>
 
 class FMV; // Forward declaration
 class Console {

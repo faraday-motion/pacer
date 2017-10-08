@@ -7,8 +7,9 @@
 #include "components/Device/AbstractDevice.h"
 #include "components/Connection/ConnectionManager.h"
 #include "components/MotorController/MotorController.h"
-#include "components/ConfigController/ConfigController.h"
+#include "components/Config/Config.h"
 
+class ConnectionManager;
 class ControllerManager
 {
 
@@ -21,9 +22,8 @@ private:
 
 public:
   AbstractController*  activeController;
-  AbstractController*  availableControllers[5];  // Not sure if I should store the entire object or just the pointers.
+  AbstractController*  registeredControllers[5];
   byte registeredControllersCount = 0;
-  ConfigController* configController;
   MotorController*  motorController;
 
   void loop();
@@ -31,7 +31,7 @@ public:
   bool allocateRegisteredController(AbstractController* controller);
   int getControllerIndexById(byte id[]);
 
-  ControllerManager(ConfigController* configController, ConnectionManager* connectionManager);
+  ControllerManager(ConnectionManager* connectionManager);
 
   bool registerController(AbstractDevice device); // create a new controller based on the type [mobile, nunchuck, accel, wired controller]
   void removeRegisteredController(byte id[]); // destroys a certain controller.

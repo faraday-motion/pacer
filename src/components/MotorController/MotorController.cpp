@@ -25,10 +25,11 @@ MotorController::MotorController()
 
 // TODO:: See if this can just be put in the constructor
 // Setup the MotorController Object.
-void MotorController::setup(ConfigController* configController)
+void MotorController::setup()
 {
   Log::Logger()->write(Log::Level::INFO, "Setting up the VESC MotorController");
-  this->motorCount = configController->config->motorCount;
+  Config* config = Config::get();
+  this->motorCount = config->motorCount;
 	// Initialize MotorController Communication Ticker
 	Ticker motorControllerTicker;
   motorControllerTicker.attach_ms(1, updateMotorController, this);

@@ -1,10 +1,11 @@
 #ifndef FMV_h
 #define FMV_h
+
+#include <Metro.h>
+#include "components/Console/Console.h"
+#include "components/Config/ConfigController.h"
 #include "components/Controller/ControllerManager.h"
 #include "components/Connection/ConnectionManager.h"
-#include "components/ConfigController/ConfigController.h"
-#include "components/Console/Console.h"
-#include <Metro.h>
 
 class Console; // Forward declaration to make the compiler happy.
 class FMV {

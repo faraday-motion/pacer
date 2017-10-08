@@ -7,7 +7,7 @@
 #include "ArduinoJson.h"
 #include <WebSocketsServer.h>
 #include "components/Console/Commands.h"
-#include "components/ConfigController/ConfigController.h"
+#include "components/Config/Config.h"
 
 
 // A bit of a Hack due to https://github.com/Links2004/arduinoWebSockets/issues/14
@@ -17,9 +17,8 @@ private:
 public:
   byte subscribers[];
   WebSocketsServer* wss;
-  ConfigController* configController;
 
-  WebSocketCommunicator(ConfigController* configController);
+  WebSocketCommunicator();
   void onWsEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
 };
 

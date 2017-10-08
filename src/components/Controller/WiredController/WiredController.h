@@ -17,7 +17,7 @@ private:
   void checkSample(int sample);
 public:
 
-  WiredController(ConfigController* configController, AbstractDevice device);
+  WiredController(AbstractDevice device);
 
   // Virtual Methods
   bool handleController();

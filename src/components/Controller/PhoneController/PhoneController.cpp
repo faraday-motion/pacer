@@ -3,8 +3,8 @@
 
 
 // Construct the PhoneController and the AbstractController
-PhoneController::PhoneController(ConfigController* configController, Wifi* wifi, AbstractDevice device)
- : AbstractController(configController, device)
+PhoneController::PhoneController(Wifi* wifi, AbstractDevice device)
+ : AbstractController(device)
 {
   Log::Logger()->write(Log::Level::DEBUG, "Started Construction of PhoneController: ");
   this->wifi = wifi;

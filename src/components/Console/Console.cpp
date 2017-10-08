@@ -150,14 +150,14 @@ String Console::execControllerCommand(unsigned int command, String data)
       Log::Logger()->write(Log::Level::DEBUG, "Command:: CTRL_UNSET_ACTIVE");
       for (byte i = 0; i < 5; i++)
       {
-        if (_fmv->controllerManager->availableControllers[i] != nullptr)
+        if (_fmv->controllerManager->registeredControllers[i] != nullptr)
         {
           registeredControllers = registeredControllers +
-                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[0] + ":" +
-                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[1] + ":" +
-                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[2] + ":" +
-                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[3] + ":" +
-                                  (String)_fmv->controllerManager->availableControllers[i]->controller.id[4] + "|";
+                                  (String)_fmv->controllerManager->registeredControllers[i]->controller.id[0] + ":" +
+                                  (String)_fmv->controllerManager->registeredControllers[i]->controller.id[1] + ":" +
+                                  (String)_fmv->controllerManager->registeredControllers[i]->controller.id[2] + ":" +
+                                  (String)_fmv->controllerManager->registeredControllers[i]->controller.id[3] + ":" +
+                                  (String)_fmv->controllerManager->registeredControllers[i]->controller.id[4] + "|";
         }
       }
       return registeredControllers;

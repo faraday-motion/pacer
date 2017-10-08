@@ -1,7 +1,14 @@
 #include "Config.h"
 
-Config::Config()
+// Global static pointer used to ensure a single instance of the class.
+Config* Config::config = nullptr;
+
+Config* Config::get()
 {
+  if(!config)
+    config = new Config;
+
+  return config;
 }
 
 void Config::setConfig(JsonObject& json)
@@ -144,6 +151,14 @@ void Config::printWifi()
   Serial.println(" ");
 }
 
+void Config::printAuthorizedControllerTypes()
+{
+  Serial.println("Authorized Controller Types: ");
+  for (size_t a = 0; a < this->authorizedControllersCount; a++)
+  {
+    Serial.println(this->authorizedControllers[a].type);
+  }
+}
 
 void Config::printRegisteredControllers()
 {

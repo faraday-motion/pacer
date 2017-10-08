@@ -6,9 +6,10 @@
 #include <IPAddress.h>
 #include <ESP8266WiFi.h>
 
+#include "components/Config/Config.h"
 #include "components/Device/WifiDevice.h"
-#include "components/ConfigController/Config.h"
-#include "components/ConfigController/ConfigController.h"
+#include "components/Config/Config.h"
+
 
 class Wifi {
 
@@ -22,7 +23,7 @@ public:
   WiFiClient   client;
 
   Wifi();
-  void setup(ConfigController* configController);
+  void setup();
   bool handleClientConnections();
 
   WifiDevice pendingDevice;

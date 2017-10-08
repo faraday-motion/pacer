@@ -8,11 +8,9 @@
 #include "BalanceController/BalanceController.h"
 
 
-ControllerManager::ControllerManager(ConfigController* configController, ConnectionManager* connectionManager)
+ControllerManager::ControllerManager(ConnectionManager* connectionManager)
 {
   Log::Logger()->write(Log::Level::INFO, "Started Setting up the ControllerManager...");
-  // TODO:: It seems a bit redundant to pass all these pointers to the controllerManager and then to the AbstractController. Investigate on how to optimize this.
-  this->configController  = configController;
   this->connectionManager = connectionManager;
 
   activeController = nullptr;
@@ -22,7 +20,7 @@ ControllerManager::ControllerManager(ConfigController* configController, Connect
 
   for (byte i = 0; i < 5; i++)
   {
-    availableControllers[i] = nullptr;
+    registeredControllers[i] = nullptr;
   }
   Log::Logger()->write(Log::Level::INFO, "Finished Setting up the ControllerManager.");
 }
@@ -33,28 +31,22 @@ void ControllerManager::loop()
   byte status = this->handleActiveController();
   if (status == 2)
   {
-    Serial.println("Connection Lost to controller");
     Log::Logger()->write(Log::Level::WARNING, "Lost Connection to the Active Controller. Unsetting the active controller");
     this->unsetActiveController();
   }
 }
 
-
 byte ControllerManager::handleActiveController()
 {
   byte status = 0; // 0 - No activeController ; 1 - all good ; 2 - connection lost on activeController
   if (activeController != nullptr && controllerReadInterval->check() == 1){
-    if (activeController->handleController()) {
+    if (activeController->handleController())
       status = 1;
-    }
     else
-    {
       status = 2;
-    }
   }
   return status;
 }
-
 
 /**
  * Gets the current active device and returns it's obejct pointer.
@@ -75,7 +67,7 @@ bool ControllerManager::setActiveController(byte id[])
 {
   if (this->activeController == nullptr)
   {
-    Log::Logger()->write(Log::Level::DEBUG, " No active controller. Ready to set new active controller");
+    Log::Logger()->write(Log::Level::DEBUG, "No active controller. Ready to set new active controller");
 
     int index = getControllerIndexById(id);
 
@@ -86,7 +78,7 @@ bool ControllerManager::setActiveController(byte id[])
     }
 
     Log::Logger()->write(Log::Level::DEBUG, "Controller is registered and authorized. Setting it as active.");
-    activeController = availableControllers[index];
+    activeController = registeredControllers[index];
     activeController->enable(); // Enable the activeController;
     return true;
   }
@@ -122,9 +114,9 @@ bool ControllerManager::tryOtherControllers()
   {
     // Loop through the registered controllers // IDEA:: Give priorities to the controllers.
     for (size_t i = 0; i < 5; i++) {
-      if (this->availableControllers[i] != nullptr)
+      if (this->registeredControllers[i] != nullptr)
       {
-        this->setActiveController(this->availableControllers[i]->controller.id);
+        this->setActiveController(this->registeredControllers[i]->controller.id);
       }
     }
   }
@@ -137,8 +129,8 @@ void ControllerManager::removeRegisteredController(byte id[])
 {
   Log::Logger()->write(Log::Level::DEBUG, "Uregistered a controller");
   byte index = this->getControllerIndexById(id);
-  delete this->availableControllers[index];
-  this->availableControllers[index] = nullptr;
+  delete this->registeredControllers[index];
+  this->registeredControllers[index] = nullptr;
 }
 
 bool ControllerManager::registerController(AbstractDevice device)
@@ -147,45 +139,54 @@ bool ControllerManager::registerController(AbstractDevice device)
   if (!this->validateController(device))
     return false;
 
-  // // If it is registered and there's no active controller set as active.
-  // if (this->activeController == nullptr)
-  // {
-  //   this->setActiveController(device.id);
-  // }
+  // Stage two. Is this controller already registered?
+  if (this->getControllerIndexById(device.id) != -1)
+  {
+    Log::Logger()->write(Log::Level::DEBUG, "This controller was already registered");
+
+    Log::Logger()->write(Log::Level::DEBUG, "Checking if it could be activated");
+    if(this->activeController == nullptr) {
+      this->setActiveController(device.id);
+      this->activeController->enable();
+    }
+
+    return true;
+  }
 
   if (device.type == 1)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Registering a PhoneController");
-    AbstractController * phoneController = new PhoneController(configController, connectionManager->wifi, device);
+    AbstractController * phoneController = new PhoneController(connectionManager->wifi, device);
     allocateRegisteredController(phoneController);
     return true;
   }
   else if (device.type == 2)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Registering a NunchuckControlle");
-    AbstractController * nunchuckController = new NunchuckController(configController, connectionManager->radio, device);
+    AbstractController * nunchuckController = new NunchuckController(connectionManager->radio, device);
     allocateRegisteredController(nunchuckController);
     return true;
   }
   else if (device.type == 3)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Registering a AccelController");
-    AbstractController * accelController = new AccelController(configController, device);
+    AbstractController * accelController = new AccelController(device);
     allocateRegisteredController(accelController);
     return true;
   }
   else if (device.type == 4)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Registering a WiredController");
-    AbstractController * wiredController = new WiredController(configController, device);
+    AbstractController * wiredController = new WiredController(device);
     allocateRegisteredController(wiredController);
     return true;
   }
   else if (device.type == 5)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Registering a BalanceController");
-    AbstractController * balanceController = new BalanceController(configController, device);
+    AbstractController * balanceController = new BalanceController(device);
     allocateRegisteredController(balanceController);
+    return true;
   }
   else
   {
@@ -198,12 +199,12 @@ int ControllerManager::getControllerIndexById(byte id[])
 {
   for (int i = 0; i < 5; i++)
   {
-    if(availableControllers[i] != nullptr){  // not a null pointer
-      if( availableControllers[i]->controller.id[0] == id[0] &&
-          availableControllers[i]->controller.id[1] == id[1] &&
-          availableControllers[i]->controller.id[2] == id[2] &&
-          availableControllers[i]->controller.id[3] == id[3] &&
-          availableControllers[i]->controller.id[4] == id[4]) {
+    if(registeredControllers[i] != nullptr){  // not a null pointer
+      if( registeredControllers[i]->controller.id[0] == id[0] &&
+          registeredControllers[i]->controller.id[1] == id[1] &&
+          registeredControllers[i]->controller.id[2] == id[2] &&
+          registeredControllers[i]->controller.id[3] == id[3] &&
+          registeredControllers[i]->controller.id[4] == id[4]) {
         return i;
       }
     }
@@ -217,10 +218,9 @@ bool ControllerManager::allocateRegisteredController(AbstractController* control
 {
   // TODO:: We need to tell the Controller that it is already registered and there's no need to ask for registration.
   for (byte i = 0; i < 5; i++) {
-    if(availableControllers[i] == nullptr)  {
-      availableControllers[i] = controller;
+    if(registeredControllers[i] == nullptr)  {
+      registeredControllers[i] = controller;
       registeredControllersCount = registeredControllersCount + 1; // keep track of registered controllers.
-      this->printActiveController();
       // If there is no active controler we set this device as active.
       if (this->activeController == nullptr && controller->controller.enabled == true)
       {
@@ -241,9 +241,12 @@ bool ControllerManager::validateController(AbstractDevice device)
 {
   // Stage One. Is this controller authorized?
   bool isAuthorized = false;
-  for (byte i = 0; i < this->configController->config->authorizedControllersCount; i ++)
+
+  Config* config = Config::get();
+
+  for (byte i = 0; i < config->authorizedControllersCount; i ++)
   {
-    if (device.type == this->configController->config->authorizedControllers[i].type) {
+    if (device.type == config->authorizedControllers[i].type) {
       isAuthorized = true;
       break;
     }
@@ -254,15 +257,6 @@ bool ControllerManager::validateController(AbstractDevice device)
     Log::Logger()->write(Log::Level::DEBUG, "This controller type is not authorized for this vehicle.");
     return false;
   }
-
-
-  // Stage two. Is this controller already registered?
-  if (this->getControllerIndexById(device.id) != -1 && isAuthorized)
-  {
-    Log::Logger()->write(Log::Level::DEBUG, "This controller was already registered");
-    return false;
-  }
-
   // All good. Proceed.
   return true;
 }
@@ -296,15 +290,15 @@ void ControllerManager::printRegisteredControllers()
     Serial.println();
     for (byte i = 0; i < registeredControllersCount; i++) {
       Serial.println("Controller ID :: ");
-      Serial.print(availableControllers[i]->controller.id[0]);
+      Serial.print(registeredControllers[i]->controller.id[0]);
       Serial.print(" ");
-      Serial.print(availableControllers[i]->controller.id[1]);
+      Serial.print(registeredControllers[i]->controller.id[1]);
       Serial.print(" ");
-      Serial.print(availableControllers[i]->controller.id[2]);
+      Serial.print(registeredControllers[i]->controller.id[2]);
       Serial.print(" ");
-      Serial.print(availableControllers[i]->controller.id[3]);
+      Serial.print(registeredControllers[i]->controller.id[3]);
       Serial.print(" ");
-      Serial.println(availableControllers[i]->controller.id[4]);
+      Serial.println(registeredControllers[i]->controller.id[4]);
     }
   }
 

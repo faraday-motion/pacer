@@ -28,7 +28,7 @@ private:
   byte computeSpeed(float sensorReading);
 public:
 
-  AccelController(ConfigController* configController, AbstractDevice device);
+  AccelController(AbstractDevice device);
 
   bool enable();
   bool disable();

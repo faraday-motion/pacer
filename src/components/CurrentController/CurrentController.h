@@ -1,8 +1,7 @@
 #ifndef CurrentController_h
 #define CurrentController_h
 #include "Arduino.h" // TODO:: optimize the inclusions of the Arduino.h . Here we need if for the byte type to be available.
-#include "../ConfigController/Config.h"
-#include "../ConfigController/ConfigController.h"
+#include "../Config/Config.h"
 
 class CurrentController {
   Config* config;
@@ -25,7 +24,7 @@ public:
 
 
   CurrentController();
-  void setup(Config* configuration); // Configures itself and the CurrentController.
+  void setup(); // Configures itself and the CurrentController.
   float getMotorAccelerationCurrent(float previousControllerInput);
   float getMotorBrakingCurrent(float previousControllerInput);
   float getNeutralCurrent();

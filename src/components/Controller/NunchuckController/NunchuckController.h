@@ -31,38 +31,16 @@ private:
   // Packet Handling
   RadioPacket responsePacket;
   RadioPacket requestPacket;
-  byte sendCount    = 0;
-  unsigned long receiveCounter = 0;
-  byte packetSize   = 7;
-  byte lastPacketId = 0;
-  byte sendCommand  = 1;
 
-  bool controllerConnected = false;
-  bool controllerVerified  = false;
-
-  // Packet Handling
-  bool tryReadBytes();
-  bool tryWriteBytes();
-
-  bool isNewOrKnownController();
   void processResponse();
-
-  // Debug
-  void printRequestPacket();
-  void printResponsePacket();
-  void printAddresses();
-
 
 public:
 
-  NunchuckController(ConfigController* configController, Radio* radio, AbstractDevice device);
+  NunchuckController(Radio* radio, AbstractDevice device);
 
   bool handleController();
   bool enable();
   bool disable();
-
-
-
 };
 
 #endif

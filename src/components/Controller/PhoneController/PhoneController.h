@@ -25,7 +25,7 @@ private:
 
 public:
   Wifi* wifi;
-  PhoneController(ConfigController* configController, Wifi* wifi, AbstractDevice device);
+  PhoneController(Wifi* wifi, AbstractDevice device);
 
   bool handleController();
   bool enable();

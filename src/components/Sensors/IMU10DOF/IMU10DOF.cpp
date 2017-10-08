@@ -5,7 +5,6 @@ IMU10DOF::IMU10DOF()
 {
   Log::Logger()->write(Log::Level::DEBUG, "Started Construction of the IMU10DOF.");
   this->accelgyro = new MPU6050();
-  //this->accelgyro = new MPU9150();
   this->I2C_M = new I2Cdev();
   Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of the IMU10DOF.");
 }

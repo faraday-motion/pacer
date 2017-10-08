@@ -41,6 +41,8 @@ bool AccelController::handleController()
   }
   float average = sum / 25; // average of 5 samples.
 
+  Log::Logger()->write(Log::Level::DEBUG,"AccelController sample:  " + (String)average );
+
   // For the sake of the range:
   average  = average * 100;
 

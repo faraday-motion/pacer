@@ -3,8 +3,8 @@
 
 
 #include <Arduino.h>
-#include "../lib/I2Cdev/I2Cdev.h"
-#include "../lib/MPU6050/MPU6050.h"
+#include "I2Cdev.h"
+#include "MPU6050.h"
 
 class IMU10DOF {
 MPU6050* accelgyro;

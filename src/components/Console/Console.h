@@ -11,7 +11,7 @@ public:
   static Console* Cmd();
   void setFMV(FMV* fmv);
   // Handle the received command and call the apropriete exec method.
-  String handle(unsigned int command, String data = "");
+  String handle(unsigned int id, unsigned int command, String data = "");
 
   // Execute Logger Commands
   String execLoggerCommand(unsigned int command, String data);

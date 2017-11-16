@@ -33,6 +33,8 @@ bool ConfigController::loadConfig()
     return false;
   }
 
+  Log::Logger()->write(Log::Level::DEBUG, "File Size: ");
+  Log::Logger()->write(Log::Level::DEBUG, (String)configFile.size());
   StaticJsonBuffer<2400> jsonBuffer;
   JsonObject& json = jsonBuffer.parse(configFile);
 
@@ -62,6 +64,7 @@ String ConfigController::getRawConfig(bool factoryConfig)
     {
       rawConfig += char(configFile.read());;
     }
+    
     configFile.close();
     return rawConfig;
   }
@@ -73,6 +76,7 @@ bool ConfigController::writeRawConfig(String rawConfig)
 {
   Log::Logger()->write(Log::Level::DEBUG, "Writing new conifguration...");
   if(!this->beginSPIFFS()) {
+    Log::Logger()->write(Log::Level::ERR, "COULD NOT BEGIN SPIFFS");
     return false;
   }
 
@@ -81,7 +85,7 @@ bool ConfigController::writeRawConfig(String rawConfig)
     Log::Logger()->write(Log::Level::ERR, "Failed to open config file for writing");
     return false;
   }
-
+  
   // Write config to file.
   configFile.print(rawConfig);
   configFile.flush();
@@ -116,9 +120,8 @@ bool ConfigController::restoreFactoryConfig()
   Log::Logger()->write(Log::Level::ERR, "::::::::::::::::::::::::::::::::::::::::::::::::::" );
   Log::Logger()->write(Log::Level::ERR, "                      PANIC                       " );
   Log::Logger()->write(Log::Level::ERR, "::::::::::::::::::::::::::::::::::::::::::::::::::" );
-  Log::Logger()->write(Log::Level::ERR, "Could not read the json config file.");
-  Log::Logger()->write(Log::Level::ERR, "Reverting to factory configuration..." );
-
+  Log::Logger()->write(Log::Level::ERR, "Could not read the json config file: ");
+  Log::Logger()->write(Log::Level::ERR, "Reverting to factory configuration..." );  
   String config = this->getRawConfig(true);
   bool result = this->writeRawConfig(config);
   yield();

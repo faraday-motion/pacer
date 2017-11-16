@@ -6,6 +6,7 @@
 #include "PhoneController/PhoneController.h"
 #include "NunchuckController/NunchuckController.h"
 #include "BalanceController/BalanceController.h"
+#include "WsController/WsController.h"
 
 
 ControllerManager::ControllerManager(ConnectionManager* connectionManager)
@@ -152,7 +153,7 @@ bool ControllerManager::registerController(AbstractDevice device)
 
     return true;
   }
-
+  // TODO:: Make a freaking enum out of this.
   if (device.type == 1)
   {
     Log::Logger()->write(Log::Level::DEBUG, "Registering a PhoneController");
@@ -183,9 +184,9 @@ bool ControllerManager::registerController(AbstractDevice device)
   }
   else if (device.type == 5)
   {
-    Log::Logger()->write(Log::Level::DEBUG, "Registering a BalanceController");
-    AbstractController * balanceController = new BalanceController(device);
-    allocateRegisteredController(balanceController);
+    Log::Logger()->write(Log::Level::DEBUG, "Registering a WsController");
+    AbstractController * wsController = new WsController(connectionManager->ws, device);
+    allocateRegisteredController(wsController);
     return true;
   }
   else

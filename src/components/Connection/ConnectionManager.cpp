@@ -92,7 +92,7 @@ void ConnectionManager::handleWifiConnections()
   if (this->wifi != nullptr)
   {
     if (this->wifi->handleClientConnections() == true) {
-      Log::Logger()->write(Log::Level::DEBUG, "Wifi Detected New Pending Device");
+      // Log::Logger()->write(Log::Level::DEBUG, "Wifi Detected New Pending Device");
       // TODO:: We have an issue the pending devices are being overwritten here by handleRadioConnections()
       this->pendingDevice = this->wifi->pendingDevice;
     }

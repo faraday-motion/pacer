@@ -14,12 +14,14 @@
 class WebSocketCommunicator {
 private:
   uint8_t clientId;
+  String ipAddressToString(IPAddress ip);
 public:
   byte subscribers[];
   WebSocketsServer* wss;
 
   WebSocketCommunicator();
   void onWsEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
+
 };
 
 #endif

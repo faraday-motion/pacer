@@ -24,14 +24,15 @@ void setup() {
 
 }
 void loop() {
-  if (!DEAD_MAN_SWITCH_ENABLED) {
-    fmv.loop();
-  } else {
-    // Setting neutral current.
-    mc.set_current_brake(0);
+  // if (!DEAD_MAN_SWITCH_ENABLED) {
+  //   fmv.loop();
+  // } else {
+  //   // Setting neutral current.
+  //   mc.set_current_brake(0);
 
-    Serial.println("::::::::PANIC:::::::::");
-    Serial.println("DEAD_MAN_SWITCH_ENABLED == TRUE");
-  }
+  //   Serial.println("::::::::PANIC:::::::::");
+  //   Serial.println("DEAD_MAN_SWITCH_ENABLED == TRUE");
+  // }
+  fmv.loop();
   yield();
 }

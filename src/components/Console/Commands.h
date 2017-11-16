@@ -13,4 +13,6 @@ enum {
   CTRL_SET_ACTIVE       = 8009,
   CTRL_UNSET_ACTIVE     = 8010,
   CTRL_GET_ALL          = 8011,
+  CTRL_REGISTER         = 8012,
+  CTRL_SENT_INPUT       = 8013,
 };

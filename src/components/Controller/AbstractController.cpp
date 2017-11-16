@@ -65,7 +65,6 @@ bool AbstractController::setMotorPower()
     motorController->set_current(motorCurrent);
     this->checkIfInMotion->reset(); // We are in motion. Reset the time watch.
     this->isInMotion = true;
-
     return 1;
   }
 

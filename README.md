@@ -31,6 +31,11 @@ Pacer is build on top of the [Arduino core for ESP8266](https://github.com/esp82
 
 [PlatformIO](http://platformio.org/) is the development environment that is managing all the project dependencies for Pacer.
 
+## Pacer Related Repositories
+[Pacer Controller](https://github.com/faraday-motion/pacer-web-app) - A RF controller for Pacer powered vehicles
+
+[Pacer Web App](https://github.com/faraday-motion/pacer-controller) - A web app hosted on Pacer powered vehicles that allows configuration and has a setup wizzard.
+
 ## Software Getting Started
 
 1. Set up a PlatformIO development environment for ESP8266. ([Check this guide](https://github.com/esp8266/Arduino#using-platformio))

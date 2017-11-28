@@ -260,7 +260,11 @@ String Console::execControllerCommand(unsigned int command, String data)
         if(activeController != nullptr && activeController->controller.type == 5)
         {
           StaticJsonBuffer<256> jsonBuffer;
-          JsonObject& json = jsonBuffer.parse(data);
+          JsonObject& json = jsonBuffer.parse(data);                  
+          if (!json.success()){
+            Log::Logger()->write(Log::Level::ERR, "Failed to parse json websocket message.");
+            return "Input data JSON Could not be parsed"; // Don't pass the json further into the app.
+          }
           int input = json["input"];
           WsController* wsController = static_cast<WsController *>(activeController);
           wsController->setInput((byte)input);

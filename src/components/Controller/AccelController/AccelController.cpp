@@ -11,91 +11,62 @@
   4. In case the driver brakes hard enough (TODO:: define hard enought) the motor will disengage
   5. The driver needs to accelerate again in order to re-engage motor.
 */
+
+
+// Useful links:
+// https://github.com/tekdemo/MiniPID/blob/master/examples/Basic/Basic.ino
+// https://gist.github.com/bradley219/5373998
+// http://mechatronicstutorials.blogspot.de/2014/07/balancing-of-ball-on-beam-using-arduino.html
+// https://playground.arduino.cc/Code/PIDLibrary
+// https://www.youtube.com/watch?v=fusr9eTceEo
+
 AccelController::AccelController(AbstractDevice device)
   : AbstractController(device)
 {
   Log::Logger()->write(Log::Level::DEBUG, "Started Construction of AccelController: ");
+
   this->sensor = new IMU10DOF();
   this->sensor->setup();
-  this->assistingTimer = new Metro(500);
-  this->logTimer = new Metro(500);
-  this->logTimer->reset();
-  this->assistingTimer->reset(); // Required. Otherwise the timer is set in the future.
+  this->readSensorTimer = new Metro(100);
+  this->readSensorTimer->reset();
+  this->PIDControl = new PID(&input, &output, &setpoint, 2, 5, 1, DIRECT);
+  this->PIDControl = new PID(&input, &output, &setpoint, 2, 5, 1, DIRECT);
+  this->PIDControl->SetMode(AUTOMATIC);
+  this->PIDControl->SetOutputLimits(-50, 50);
+
   Log::Logger()->write(Log::Level::DEBUG, "Finished Construction of AccelController: ");
 }
 
 bool AccelController::handleController()
 {
-  float samples[25];
+  double power = 50.0;
 
-  // Gathering samples.
-  for (size_t i = 0; i < 25; i++) {
-    this->sensor->getAccel_Data();
-    samples[i] = this->sensor->Axyz[0];
+  this->sensor->getAccel_Data();
+
+  this->acceleration = this->sensor->Axyz[0];
+
+  // NOT WORKING AS EXPECTED YET. Weighted against the last few readings.
+  // this->acceleration = this->acceleration * 0.99 + this->sensor->Axyz[0] * 0.1;
+  this->input = map(acceleration * 100, -100 , 100, 0, 100);
+
+  if (this->readSensorTimer->check() == 1) {
+    this->setpoint = this->input;
   }
 
-  // Get the average X axeleration
-  float sum = 0;
-  for (size_t s = 0; s < 25; s++) {
-    sum = sum + samples[s];
-  }
-  float average = sum / 25; // average of 5 samples.
+  this->PIDControl->Compute();
 
-  Log::Logger()->write(Log::Level::DEBUG,"AccelController sample:  " + (String)average );
+  power = power + output;
 
-  // For the sake of the range:
-  average  = average * 100;
-
-  newSpeed = map(average, -100 , 100, 0, 100);
-    delay(5);
-    this->motorController->get_values(); // get the data from the motorController.
-    delay(5);
-    if (VescParams::Instance()->motorValues.rpm < 100)
-    {
-      newSpeed = 49;
-    }
-  // setting the boundaries for cases when the average is going out the min max.
-  if (newSpeed < 0)
-  {
-    newSpeed = 0;
-  }
-  if (newSpeed > 100)
-  {
-    newSpeed = 100;
-  }
-
-  if (newSpeed > 50)
-  {
-    this->lockedTarget = newSpeed;
-    this->assisting    = true;
-  }
-
-  if (newSpeed < 50)
-  {
-    newSpeed = 50;
-    lockedTarget = 0;
-    this->assisting = false;
-  }
-
-  delay(5);
-  if (this->assisting == true)
-  {
-    // Only increase if we did not get to the max already
-    if (previousSpeed < 100)
-    {
-      // Accelerating
-      previousSpeed = previousSpeed + changeRate;
-    } else {
-      previousSpeed = 100;
-    }
-
-    delay(5);
-    processInput(previousSpeed);
-
-  } else {
-    processInput(50);
-  }
-
+  Serial.print("SP: ");
+  Serial.print(setpoint);
+  Serial.print("  IN: ");
+  Serial.print(input);
+  Serial.print("  OU: ");
+  Serial.print(output);
+  Serial.print("  PW: ");
+  Serial.print(power);
+  Serial.println();
+  delay(10);
   return true;
 }
 

@@ -44,7 +44,7 @@
       "id" : "ACCE1",
       "type" : 3,
       "priority" : 1,
-      "enabled" : 0,
+      "enabled" : 1,
       "constraints" : {
         "brake" : 200,
         "accel" : 650

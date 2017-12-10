@@ -2,7 +2,9 @@
   <img src="http://www.faradaymotion.com/wp-content/uploads/2017/07/pace_logo.png" width="150">
 </p>
 
-# What is Pacer?
+# Pacer
+[![Build Status](https://travis-ci.org/faraday-motion/pacer.svg?branch=master)](https://travis-ci.org/faraday-motion/pacer)
+
 Pacer is a development platform that enables fast and cheap development of light electric vehicles.
 
 Pacer bundles open source software with modular hardware components.

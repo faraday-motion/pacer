@@ -83,7 +83,14 @@ void ConnectionManager::handleClientConnections()
   {
     this->handleWifiConnections();
     this->handleRadioConnections();
+    this->healthCheckWebSocketConnections();
   }
+}
+/** Check websocket connections */
+void ConnectionManager::healthCheckWebSocketConnections()
+{
+  if (this->ws != nullptr)
+    this->ws->EvictInactiveConnections();
 }
 
 /** Checks if wifi is instantiated and checks for new clinets wanting to connect */

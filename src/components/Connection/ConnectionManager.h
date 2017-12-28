@@ -24,6 +24,7 @@ private:
 
   void handleWifiConnections();
   void handleRadioConnections();
+  void healthCheckWebSocketConnections();
 
 public:
 

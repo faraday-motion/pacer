@@ -86,9 +86,9 @@ Steps:
 
 #### 2. nRF24 Connections
 
-![nRF24](http://www.faradaymotion.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-27-at-12.09.51-PM.png)
+![nRF24](http://blog.faradaymotion.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-27-at-12.09.51-PM.png)
 
-![nRF24 Pins](http://www.faradaymotion.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-27-at-12.23.36-PM.png)
+![nRF24 Pins](http://blog.faradaymotion.com/wp-content/uploads/2017/07/Screen-Shot-2017-07-27-at-12.23.36-PM.png)
 
 #### 3. MPU9150
 

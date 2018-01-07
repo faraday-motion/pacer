@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://www.faradaymotion.com/wp-content/uploads/2017/07/pace_logo.png" width="150">
+  <img src="http://blog.faradaymotion.com/wp-content/uploads/2017/07/pace_logo.png" width="150">
 </p>
 
 # Pacer

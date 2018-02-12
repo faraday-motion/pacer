@@ -2,6 +2,7 @@
 #define CONFIGS_HPP
 
 //#include "./modules/bt_connection/bt_connection.h"
+#include "./modules/arduino_ota/arduino_ota_config.h"
 #include "./modules/control_priority/control_priority_config.h"
 #include "./modules/current_monitor/current_monitor_config.h"
 #include "./modules/dead_man_switch/dead_man_switch_config.h"

@@ -40,7 +40,7 @@ public:
 
       //The drivelog seems to have an issue if configured too late or if the file is too big
       Spiffs_drivelog_config* cfg23 = new Spiffs_drivelog_config(id++);
-      cfg23 -> enabled = true;
+      cfg23 -> enabled = false;
       Configurator::Instance().addConfig(cfg23);
 
       //1
@@ -167,6 +167,8 @@ public:
       Configurator::Instance().addConfig(cfg22);
 
       //23
+      Arduino_ota_config* cfg24 = new Arduino_ota_config(id++);
+      Configurator::Instance().addConfig(cfg24);
     }
 };
 

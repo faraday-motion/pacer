@@ -140,6 +140,11 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Control_priority_config(id);
         break;
+      case Configurations::ARDUINO_OTA_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance ARDUINO_OTA_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        cfg = new Arduino_ota_config(id);
+        break;
       return cfg;
     }
   }

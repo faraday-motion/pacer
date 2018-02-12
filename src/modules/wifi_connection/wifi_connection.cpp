@@ -15,8 +15,8 @@ void Wifi_connection::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Wifi_connection"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    //setWifiStation();
-    setWifiAp();
+    setWifiStation();
+    //setWifiAp();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Wifi_connection"));
     mIsSetup = true;
   }
@@ -67,7 +67,7 @@ void Wifi_connection::setWifiAp()
 
 void Wifi_connection::setWifiStation()
 {
-  Logger::Instance().write(LogLevel::INFO, FPSTR("WifiStation BEGIN"));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("WifiStation"));
   //WiFi.disconnect(true);
   //delay(250);
   //WiFi.onEvent(onWiFiEvent);
@@ -81,7 +81,7 @@ void Wifi_connection::setWifiStation()
        Serial.print(".");
    }
    onEvent(Events::WIFI_STA_STARTED);
-  Logger::Instance().write(LogLevel::INFO, FPSTR("WifiStation END"));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("ArduinoOTA IP address: "), Tools::ipAddressToString(WiFi.localIP()));
 }
 
 void Wifi_connection::onWiFiEvent(WiFiEvent_t event)

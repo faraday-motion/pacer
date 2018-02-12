@@ -3,6 +3,7 @@
 
 //Modules
 //#include "./modules/bt_connection/bt_connection.h"
+#include "./modules/arduino_ota/arduino_ota.h"
 #include "./modules/control_priority/control_priority.h"
 #include "./modules/current_monitor/current_monitor.h"
 #include "./modules/dead_man_switch/dead_man_switch.h"

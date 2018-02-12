@@ -12,8 +12,8 @@ function sendRequest()
 {
   requestCommand = document.getElementById('command').value;
   var payload    = document.getElementById('payload').value;
-  console.log(requestCommand + ":" + payload);
-  socket.send(requestCommand + ":" + payload);
+  console.log("{\"command\":" + JSON.parse(requestCommand) + ",\"value\":" + JSON.parse(payload) + "}");
+  socket.send("{\"command\":" + JSON.parse(requestCommand) + ",\"value\":" + JSON.parse(payload) + "}");
 }
 
 function printResponse(response) {
@@ -22,7 +22,7 @@ function printResponse(response) {
   if (requestCommand == 8008 || requestCommand == 8011) {
     response = parseCtrlId(response);
   }
-  document.getElementById("response").innerHTML = JSON.parse(JSON.stringify(response, undefined, 2));
+  document.getElementById("response").innerHTML = JSON.parse(JSON.stringify(response, undefined, 2)) + "<br>" + document.getElementById("response").innerHTML;
 }
 
 

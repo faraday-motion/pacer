@@ -4,10 +4,9 @@
 #include "../../configuration/configurator.h"
 #include "./serial_control_config.h"
 #include "../../utility/simpletimer.h"
-#include "../base/input_control.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 
-class Serial_control : virtual public Input_control
+class Serial_control : virtual public Control_module
 {
 private:
   FMV *mFMV;
@@ -20,7 +19,7 @@ protected:
       mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Serial_control(byte id, FMV *fmv, Serial_control_config* cfg = nullptr) : Input_control(id, Modules::SERIAL_CONTROL, fmv)  {
+  Serial_control(byte id, FMV *fmv, Serial_control_config* cfg = nullptr) : Control_module(id, Modules::SERIAL_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Serial_control_config*>(Configurator::Instance().createConfig(id, Configurations::SERIAL_CONTROL_CONFIG));

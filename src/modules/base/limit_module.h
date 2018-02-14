@@ -1,16 +1,16 @@
-#ifndef INPUT_LIMIT_H
-#define INPUT_LIMIT_H
+#ifndef LIMIT_MODULE_H
+#define LIMIT_MODULE_H
 #include <Arduino.h>
-#include "./modulebase.h"
+#include "./base.hpp"
 #include "../../enums/enums.hpp"
 #include "../../vehiclecontrol.h"
 
-class Input_limit : public Modulebase  {
+class Limit_module : public Modulebase  {
 private:
 protected:
   Vehiclecontrol mInputControl;
   Vehiclecontrol mOutputControl;
-  Input_limit(byte id, Modules module) : Modulebase(id, module,Roles::INPUT_LIMIT) {
+  Limit_module(byte id, Modules module) : Modulebase(id, module,Roles::LIMIT_MODULE) {
     mInputControl.setName("Input_limit-INPUT");
     mOutputControl.setName("Input_limit-OUTPUT");
   }

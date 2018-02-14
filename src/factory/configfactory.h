@@ -145,6 +145,17 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Arduino_ota_config(id);
         break;
+      case Configurations::WEBSOCKET_CONNECTION_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance WEBSOCKET_CONNECTION_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        cfg = new Websocket_connection_config(id);
+        break;
+      case Configurations::WEBSOCKET_DRIVELOG_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance WEBSOCKET_CONNECTION_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        cfg = new Websocket_drivelog_config(id);
+        break;
+
       return cfg;
     }
   }

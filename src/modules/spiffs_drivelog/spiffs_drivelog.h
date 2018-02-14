@@ -4,8 +4,7 @@
 #include "../../configuration/configurator.h"
 #include "./spiffs_drivelog_config.h"
 #include "../../utility/simpletimer.h"
-#include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 #include "../../sensors/base/sensorbase.h"
 #include "../../utility/spiffs_storage.h"
 

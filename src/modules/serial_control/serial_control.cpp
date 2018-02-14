@@ -31,7 +31,7 @@ void Serial_control::loop()
     byte value = 0;
     if (readSerial(command, value))
     {
-      handleCommand(command, value);
+      recieve(command, value);
       if (command == 99)
         mFMV -> modules().command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
     }

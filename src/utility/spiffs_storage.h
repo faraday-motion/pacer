@@ -5,7 +5,7 @@
 #include "FS.h"
 #include "SPIFFS.h"
 #include "../configuration/base/configbase.h"
-#include "../interfaces/iwrite.h"
+#include "../interfaces/isend.h"
 
 class Spiffs_storage
 {
@@ -15,7 +15,7 @@ class Spiffs_storage
       Spiffs_storage(){
       };
       void append(String path, const String message);
-      void read(String path, IWrite* writer);
+      void read(String path, ISend* sender);
       bool remove(String path);
 };
 

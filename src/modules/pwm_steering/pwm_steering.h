@@ -6,12 +6,12 @@
 #include "../../configuration/configurator.h"
 #include "./pwm_steering_config.h"
 #include "./pwm_steering_wheel_decorator.h"
-#include "../base/input_controller.h"
+#include "../base/power_module.h"
 #include "../../fmv.h"
 #include "../../sensors/base/sensorbase.h"
 #include "datatypes.h"
 
-class Pwm_steering : virtual public Input_controller
+class Pwm_steering : virtual public Power_module
 {
 private:
   FMV *mFMV;
@@ -30,7 +30,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Pwm_steering(byte id, FMV *fmv, Pwm_steering_config* cfg = nullptr) : Input_controller(id, Modules::PWM_STEERING)  {
+  Pwm_steering(byte id, FMV *fmv, Pwm_steering_config* cfg = nullptr) : Power_module(id, Modules::PWM_STEERING)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Pwm_steering_config*>(Configurator::Instance().createConfig(id, Configurations::PWM_STEERING_CONFIG));

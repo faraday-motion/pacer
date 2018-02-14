@@ -16,7 +16,7 @@
 class Logfactory{
 public:
 
-  static Logbase* getLogInstance(byte id, Configurations configuration, FMV *fmv)
+  static Logbase* getLogInstance(byte id, Configurations configuration, FMV * fmv)
   {
       Logbase* log = nullptr;
       switch(configuration) {

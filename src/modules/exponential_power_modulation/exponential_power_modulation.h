@@ -2,13 +2,12 @@
 #define EXPONENTIAL_POWER_MODULATION_H
 
 #include <Arduino.h>
+#include "../base/base.hpp"
 #include "../../configuration/configurator.h"
 #include "./exponential_power_modulation_config.h"
 #include "../../utility/simpletimer.h"
-#include "../base/input_modulation.h"
-#include "../../fmv.h"
 
-class Exponential_power_modulation : virtual public Input_modulation
+class Exponential_power_modulation : virtual public Modulation_module
 {
 private:
   FMV *mFMV;
@@ -21,7 +20,7 @@ private:
 protected:
   void onDisable();
 public:
-  Exponential_power_modulation(byte id, FMV* fmv, Exponential_power_modulation_config* cfg = nullptr) : Input_modulation(id, Modules::EXPONENTIAL_POWER_MODULATION)  {
+  Exponential_power_modulation(byte id, FMV* fmv, Exponential_power_modulation_config* cfg = nullptr) : Modulation_module(id, Modules::EXPONENTIAL_POWER_MODULATION)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Exponential_power_modulation_config*>(Configurator::Instance().createConfig(id, Configurations::EXPONENTIAL_POWER_MODULATION_CONFIG));

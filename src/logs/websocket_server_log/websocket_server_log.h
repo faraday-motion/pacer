@@ -2,23 +2,34 @@
 #define WEBSOCKET_SERVER_LOG_H
 
 #include <Arduino.h>
-#include <WebSocketsServer.h>
 #include "../base/logbase.h"
 #include "../../utility/tools.h"
-#include "../../utility/spiffs_storage.h"
 #include "../../configuration/configurator.h"
 #include "./websocket_server_log_config.h"
 #include "../../fmv.h"
 #include "../../interfaces/interfaces.hpp"
-
-using namespace std;
-using namespace std::placeholders;
+#include "../../modules/modules.hpp"
 
 class Websocket_server_log : public Logbase
 {
 private:
   Websocket_server_log_config* mCfg = nullptr;
   FMV * mFMV = nullptr;
+  IConnection * pIConnection = nullptr;
+  void getWebsocketConnection()
+  {
+    //Find the websocket connection module
+    if (pIConnection == nullptr)
+    {
+      Modulebase * mb = mFMV -> modules().get(Modules::WEBSOCKET_CONNECTION);
+      if (mb != nullptr)
+      {
+        Connection_module * conn = static_cast<Connection_module*>(mb);
+        pIConnection = static_cast<IConnection*>(conn);
+      }
+    }
+  }
+
 protected:
 public:
   Websocket_server_log(byte id, FMV *fmv = nullptr, Websocket_server_log_config* mfg = nullptr) : Logbase(id){
@@ -27,6 +38,7 @@ public:
       mCfg = static_cast<Websocket_server_log_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_SERVER_LOG_CONFIG));
     else
       mCfg = mfg;
+    //getWebsocketConnection();
     setConfig();
   };
 
@@ -36,17 +48,13 @@ public:
     setEnabled(mCfg -> enabled);
   }
 
-  void setWriter(IWrite * writer)
-  {
-    pWriter = writer;
-  }
-
   void write(LogLevel level, String message)
   {
     if (enabled() && level >= getLevel())
     {
-      if (pWriter != nullptr)
-        pWriter -> write(message);
+      //getWebsocketConnection();
+      if (pIConnection != nullptr)
+        pIConnection -> send(message);
     }
   }
 };

@@ -24,40 +24,41 @@ void Control_priority::loop()
       int activeId = -1;
       //bool activeHasClient = false;
       //bool activePriority = 0;
-      Modulebase* activeControl = mFMV -> modules().getActiveControl();
+      Control_module* activeControl = mFMV -> modules().getActiveControl();
       if (activeControl != nullptr)
       {
+
         activeId = activeControl -> id();
         //activeHasClient = activeControl -> hasClient();
         //activePriority = getPriority(activeId);
         //Logger::Instance().write(LogLevel::DEBUG, "activePriority Id: " + String(activeId));
       }
 
-      Modulebase* priority1 = nullptr;
-      Modulebase* priority2 = nullptr;
-      Modulebase* priority3 = nullptr;
-      Modulebase* priority4 = nullptr;
-      Modulebase* priority5 = nullptr;
+      Control_module* priority1 = nullptr;
+      Control_module* priority2 = nullptr;
+      Control_module* priority3 = nullptr;
+      Control_module* priority4 = nullptr;
+      Control_module* priority5 = nullptr;
 
       if (mPriority1 != -1)
       {
-        priority1 = mFMV -> modules().get(mPriority1);
+        priority1 = static_cast<Control_module*>(mFMV -> modules().get(mPriority1));
       }
       if (mPriority2 != -1)
       {
-        priority2 = mFMV -> modules().get(mPriority2);
+        priority2 = static_cast<Control_module*>(mFMV -> modules().get(mPriority2));
       }
       if (mPriority3 != -1)
       {
-        priority3 = mFMV -> modules().get(mPriority3);
+        priority3 = static_cast<Control_module*>(mFMV -> modules().get(mPriority3));
       }
       if (mPriority4 != -1)
       {
-        priority4 = mFMV -> modules().get(mPriority4);
+        priority4 = static_cast<Control_module*>(mFMV -> modules().get(mPriority4));
       }
       if (mPriority5 != -1)
       {
-        priority5 = mFMV -> modules().get(mPriority5);
+        priority5 = static_cast<Control_module*>(mFMV -> modules().get(mPriority5));
       }
 
       if (priority1 != nullptr && priority1 -> hasClient())

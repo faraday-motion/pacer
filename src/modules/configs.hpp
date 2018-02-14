@@ -25,5 +25,7 @@
 #include "./modules/websocket_control/websocket_control_config.h"
 #include "./modules/wifi_connection/wifi_connection_config.h"
 #include "./modules/wifi_simple_control/wifi_simple_control_config.h"
+#include "./modules/websocket_connection/websocket_connection_config.h"
+#include "./modules/websocket_drivelog/websocket_drivelog_config.h"
 
 #endif

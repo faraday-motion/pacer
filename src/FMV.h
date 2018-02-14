@@ -8,9 +8,8 @@
 #include "./logs/logger.h"
 #include "./sensors/base/sensorbase.h"
 #include "./sensors/sensor_value.h"
-#include "./enums/modules.h"
-#include "./enums/externalcommands.h"
-#include "./modules/base/modulebase.h"
+#include "./enums/enums.hpp"
+#include "./modules/base/base.hpp"
 #include "./configuration/wheel.h"
 #include "./modules/modulelist.h"
 #include "./sensors/sensorlist.h"
@@ -20,6 +19,7 @@
 
 class FMV {
 private:
+  void getFactoryInstances(std::vector<Configbase*> mConfigArray);
   const String mVersion = "1.0";
   std::vector<Wheel*> wheelArray;
   std::vector<Sensorbase*> sensorArray;
@@ -36,7 +36,6 @@ public:
   };
   virtual void setup();
   virtual void loop();
-  void getFactoryInstances(std::vector<Configbase*> mConfigArray);
   void moduleEvent(Modulebase* sender, byte eventId);
   Sensorbase* getSensor(byte id);
 

@@ -15,8 +15,8 @@ void Wifi_connection::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Wifi_connection"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    setWifiStation();
-    //setWifiAp();
+    //setWifiStation();
+    setWifiAp();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Wifi_connection"));
     mIsSetup = true;
   }

@@ -4,10 +4,10 @@
 #include <Arduino.h>
 #include "../interfaces/interfaces.hpp"
 
-class Logger_writer : virtual public IWrite
+class Logger_writer : virtual public ISend
 {
 public:
-  Logger_writer() : IWrite()  {
+  Logger_writer() : ISend()  {
   }
 
   void write(String msg)

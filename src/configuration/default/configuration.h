@@ -28,5 +28,8 @@
 #define LOGGER_LOG_DEFALT_ENABLED     true
 #define LOGGER_LOG_MAXBUFFER          50
 #define WEBSOCKET_PORT                81
+#define ARDUINO_OTA_PORT              3232
+#define ARDUINO_OTA_HOSTNAME          "myesp32"
+#define ARDUINO_OTA_PASSWORD          ""
 
 #endif

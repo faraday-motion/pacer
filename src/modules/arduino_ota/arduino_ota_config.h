@@ -16,13 +16,20 @@ public:
   {
     root["id"] = id;
     root["configuration"] = (int)configuration;
+    root["hostName"] = hostName;
+    root["password"] = password;
   }
 
   void setConfiguration(JsonObject &root)
   {
     id = byte(root["id"]);
+    hostName = root["hostName"].as<String>();
+    password = root["password"].as<String>();
   }
 
+  int port = ARDUINO_OTA_PORT;
+  String hostName = ARDUINO_OTA_HOSTNAME;
+  String password = ARDUINO_OTA_PASSWORD;
 };
 
 #endif

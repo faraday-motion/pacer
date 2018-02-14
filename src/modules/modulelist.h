@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 #include <vector>
-#include "./base/modulebase.h"
-#include "../interfaces/interfaces.hpp"
+#include "./base/base.hpp"
+#include "./base/control_module.h"
 #include "../logs/logger.h"
 
 class ModuleList {
@@ -113,13 +113,16 @@ public:
     return nullptr;
   }
 
-  Modulebase* getActiveControl()
+  Control_module* getActiveControl()
   {
     for (byte i=0; i<moduleArray.size(); i++)
     {
-      if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == Roles::INPUT_CONTROL && moduleArray[i] -> isActive())
+      if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == Roles::CONTROL_MODULE)
       {
-        return moduleArray[i];
+        Control_module * cm = static_cast<Control_module*>(moduleArray[i]);
+        IActive * ma = static_cast<IActive*>(cm);
+        if (ma -> isActive())
+          return cm;
       }
     }
     return nullptr;
@@ -135,10 +138,11 @@ public:
   {
     for (byte i=0; i<moduleArray.size(); i++)
     {
-      if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == Roles::INPUT_CONTROL)
+      if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == Roles::CONTROL_MODULE)
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("DEACTIVATING MODULE: "), String(moduleArray[i] -> id()));
-        static_cast<IActive*>(moduleArray[i]) -> setActive(false);
+        Control_module * cm = static_cast<Control_module*>(moduleArray[i]);
+        cm -> setActive(false);
       }
     }
   }
@@ -147,10 +151,11 @@ public:
   {
     for (byte i=0; i<moduleArray.size(); i++)
     {
-      if (moduleArray[i] -> enabled() && moduleArray[i] -> id() == id)
+      if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == Roles::CONTROL_MODULE && moduleArray[i] -> id() == id)
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("ACTIVATING MODULE: "), String(moduleArray[i] -> id()));
-        static_cast<IActive*>(moduleArray[i]) -> setActive(true);
+        Control_module * cm = static_cast<Control_module*>(moduleArray[i]);
+        cm -> setActive(true);
         break;
       }
     }

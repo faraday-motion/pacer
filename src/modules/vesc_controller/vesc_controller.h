@@ -6,7 +6,7 @@
 #include "../../configuration/configurator.h"
 #include "./vesc_controller_config.h"
 #include "./vesc_controller_wheel_decorator.h"
-#include "../base/input_controller.h"
+#include "../base/power_module.h"
 #include "../../fmv.h"
 #include "../../sensors/base/sensorbase.h"
 #include "datatypes.h"
@@ -14,7 +14,7 @@
 static bool sVescDefaultSerial = false;
 static HardwareSerial * sVescSerial = nullptr;
 
-class Vesc_controller : virtual public Input_controller
+class Vesc_controller : virtual public Power_module
 {
 private:
   FMV *mFMV;
@@ -29,7 +29,6 @@ private:
   byte mMaxPowerCurrent = 0;
   byte mMaxBrakeCurrent = 0;
   int mMaxRpm = 0;
-  hw_timer_t* timerVesc = nullptr;
   std::vector<Vesc_controller_wheel_decorator*> wheelDecorators;
 protected:
   void onDisable();
@@ -38,7 +37,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Vesc_controller(byte id, FMV *fmv, Vesc_controller_config* cfg = nullptr) : Input_controller(id, Modules::VESC_CONTROLLER)  {
+  Vesc_controller(byte id, FMV *fmv, Vesc_controller_config* cfg = nullptr) : Power_module(id, Modules::VESC_CONTROLLER)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Vesc_controller_config*>(Configurator::Instance().createConfig(id, Configurations::VESC_CONTROLLER_CONFIG));

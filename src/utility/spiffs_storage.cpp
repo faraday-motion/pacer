@@ -6,7 +6,7 @@
 #include "../configuration/base/configbase.h"
 #include "../configuration/configurator.h"
 #include "../logs/logger.h"
-#include "../interfaces/iwrite.h"
+#include "../interfaces/isend.h"
 
 void Spiffs_storage::append(String path, const String message){
     //Dont write to the logger in the appendFile method as this would be a cyclic call
@@ -25,7 +25,7 @@ void Spiffs_storage::append(String path, const String message){
     file.close();
 }
 
-void Spiffs_storage::read(String path, IWrite* writer){
+void Spiffs_storage::read(String path, ISend* sender){
     Logger::Instance().write(LogLevel::DEBUG, FPSTR("Reading file: "), path);
     File file = fs.open(path);
     if(!file || file.isDirectory()){
@@ -35,7 +35,7 @@ void Spiffs_storage::read(String path, IWrite* writer){
     int i = 0;
     while(file.available()) { // && i < 100
       String line = file.readStringUntil('\n');
-      writer -> write(line);
+      sender -> send(line);
       yield();
       i ++;
     }

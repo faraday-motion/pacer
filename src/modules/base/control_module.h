@@ -1,24 +1,23 @@
-#ifndef INPUT_CONTROL_H
-#define INPUT_CONTROL_H
+#ifndef CONTROL_MODULE_H
+#define CONTROL_MODULE_H
 #include <Arduino.h>
-#include "./modulebase.h"
+#include "./base.hpp"
 #include "../../configuration/default/configuration.h"
 #include "../../enums/enums.hpp"
 #include "../../vehiclecontrol.h"
-#include "../../fmv.h"
 #include "../../logs/logger.h"
 #include "../../utility/simpletimer.h"
 
-class Input_control : public Modulebase  {
+class Control_module : public Modulebase, public IRecieve, public IActive, public IClient  {
 private:
   bool mIsActive = false;
   bool mHasClient = false;
-  FMV* mFMV = nullptr;
+  //FMV* mFMV = nullptr;
   SimpleTimer mSimpleTimerClientTimeout;
 protected:
   Vehiclecontrol mOutputControl;
-  Input_control(byte id, Modules module, FMV* fmv) : Modulebase(id, module, Roles::INPUT_CONTROL) {
-    mFMV = fmv;
+  Control_module(byte id, Modules module) : Modulebase(id, module, Roles::CONTROL_MODULE) {
+    //mFMV = fmv;
     mSimpleTimerClientTimeout.setInterval(30000);
   }
 
@@ -51,13 +50,9 @@ protected:
       setHasClient(false);
   }
 
-  virtual void handleCommand(byte command, byte value)
+  void recieve(byte command, byte value)
   {
-    handleCoreCommand(command, value);
-  }
-
-  void handleCoreCommand(byte command, byte value)
-  {
+    Logger::Instance().write(LogLevel::INFO, FPSTR("recieve Command: "), String(command) + " Value" + String(value));
     if (enabled())
     {
       //If the command is not allowed to be executed
@@ -102,11 +97,11 @@ protected:
       }
       else if (command == (byte)ExternalCommands::ENABLE_CONTROLLER)
       {
-        mFMV -> modules().setActiveController(value);
+        //mFMV -> modules().setActiveController(value);
       }
       else if(command == (byte)ExternalCommands::DISABLE_CONTROLLERS)
       {
-        mFMV -> modules().deactivateControllers();
+        //mFMV -> modules().deactivateControllers();
       }
       else if(command == (byte)ExternalCommands::DRIVE_MODE_20)
       {

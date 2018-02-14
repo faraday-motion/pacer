@@ -52,54 +52,54 @@ public:
     }
 
     //Handle neopixels
-    if (sender -> role() == Roles::INPUT_CONTROL)
+    if (sender -> role() == Roles::CONTROL_MODULE)
     {
       //Handle dead man switch
-      if (eventId == Input_control::Events::CONTROL_NONE)
+      if (eventId == Control_module::Events::CONTROL_NONE)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::CONTROL_NONE);
       }
-      else if (eventId == Input_control::Events::DRIVE_POWER)
+      else if (eventId == Control_module::Events::DRIVE_POWER)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::DRIVE_POWER);
       }
-      else if (eventId == Input_control::Events::DRIVE_BRAKE)
+      else if (eventId == Control_module::Events::DRIVE_BRAKE)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::DRIVE_BRAKE);
       }
-      else if (eventId == Input_control::Events::DRIVE_NEUTRAL)
+      else if (eventId == Control_module::Events::DRIVE_NEUTRAL)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::DRIVE_NEUTRAL);
       }
-      else if (eventId == Input_control::Events::TURN_LEFT)
+      else if (eventId == Control_module::Events::TURN_LEFT)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::TURN_LEFT);
       }
-      else if (eventId == Input_control::Events::TURN_NEUTRAL)
+      else if (eventId == Control_module::Events::TURN_NEUTRAL)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::TURN_NEUTRAL);
       }
-      else if (eventId == Input_control::Events::TURN_RIGHT)
+      else if (eventId == Control_module::Events::TURN_RIGHT)
       {
         mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::TURN_RIGHT);
       }
-      else if (eventId == Input_control::Events::DRIVE_MODE_20)
+      else if (eventId == Control_module::Events::DRIVE_MODE_20)
       {
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_20);
       }
-      else if (eventId == Input_control::Events::DRIVE_MODE_40)
+      else if (eventId == Control_module::Events::DRIVE_MODE_40)
       {
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_40);
       }
-      else if (eventId == Input_control::Events::DRIVE_MODE_60)
+      else if (eventId == Control_module::Events::DRIVE_MODE_60)
       {
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_60);
       }
-      else if (eventId == Input_control::Events::DRIVE_MODE_80)
+      else if (eventId == Control_module::Events::DRIVE_MODE_80)
       {
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_80);
       }
-      else if (eventId == Input_control::Events::DRIVE_MODE_100)
+      else if (eventId == Control_module::Events::DRIVE_MODE_100)
       {
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_100);
       }
@@ -108,7 +108,7 @@ public:
     if (sender -> module() == Modules::WIFI_SIMPLE_CONTROL)
     {
       //Enable wifi for wifi simple control
-      if (eventId == Input_control::Events::CONFIGURE)
+      if (eventId == Control_module::Events::CONFIGURE)
       {
         //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }

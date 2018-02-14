@@ -1,8 +1,7 @@
 #ifndef BT_CONNECTION_H
 #define BT_CONNECTION_H
 
-#include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 #include "../../sensors/base/sensorbase.h"
 
 class Bt_connection : virtual public Modulebase

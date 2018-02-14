@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "./power_limit.h"
 #include "../../configuration/default/configuration.h"
-#include "../base/input_modulation.h"
+#include "../base/modulation_module.h"
 
 void Power_limit::setup() {
   if (mIsSetup == false)
@@ -25,10 +25,10 @@ void Power_limit::loop()
     }
     else if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::INPUT_MODULATION);
+      Modulebase* mb = mFMV -> modules().getEnabled(Roles::MODULATION_MODULE);
       if (mb != nullptr )
       {
-        Input_modulation* ic = static_cast<Input_modulation*>(mb);
+        Modulation_module* ic = static_cast<Modulation_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)
         {

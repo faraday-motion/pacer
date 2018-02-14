@@ -3,11 +3,10 @@
 
 #include "../../configuration/configurator.h"
 #include "./force_control_config.h"
-#include "../base/input_control.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 #include "../../sensors/base/sensorbase.h"
 
-class Force_control : virtual public Input_control
+class Force_control : virtual public Control_module
 {
 private:
   FMV *mFMV;
@@ -28,7 +27,7 @@ protected:
       mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Force_control(byte id, FMV *fmv, Force_control_config* cfg = nullptr) : Input_control(id, Modules::FORCE_CONTROL, fmv)  {
+  Force_control(byte id, FMV *fmv, Force_control_config* cfg = nullptr) : Control_module(id, Modules::FORCE_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Force_control_config*>(Configurator::Instance().createConfig(id, Configurations::FORCE_CONTROL_CONFIG));

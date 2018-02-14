@@ -3,11 +3,11 @@
 
 #include "../../configuration/configurator.h"
 #include "./power_limit_config.h"
-#include "../base/input_limit.h"
+#include "../base/limit_module.h"
 #include "../../fmv.h"
 #include "../../sensors/base/sensorbase.h"
 
-class Power_limit : virtual public Input_limit
+class Power_limit : virtual public Limit_module
 {
 private:
   FMV *mFMV;
@@ -24,7 +24,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Power_limit(byte id, FMV *fmv, Power_limit_config* cfg = nullptr) : Input_limit(id, Modules::POWER_LIMIT)  {
+  Power_limit(byte id, FMV *fmv, Power_limit_config* cfg = nullptr) : Limit_module(id, Modules::POWER_LIMIT)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Power_limit_config*>(Configurator::Instance().createConfig(id, Configurations::POWER_LIMIT_CONFIG));

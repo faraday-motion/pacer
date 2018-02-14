@@ -7,7 +7,9 @@
 #include "./ienableable.h"
 #include "./ilog.h"
 #include "./iloopable.h"
-#include "./iwrite.h"
+#include "./isend.h"
+#include "./irecieve.h"
+#include "./iconnection.h"
 #include "./iconfigurable.h"
 
 #endif

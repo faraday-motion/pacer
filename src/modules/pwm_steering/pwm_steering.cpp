@@ -5,7 +5,7 @@
 #include "./pwm_steering.h"
 #include "./pwm_steering_wheel_decorator.h"
 #include "../../configuration/default/configuration.h"
-#include "../base/input_limit.h"
+#include "../base/limit_module.h"
 #include "../../utility/tools.h"
 #include "../../logs/logger.h"
 
@@ -38,11 +38,11 @@ void Pwm_steering::loop()
   {
     if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::INPUT_LIMIT);
+      Modulebase* mb = mFMV -> modules().getEnabled(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, "Pwm_steering::loop");
-        Input_limit* ic = static_cast<Input_limit*>(mb);
+        Limit_module* ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
 
         //Logger::Instance().write(LogLevel::DEBUG, "Pwm_steering::Turning " + String(mInputControl.getLeft()) + " " + String(mInputControl.getRight()));

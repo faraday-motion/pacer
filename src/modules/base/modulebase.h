@@ -5,7 +5,7 @@
 #include "../../interfaces/interfaces.hpp"
 #include "../../enums/enums.hpp"
 
-class Modulebase : public ILoopable, public IActive, public IClient, public IEnableable  {
+class Modulebase : public ILoopable, public IEnableable  {
 private:
   byte mId = 0;
   Modules mModule = Modules::NONE;
@@ -27,17 +27,6 @@ protected:
     mRole = role;
   }
 public:
-    virtual bool isActive(){
-      return true;
-    }
-
-    virtual void setActive(bool active)
-    {
-    }
-
-    virtual bool hasClient(){
-      return false;
-    }
 
     virtual void command(byte command)
     {

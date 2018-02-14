@@ -16,7 +16,6 @@ public:
   {
     root["id"] = id;
     root["configuration"] = (int)configuration;
-    root["port"] = port;
     root["logLevel"] = (int)logLevel;
     root["enabled"] = enabled;
   }
@@ -24,12 +23,10 @@ public:
   void setConfiguration(JsonObject &root)
   {
     id = byte(root["id"]);
-    port = int(root["port"]);
     logLevel = static_cast<LogLevel>(int(root["logLevel"]));
     enabled = bool(root["enabled"]);
   }
 
-  int port = WEBSOCKET_PORT;
   LogLevel logLevel = LogLevel::DEBUG;
   bool enabled = LOGGER_LOG_DEFALT_ENABLED;
 };

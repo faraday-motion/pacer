@@ -28,7 +28,7 @@ public:
 
       //0
       Serial_log_config* cfg0 = new Serial_log_config(id++);
-      cfg0 -> logLevel = LogLevel::INFO;
+      cfg0 -> logLevel = LogLevel::DEBUG;
       cfg0 -> enabled = true;
       Configurator::Instance().addConfig(cfg0);
 
@@ -144,11 +144,20 @@ public:
       Configurator::Instance().addConfig(cfg18);
 
       //19
+      Websocket_connection_config* cfg25 = new Websocket_connection_config(id++);
+      cfg25 -> enabled = true;
+      Configurator::Instance().addConfig(cfg25);
+
+      //20
       Websocket_control_config* cfg19 = new Websocket_control_config(id++);
       cfg19 -> enabled = true;
       Configurator::Instance().addConfig(cfg19);
 
-      //20
+      Websocket_drivelog_config* cfg26 = new Websocket_drivelog_config(id++);
+      cfg26 -> enabled = true;
+      Configurator::Instance().addConfig(cfg26);
+
+      //21
       Control_priority_config* cfg20 = new Control_priority_config(id++);
       cfg20 -> enabled = true;
       cfg20 -> priority1 = cfg14 -> id; //Wifi simple
@@ -157,18 +166,21 @@ public:
       cfg20 -> priority4 = cfg9 -> id; //Force
       Configurator::Instance().addConfig(cfg20);
 
-      //21
+      //22
       Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);
       cfg21 -> enabled = true;
       Configurator::Instance().addConfig(cfg21);
 
-      //22
+/*
+      //23
       Ntp_timeservice_config* cfg22 = new Ntp_timeservice_config(id++);
       Configurator::Instance().addConfig(cfg22);
-
+*/
+/*
       //23
       Arduino_ota_config* cfg24 = new Arduino_ota_config(id++);
       Configurator::Instance().addConfig(cfg24);
+*/
     }
 };
 

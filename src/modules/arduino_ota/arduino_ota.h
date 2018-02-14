@@ -14,6 +14,9 @@ private:
   void onDisable();
   SimpleTimer mSimpleTimer;
   Arduino_ota_config* mCfg = nullptr;
+  int mPort = 0;
+  String mHostName = "";
+  String mPassword = "";
 protected:
   void onEvent(byte eventId)
   {
@@ -39,6 +42,9 @@ public:
   {
     mSimpleTimer.setName("Arduino_ota");
     mSimpleTimer.setInterval(10);
+    mPort = mCfg -> port;
+    mHostName = mCfg -> hostName;
+    mPassword = mCfg -> password;
   }
 
   void setup();

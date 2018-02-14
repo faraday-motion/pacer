@@ -3,11 +3,10 @@
 
 #include "../../configuration/configurator.h"
 #include "./joystick_control_config.h"
-#include "../base/input_control.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 #include "../../sensors/base/sensorbase.h"
 
-class Joystick_control : virtual public Input_control
+class Joystick_control : virtual public Control_module
 {
 private:
   FMV *mFMV;
@@ -36,7 +35,7 @@ protected:
       mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Joystick_control(byte id, FMV *fmv, Joystick_control_config* cfg = nullptr) : Input_control(id, Modules::JOYSTICK_CONTROL, fmv)  {
+  Joystick_control(byte id, FMV *fmv, Joystick_control_config* cfg = nullptr) : Control_module(id, Modules::JOYSTICK_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Joystick_control_config*>(Configurator::Instance().createConfig(id, Configurations::JOYSTICK_CONTROL_CONFIG));

@@ -1,8 +1,8 @@
 #include "./exponential_power_modulation.h"
+#include "../base/base.hpp"
 #include <Arduino.h>
 #include "../../utility/simpletimer.h"
 #include "../../configuration/default/configuration.h"
-#include "../base/input_control.h"
 
 void Exponential_power_modulation::setup() {
   if (mIsSetup == false)
@@ -21,10 +21,10 @@ void Exponential_power_modulation::loop()
     if (mSimpleTimer.check())
     {
       Logger::Instance().write(LogLevel::DEBUG, FPSTR("Exponential_power_modulation::loop"));
-      Modulebase* mb = mFMV -> modules().getActiveControl();
+      Control_module* mb = mFMV -> modules().getActiveControl();
       if (mb != nullptr)
       {
-        Input_control* ic = static_cast<Input_control*>(mb);
+        Control_module* ic = static_cast<Control_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)
           mOutputControl.setPower(calculateOutput(mPreviousPower, mInputControl.getPower()));

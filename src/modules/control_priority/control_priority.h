@@ -4,8 +4,8 @@
 #include "../../configuration/configurator.h"
 #include "./control_priority_config.h"
 #include "../../utility/simpletimer.h"
-#include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
+//#include "../../fmv.h"
 
 class Control_priority : virtual public Modulebase
 {

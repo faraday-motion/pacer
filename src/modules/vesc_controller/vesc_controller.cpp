@@ -17,7 +17,7 @@
 #include "./vesc_controller.h"
 #include "./vesc_controller_wheel_decorator.h"
 #include "../../configuration/default/configuration.h"
-#include "../base/input_limit.h"
+#include "../base/limit_module.h"
 #include "../../utility/tools.h"
 
 static mc_values motorValues;
@@ -78,11 +78,11 @@ void Vesc_controller::loop()
   {
     return;
     if (mSimpleTimer.check()) {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::INPUT_LIMIT);
+      Modulebase* mb = mFMV -> modules().getEnabled(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::loop"));
-        Input_limit* ic = static_cast<Input_limit*>(mb);
+        Limit_module* ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         serialRead();
 

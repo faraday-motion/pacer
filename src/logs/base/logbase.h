@@ -13,7 +13,7 @@ private:
   LogLevel mLogLevel = LogLevel::DEBUG; // default log level.
 protected:
   byte mId = 0;
-  IWrite * pWriter = nullptr;
+  ISend * pSender = nullptr;
   Logbase(byte id) : ILog() {
     mId = id;
   };
@@ -34,7 +34,7 @@ public:
       return mLogLevel;
     }
 
-    void setWriter(IWrite * writer);
+    void setSender(ISend * sender);
     virtual void write(LogLevel level, String message);
 
     void setEnabled(bool enabled)

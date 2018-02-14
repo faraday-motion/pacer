@@ -4,11 +4,10 @@
 #include <WiFi.h>
 #include "../../configuration/configurator.h"
 #include "./wifi_simple_control_config.h"
-#include "../base/input_control.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 #include "../../sensors/base/sensorbase.h"
 
-class Wifi_simple_control : virtual public Input_control
+class Wifi_simple_control : virtual public Control_module
 {
 private:
   FMV *mFMV;
@@ -31,7 +30,7 @@ protected:
       mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Wifi_simple_control(byte id, FMV *fmv, Wifi_simple_control_config* cfg = nullptr) : Input_control(id, Modules::WIFI_SIMPLE_CONTROL, fmv)  {
+  Wifi_simple_control(byte id, FMV *fmv, Wifi_simple_control_config* cfg = nullptr) : Control_module(id, Modules::WIFI_SIMPLE_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Wifi_simple_control_config*>(Configurator::Instance().createConfig(id, Configurations::WIFI_SIMPLE_CONTROL_CONFIG));

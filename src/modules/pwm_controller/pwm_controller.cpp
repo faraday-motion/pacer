@@ -4,7 +4,7 @@
 #include "./pwm_controller.h"
 #include "./pwm_controller_wheel_decorator.h"
 #include "../../configuration/default/configuration.h"
-#include "../base/input_limit.h"
+#include "../base/limit_module.h"
 #include "../../utility/tools.h"
 
 void Pwm_controller::setup() {
@@ -36,11 +36,11 @@ void Pwm_controller::loop()
   {
     if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::INPUT_LIMIT);
+      Modulebase* mb = mFMV -> modules().getEnabled(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Pwm_controller::loop"));
-        Input_limit* ic = static_cast<Input_limit*>(mb);
+        Limit_module* ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         //Copy all inputs to the individual powered wheels
         for (int i=0; i<wheelDecorators.size(); i++)

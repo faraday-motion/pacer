@@ -29,10 +29,10 @@ void Dead_man_switch::loop()
           onEvent(Events::VEHICLE_ISDEAD);
         else
           onEvent(Events::VEHICLE_ISALIVE);
-        mFMV -> sensors().add("Dead", mIsVehicleDead);
       }
       //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Dead_man_switch: "), String(mIsVehicleDead));
     }
+    mFMV -> sensors().add("dead", mIsVehicleDead);
   }
 }
 

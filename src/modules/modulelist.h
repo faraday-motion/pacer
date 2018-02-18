@@ -41,7 +41,7 @@ public:
       moduleArray.push_back(fb);
   }
 
-  Modulebase* get(Modules module)
+  Modulebase* get(int module)
   {
     for (byte i=0; i<moduleArray.size(); i++)
     {
@@ -68,7 +68,7 @@ public:
       m -> command(command);
   }
 
-  void command(Modules module, byte command)
+  void command(int module, byte command)
   {
     Modulebase* m = get(module);
     if (m != nullptr)

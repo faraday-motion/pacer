@@ -34,8 +34,8 @@ public:
 
       //15
       Vesc_controller_config* cfg15 = new Vesc_controller_config(id++);
-      cfg15 -> defaultSerial = false;
-      cfg15 -> enabled = true;
+      cfg15 -> defaultSerial = true;
+      cfg15 -> enabled = false;
       Configurator::Instance().addConfig(cfg15);
 
       //The drivelog seems to have an issue if configured too late or if the file is too big
@@ -130,12 +130,12 @@ public:
 
       //16
       Pwm_steering_config* cfg16 = new Pwm_steering_config(id++);
-      cfg16 -> enabled = true;
+      cfg16 -> enabled = false;
       Configurator::Instance().addConfig(cfg16);
 
       //17
       Pwm_controller_config* cfg17 = new Pwm_controller_config(id++);
-      cfg17 -> enabled = true;
+      cfg17 -> enabled = false;
       Configurator::Instance().addConfig(cfg17);
 
       //18
@@ -166,12 +166,13 @@ public:
       cfg20 -> priority4 = cfg9 -> id; //Force
       Configurator::Instance().addConfig(cfg20);
 
+      /*
+
       //22
       Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);
-      cfg21 -> enabled = true;
+      cfg21 -> enabled = false;
       Configurator::Instance().addConfig(cfg21);
 
-/*
       //23
       Ntp_timeservice_config* cfg22 = new Ntp_timeservice_config(id++);
       Configurator::Instance().addConfig(cfg22);

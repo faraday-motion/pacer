@@ -74,7 +74,7 @@ void FMV::getFactoryInstances(std::vector<Configbase*> mConfigArray)
 {
   for (int i=0; i<mConfigArray.size(); i++)
   {
-    Configurations configuration = mConfigArray[i] -> configuration;
+    int configuration = mConfigArray[i] -> configuration;
     byte id = mConfigArray[i] -> id;
 
     Sensorbase* sb = Sensorfactory::getSensorInstance(id, configuration, this);

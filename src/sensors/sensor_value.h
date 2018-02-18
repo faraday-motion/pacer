@@ -12,6 +12,8 @@ private:
   bool hasStringValue = false;
   int mIntValue = 0;
   bool hasIntValue = false;
+  bool mBoolValue = 0;
+  bool hasBoolValue = false;
 protected:
 public:
     Sensor_value(String name, float value) {
@@ -32,6 +34,12 @@ public:
       hasIntValue = true;
     }
 
+    Sensor_value(String name, bool value) {
+      mName = name;
+      mBoolValue = value;
+      hasBoolValue = true;
+    }
+
     String getName()
     {
       return mName;
@@ -50,6 +58,11 @@ public:
     int getIntValue()
     {
       return mIntValue;
+    }
+
+    int getBoolValue()
+    {
+      return mBoolValue;
     }
 
     void setValue(float value)
@@ -73,6 +86,13 @@ public:
        mIntValue = value;
     }
 
+    void setValue(bool value)
+    {
+       if (!hasBoolValue)
+         resetValues();
+       mBoolValue = value;
+    }
+
     String getValue()
     {
       if (hasFloatValue)
@@ -87,6 +107,10 @@ public:
       {
         return String(mIntValue);
       }
+      else if (hasBoolValue)
+      {
+        return String(mBoolValue);
+      }
     }
 
     void resetValues()
@@ -94,9 +118,11 @@ public:
       hasFloatValue = false;
       hasStringValue = false;
       hasIntValue = false;
+      hasBoolValue = false;
       mFloatValue = 0;
       mStringValue = "";
       mIntValue = 0;
+      mBoolValue = false;
     }
 
 };

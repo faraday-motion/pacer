@@ -8,7 +8,7 @@
 class Modulebase : public ILoopable, public IEnableable  {
 private:
   byte mId = 0;
-  Modules mModule = Modules::NONE;
+  int mModule = Modules::NONE;
   Roles mRole = Roles::MODULE;
 protected:
   bool mEnabled = MODULE_DEFAULT_ENABLED;
@@ -21,7 +21,7 @@ protected:
 
   }
 
-  Modulebase(byte id, Modules module, Roles role = Roles::MODULE) {
+  Modulebase(byte id, int module, Roles role = Roles::MODULE) {
     mId = id;
     mModule = module;
     mRole = role;
@@ -57,7 +57,7 @@ public:
       return mEnabled;
     }
 
-    Modules module() const
+    int module() const
     {
       return mModule;
     }

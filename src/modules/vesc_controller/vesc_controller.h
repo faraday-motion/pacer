@@ -2,6 +2,7 @@
 #define VESC_CONTROLLER_H
 
 #include <vector>
+#include <functional>
 #include <Arduino.h>
 #include "../../configuration/configurator.h"
 #include "./vesc_controller_config.h"
@@ -11,8 +12,9 @@
 #include "../../sensors/base/sensorbase.h"
 #include "datatypes.h"
 
-static bool sVescDefaultSerial = false;
-static HardwareSerial * sVescSerial = nullptr;
+static mc_values mMotorValues;
+static HardwareSerial * pVescSerial;
+static bool mVescDefaultSerial;
 
 class Vesc_controller : virtual public Power_module
 {
@@ -20,8 +22,6 @@ private:
   FMV *mFMV;
   SimpleTimer mSimpleTimer;
   Vesc_controller_config* mCfg = nullptr;
-  void serialInit();
-  void serialRead();
   void setCurrent();
   void setRpm(int rpm);
   void getValues();
@@ -29,7 +29,12 @@ private:
   byte mMaxPowerCurrent = 0;
   byte mMaxBrakeCurrent = 0;
   int mMaxRpm = 0;
+  byte mVescArrayIndex = 0;
   std::vector<Vesc_controller_wheel_decorator*> wheelDecorators;
+  static void serialInit();
+  static void serialRead();
+  static void serialWrite(unsigned char * data, unsigned int len);
+  static void setValues(mc_values * val);
 protected:
   void onDisable();
   void onEvent(byte eventId)
@@ -59,7 +64,7 @@ public:
   {
     mSimpleTimer.setName("Vesc_controller");
     mSimpleTimer.setInterval(25, 50);
-    sVescDefaultSerial = mCfg -> defaultSerial;
+    mVescDefaultSerial = mCfg -> defaultSerial;
     mMaxPowerCurrent = mCfg -> maxPowerCurrent;
     mMaxBrakeCurrent = mCfg -> maxBrakeCurrent;
     mMaxRpm = mCfg -> maxRpm;

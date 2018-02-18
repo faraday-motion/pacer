@@ -11,13 +11,13 @@
 class Configbase : public IConfigurable{
 private:
 protected:
-  Configbase(byte id, Configurations configuration) : IConfigurable() {
+  Configbase(byte id, int configuration) : IConfigurable() {
     this -> id = id;
     this -> configuration = configuration;
   }
 public:
   byte id = 0;
-  Configurations configuration = Configurations::NONE;
+  int configuration = Configurations::NONE;
   virtual void getConfiguration(JsonObject &root);
   virtual void setConfiguration(JsonObject &root);
 };

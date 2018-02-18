@@ -20,7 +20,7 @@
 class Configfactory{
 public:
 
-  static Configbase* getConfigInstance(int id, Configurations configuration)
+  static Configbase* getConfigInstance(int id, int configuration)
   {
       Configbase* cfg = nullptr;
 
@@ -155,7 +155,11 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Websocket_drivelog_config(id);
         break;
-
+      case Configurations::MQTT_CLIENT_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance MQTT_CLIENT_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        cfg = new Mqtt_client_config(id);
+        break;
       return cfg;
     }
   }

@@ -16,7 +16,7 @@ private:
   SimpleTimer mSimpleTimerClientTimeout;
 protected:
   Vehiclecontrol mOutputControl;
-  Control_module(byte id, Modules module) : Modulebase(id, module, Roles::CONTROL_MODULE) {
+  Control_module(byte id, int module) : Modulebase(id, module, Roles::CONTROL_MODULE) {
     //mFMV = fmv;
     mSimpleTimerClientTimeout.setInterval(30000);
   }
@@ -59,7 +59,7 @@ protected:
       if (command > EXTERNALCOMMANDS_LIMIT)
         return;
       //The commands that are allowed to be executed
-      if (command == (byte)ExternalCommands::DRIVE_POWER)
+      if (command == ExternalCommands::DRIVE_POWER)
       {
         mOutputControl.setPower(value);
         if (value != 0)
@@ -68,7 +68,7 @@ protected:
           onEvent(Events::DRIVE_NEUTRAL);
         setHasClient(true);
       }
-      else if (command == (byte)ExternalCommands::DRIVE_BRAKE)
+      else if (command == ExternalCommands::DRIVE_BRAKE)
       {
         mOutputControl.setBrake(value);
         if (value != 0)
@@ -77,7 +77,7 @@ protected:
           onEvent(Events::DRIVE_NEUTRAL);
         setHasClient(true);
       }
-      else if (command == (byte)ExternalCommands::TURN_LEFT)
+      else if (command == ExternalCommands::TURN_LEFT)
       {
         mOutputControl.setLeft(value);
         if (value != 0)
@@ -86,7 +86,7 @@ protected:
           onEvent(Events::TURN_NEUTRAL);
         setHasClient(true);
       }
-      else if (command == (byte)ExternalCommands::TURN_RIGHT)
+      else if (command == ExternalCommands::TURN_RIGHT)
       {
         mOutputControl.setRight(value);
         if (value != 0)
@@ -95,31 +95,31 @@ protected:
           onEvent(Events::TURN_NEUTRAL);
         setHasClient(true);
       }
-      else if (command == (byte)ExternalCommands::ENABLE_CONTROLLER)
+      else if (command == ExternalCommands::ENABLE_CONTROLLER)
       {
         //mFMV -> modules().setActiveController(value);
       }
-      else if(command == (byte)ExternalCommands::DISABLE_CONTROLLERS)
+      else if(command == ExternalCommands::DISABLE_CONTROLLERS)
       {
         //mFMV -> modules().deactivateControllers();
       }
-      else if(command == (byte)ExternalCommands::DRIVE_MODE_20)
+      else if(command == ExternalCommands::DRIVE_MODE_20)
       {
         onEvent(Events::DRIVE_MODE_20);
       }
-      else if(command == (byte)ExternalCommands::DRIVE_MODE_40)
+      else if(command == ExternalCommands::DRIVE_MODE_40)
       {
         onEvent(Events::DRIVE_MODE_40);
       }
-      else if(command == (byte)ExternalCommands::DRIVE_MODE_60)
+      else if(command == ExternalCommands::DRIVE_MODE_60)
       {
         onEvent(Events::DRIVE_MODE_60);
       }
-      else if(command == (byte)ExternalCommands::DRIVE_MODE_80)
+      else if(command == ExternalCommands::DRIVE_MODE_80)
       {
         onEvent(Events::DRIVE_MODE_80);
       }
-      else if(command == (byte)ExternalCommands::DRIVE_MODE_100)
+      else if(command == ExternalCommands::DRIVE_MODE_100)
       {
         onEvent(Events::DRIVE_MODE_100);
       }

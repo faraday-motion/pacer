@@ -10,7 +10,7 @@ class Connection_module : public Modulebase, public IConnection  {
 private:
   std::vector<IRecieve*> pRecievers;
 protected:
-  Connection_module(byte id, Modules module) : Modulebase(id, module, Roles::CONNECTION_MODULE) {
+  Connection_module(byte id, int module) : Modulebase(id, module, Roles::CONNECTION_MODULE) {
 
   }
 public:

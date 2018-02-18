@@ -9,9 +9,9 @@ void Wifi_simple_control::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Wifi_simple_control"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
-    server = new WiFiServer(8899);
-    server -> begin();
-    server -> setNoDelay(true);
+    pServer = new WiFiServer(8899);
+    pServer -> begin();
+    pServer -> setNoDelay(true);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Wifi_simple_control"));
     mIsSetup = true;
   }
@@ -31,7 +31,7 @@ void Wifi_simple_control::loop()
       readInput();
       if (isActive())
       {
-        mFMV -> sensors().add("Active", id());
+        mFMV -> sensors().add("active", id());
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Wifi_simple_control: "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
       }
       clientTimeoutCheck();
@@ -40,13 +40,13 @@ void Wifi_simple_control::loop()
 }
 
 void Wifi_simple_control::handleClientConnections() {
-  if (server->hasClient())
+  if (pServer->hasClient())
   {
-    client = server->available();
-    if (client && client.connected())
-      client.setNoDelay(true);
+    mClient = pServer->available();
+    if (mClient && mClient.connected())
+      mClient.setNoDelay(true);
     else
-      client.stop();
+      mClient.stop();
   }
 }
 
@@ -54,16 +54,8 @@ void Wifi_simple_control::readInput()
 {
    uint8_t i;
    // Check clients for data
-   if (client && client.connected()) {
-     unsigned int  timeout   = 3;
-     unsigned long timestamp = millis();
-
-     // While no data is coming do yield();
-     //while (client.available() == 0 && ((millis() - timestamp) <= timeout)) {
-    //   yield();
-     //}
-
-     unsigned int streamLength = client.available();
+   if (mClient && mClient.connected()) {
+     unsigned int streamLength = mClient.available();
      if (streamLength > 0) {
        // size_t len
        byte packetLength = 11;
@@ -73,11 +65,11 @@ void Wifi_simple_control::readInput()
        unsigned int packages = int(float(streamLength / packetLength));
        for (uint8_t ii = 0; ii < (packages - 1) * packetLength; ii++)
        {
-         client.read();
+         mClient.read();
        }
        for (uint8_t ii = 0; ii < packetLength; ii++)
        {
-         m[packetCount++] = client.read();
+         m[packetCount++] = mClient.read();
        }
        yield();
        if (Tools::validateChecksum(m, packetCount))

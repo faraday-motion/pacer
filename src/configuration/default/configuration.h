@@ -31,5 +31,7 @@
 #define ARDUINO_OTA_PORT              3232
 #define ARDUINO_OTA_HOSTNAME          "myesp32"
 #define ARDUINO_OTA_PASSWORD          ""
+#define MQTT_CLIENT_SERVER            "broker.mqtt-dashboard.com"
+#define MQTT_CLIENT_PORT              1883
 
 #endif

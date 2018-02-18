@@ -16,7 +16,7 @@
 class Modulefactory{
 public:
 
-  static Modulebase* getModuleInstance(byte id, Configurations configuration, FMV *fmv)
+  static Modulebase* getModuleInstance(byte id, int configuration, FMV *fmv)
   {
       Modulebase* mod = nullptr;
       switch(configuration) {
@@ -134,6 +134,11 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance WEBSOCKET_DRIVELOG_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         mod = new Websocket_drivelog(id, fmv);
+        break;
+      case Configurations::MQTT_CLIENT_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance MQTT_CLIENT_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Mqtt_client(id, fmv);
         break;
       }
       return mod;

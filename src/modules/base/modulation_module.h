@@ -10,7 +10,7 @@ private:
 protected:
   Vehiclecontrol mInputControl;
   Vehiclecontrol mOutputControl;
-  Modulation_module(byte id, Modules module) : Modulebase(id, module, Roles::MODULATION_MODULE) {
+  Modulation_module(byte id, int module) : Modulebase(id, module, Roles::MODULATION_MODULE) {
     mInputControl.setName("Modulation_module-INPUT");
     mOutputControl.setName("Modulation_module-OUTPUT");
   }

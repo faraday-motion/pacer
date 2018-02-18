@@ -14,8 +14,8 @@ private:
   byte mForward = 0;
   byte mBack = 0;
   Wifi_simple_control_config* mCfg = nullptr;
-  WiFiServer*  server;
-  WiFiClient client;
+  WiFiServer*  pServer;
+  WiFiClient mClient;
   SimpleTimer mSimpleTimerConnection;
   SimpleTimer mSimpleTimerInput;
   void readInput();

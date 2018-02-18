@@ -14,7 +14,7 @@ public:
   void getConfiguration(JsonObject &root)
   {
     root["id"] = id;
-    root["configuration"] = (int)configuration;
+    root["configuration"] = configuration;
     root["pin"] = pin;
     root["interval"] = interval;
     root["critical"] = critical;
@@ -23,7 +23,7 @@ public:
   void setConfiguration(JsonObject &root)
   {
     id = byte(root["id"]);
-    configuration = static_cast<Configurations>(int(root["configuration"]));
+    configuration = root["configuration"];
     pin = byte(root["pin"]);
     interval = int(root["interval"]);
     critical = int(root["critical"]);

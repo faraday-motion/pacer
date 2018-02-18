@@ -1,8 +1,10 @@
 #ifndef MODULES_H
 #define MODULES_H
 
+#include "./default/default_modules.h"
 
-enum class Modules {
+class Modules : public Default_modules{
+  /*
   NONE = 0,
   DEAD_MAN_SWITCH = 1,
   NEOPIXELS = 2,
@@ -30,6 +32,7 @@ enum class Modules {
   ARDUINO_OTA = 24,
   WEBSOCKET_CONNECTION = 25,
   WEBSOCKET_DRIVELOG = 26
+  */
 };
 
 #endif

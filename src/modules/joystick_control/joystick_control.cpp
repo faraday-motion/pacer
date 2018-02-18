@@ -81,7 +81,7 @@ void Joystick_control::loop()
     }
     if (isActive())
     {
-      mFMV -> sensors().add("Active", id());
+      mFMV -> sensors().add("active", id());
       Logger::Instance().write(LogLevel::DEBUG, FPSTR("Joystick_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
       Logger::Instance().write(LogLevel::DEBUG, FPSTR("Joystick_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
     }

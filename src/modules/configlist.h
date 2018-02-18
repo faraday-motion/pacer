@@ -69,7 +69,7 @@ public:
       //Load the shared id and configuration part of the config file
       mSpiffs_config.loadBase(files[i], id, configuration);
       //Get the instance
-      Configbase* config = Configfactory::getConfigInstance(id, static_cast <Configurations> (configuration));
+      Configbase* config = Configfactory::getConfigInstance(id, configuration);
       //Populate the values
       mSpiffs_config.load(config);
       if (addInstances) {
@@ -96,7 +96,7 @@ public:
     return false;
   }
 
-  Configbase* create(byte id, Configurations configuration)
+  Configbase* create(byte id, int configuration)
   {
     Configbase* baseCfg = get(id, configuration);
     if (baseCfg == nullptr)
@@ -155,7 +155,7 @@ public:
     save();
   }
 
-  Configbase* get(byte id, Configurations configuration = Configurations::NONE)
+  Configbase* get(byte id, int configuration = Configurations::NONE)
   {
     for (int i=0; i<mConfigArray.size(); i++)
     {

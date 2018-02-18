@@ -44,7 +44,7 @@ public:
     return mConfigs.add(config, save);
   }
 
-  Configbase* createConfig(byte id, Configurations configuration)
+  Configbase* createConfig(byte id, int configuration)
   {
     return mConfigs.create(id, configuration);
   }

@@ -27,5 +27,6 @@
 #include "./modules/wifi_simple_control/wifi_simple_control_config.h"
 #include "./modules/websocket_connection/websocket_connection_config.h"
 #include "./modules/websocket_drivelog/websocket_drivelog_config.h"
+#include "./modules/mqtt_client/mqtt_client_config.h"
 
 #endif

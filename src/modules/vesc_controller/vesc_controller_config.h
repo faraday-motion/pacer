@@ -15,7 +15,7 @@ public:
   void getConfiguration(JsonObject &root)
   {
     root["id"] = id;
-    root["configuration"] = (int)configuration;
+    root["configuration"] = configuration;
     root["maxPowerCurrent"] = maxPowerCurrent;
     root["maxBrakeCurrent"] = maxBrakeCurrent;
     root["maxRpm"] = maxRpm;

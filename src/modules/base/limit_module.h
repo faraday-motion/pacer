@@ -10,7 +10,7 @@ private:
 protected:
   Vehiclecontrol mInputControl;
   Vehiclecontrol mOutputControl;
-  Limit_module(byte id, Modules module) : Modulebase(id, module,Roles::LIMIT_MODULE) {
+  Limit_module(byte id, int module) : Modulebase(id, module,Roles::LIMIT_MODULE) {
     mInputControl.setName("Input_limit-INPUT");
     mOutputControl.setName("Input_limit-OUTPUT");
   }

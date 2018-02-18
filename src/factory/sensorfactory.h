@@ -14,7 +14,7 @@
 class Sensorfactory{
 public:
 
-  static Sensorbase* getSensorInstance(byte id, Configurations configuration, FMV *fmv)
+  static Sensorbase* getSensorInstance(byte id, int configuration, FMV *fmv)
   {
     Sensorbase* sen = nullptr;
       switch(configuration) {

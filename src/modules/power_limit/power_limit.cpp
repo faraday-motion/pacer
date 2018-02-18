@@ -62,12 +62,10 @@ void Power_limit::loop()
           mOutputControl.resetDirection();
       }
     }
-    mFMV -> sensors().add("Power", mOutputControl.getPower());
-    mFMV -> sensors().add("Brake", mOutputControl.getBrake());
-    mFMV -> sensors().add("Left", mOutputControl.getLeft());
-    mFMV -> sensors().add("Right", mOutputControl.getRight());
-    //Logger::Instance().write(LogLevel::DEBUG, "Power_limit:Power " + String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-    //Logger::Instance().write(LogLevel::DEBUG, "Power_limit:Turning " + String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
+    mFMV -> sensors().add("accel", mOutputControl.getPower());
+    mFMV -> sensors().add("brake", mOutputControl.getBrake());
+    mFMV -> sensors().add("left", mOutputControl.getLeft());
+    mFMV -> sensors().add("right", mOutputControl.getRight());
   }
 }
 

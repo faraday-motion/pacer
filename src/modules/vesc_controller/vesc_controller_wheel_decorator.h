@@ -49,6 +49,7 @@ public:
   void setVescValues(mc_values vescValues)
   {
     mVescValues = vescValues;
+    
   }
 
   bool isMaster()

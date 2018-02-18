@@ -1,7 +1,11 @@
 #ifndef CONFIGURATIONS_H
 #define CONFIGURATIONS_H
 
-enum class Configurations {
+#include "./default/default_configurations.h"
+
+class Configurations : public Default_configurations {
+public:
+  /*
   NONE = 0,
   SWITCH_CONFIG= 1,
   ANALOG_CONFIG= 2,
@@ -33,6 +37,7 @@ enum class Configurations {
   ARDUINO_OTA_CONFIG = 28,
   WEBSOCKET_CONNECTION_CONFIG = 29,
   WEBSOCKET_DRIVELOG_CONFIG = 30
+  */
 };
 
 #endif

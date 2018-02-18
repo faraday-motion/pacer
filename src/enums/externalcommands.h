@@ -1,8 +1,12 @@
-#ifndef COMMANDS_H
-#define COMMANDS_H
+#ifndef EXTERNALCOMMANDS_H
+#define EXTERNALCOMMANDS_H
 #include "../configuration/default/configuration.h"
 
-enum class ExternalCommands {
+#include "./default/default_externalcommands.h"
+
+class ExternalCommands : public Default_externalCommands {
+public:
+  /*
   MODULE_ON,
   MODULE_OFF,
   DISABLE_CONTROLLERS,
@@ -16,6 +20,7 @@ enum class ExternalCommands {
   DRIVE_MODE_60,
   DRIVE_MODE_80,
   DRIVE_MODE_100 = EXTERNALCOMMANDS_LIMIT
+  */
 };
 
 #endif

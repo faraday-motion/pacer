@@ -86,7 +86,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           //TODO Return error message
           break;
         }
-        byte id = json["command"];
+        byte id = json["id"];
         byte command = json["command"];
         byte value = json["value"];
 

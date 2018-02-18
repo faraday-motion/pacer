@@ -99,19 +99,19 @@ void Vesc_controller::loop()
           {
             String idx = String(i);
             wheelDecorators[i] -> setVescValues(mMotorValues);
-            mFMV -> sensors().add("v_in_" + idx, wheelDecorators[i] -> getVescValues().v_in);
-            mFMV -> sensors().add("t_pcb_" + idx, wheelDecorators[i] -> getVescValues().temp_pcb);
-            mFMV -> sensors().add("rpm_" + idx, wheelDecorators[i] -> getVescValues().rpm);
-            mFMV -> sensors().add("c_mot_" + idx, wheelDecorators[i] -> getVescValues().current_motor);
-            mFMV -> sensors().add("c_in_" + idx, wheelDecorators[i] -> getVescValues().current_in);
-            mFMV -> sensors().add("duty_" + idx, wheelDecorators[i] -> getVescValues().duty_now);
-            mFMV -> sensors().add("a_hours_" + idx, wheelDecorators[i] -> getVescValues().amp_hours);
-            mFMV -> sensors().add("a_charged_" + idx, wheelDecorators[i] -> getVescValues().amp_hours_charged);
-            mFMV -> sensors().add("w_hours_" + idx, wheelDecorators[i] -> getVescValues().watt_hours);
-            mFMV -> sensors().add("w_charged_" + idx, wheelDecorators[i] -> getVescValues().watt_hours_charged);
-            mFMV -> sensors().add("tacho_" + idx, wheelDecorators[i] -> getVescValues().tachometer);
-            mFMV -> sensors().add("techo_abs_" + idx, wheelDecorators[i] -> getVescValues().tachometer_abs);
-            mFMV -> sensors().add("fault_" + idx, wheelDecorators[i] -> getVescValues().fault_code);
+            mFMV -> sensors().add("vesc_" + idx + "_v_in", wheelDecorators[i] -> getVescValues().v_in);
+            mFMV -> sensors().add("vesc_" + idx + "_t_pcb", wheelDecorators[i] -> getVescValues().temp_pcb);
+            mFMV -> sensors().add("vesc_" + idx + "_rpm", wheelDecorators[i] -> getVescValues().rpm);
+            mFMV -> sensors().add("vesc_" + idx + "_c_mot", wheelDecorators[i] -> getVescValues().current_motor);
+            mFMV -> sensors().add("vesc_" + idx + "_c_in", wheelDecorators[i] -> getVescValues().current_in);
+            mFMV -> sensors().add("vesc_" + idx + "_duty", wheelDecorators[i] -> getVescValues().duty_now);
+            mFMV -> sensors().add("vesc_" + idx + "_a_hours", wheelDecorators[i] -> getVescValues().amp_hours);
+            mFMV -> sensors().add("vesc_" + idx + "_a_charged", wheelDecorators[i] -> getVescValues().amp_hours_charged);
+            mFMV -> sensors().add("vesc_" + idx + "_w_hours", wheelDecorators[i] -> getVescValues().watt_hours);
+            mFMV -> sensors().add("vesc_" + idx + "_w_charged", wheelDecorators[i] -> getVescValues().watt_hours_charged);
+            mFMV -> sensors().add("vesc_" + idx + "_tacho", wheelDecorators[i] -> getVescValues().tachometer);
+            mFMV -> sensors().add("vesc_" + idx + "_techo_abs", wheelDecorators[i] -> getVescValues().tachometer_abs);
+            mFMV -> sensors().add("vesc_" + idx + "_fault", wheelDecorators[i] -> getVescValues().fault_code);
           }
 
           minRpm = std::min(minRpm, wheelDecorators[i] -> getVescValues().rpm);

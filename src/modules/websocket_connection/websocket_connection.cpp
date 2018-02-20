@@ -87,6 +87,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           //TODO Return error message
           break;
         }
+        byte id = json["id"];
         byte command = json["command"];
         byte value = json["value"];
 
@@ -104,7 +105,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           //storage.read("/drivelog.txt", pWriter);
         }
 
-        String response = "{\"command\":\"" + String(command) + "\",\"response\": \"" + "OK" + "\"}";
+        String response = "{\"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\",\"response\": \"" + "OK" + "\"}";
         mWebSocketsServer -> sendTXT(num, response);
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket resonse: "), response);
       }

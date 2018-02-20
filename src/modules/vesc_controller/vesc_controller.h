@@ -10,18 +10,21 @@
 #include "../base/power_module.h"
 #include "../../fmv.h"
 #include "../../sensors/base/sensorbase.h"
-#include "datatypes.h"
+#include "./vesc_datatypes.h"
+#include "./vesc_interface.h"
+#include "./ivesc_interface.h"
 
-static mc_values mMotorValues;
-static HardwareSerial * pVescSerial;
-static bool mVescDefaultSerial;
+//When the vesc_interface is not static, it gives problems
+static Vesc_interface * pVescInterface;
 
-class Vesc_controller : virtual public Power_module
+class Vesc_controller : public Power_module, public IVesc_interface
 {
 private:
-  FMV *mFMV;
+  FMV * mFMV;
   SimpleTimer mSimpleTimer;
-  Vesc_controller_config* mCfg = nullptr;
+  Vesc_controller_config * mCfg = nullptr;
+
+
   void setCurrent();
   void setRpm(int rpm);
   void getValues();
@@ -31,10 +34,20 @@ private:
   int mMaxRpm = 0;
   byte mVescArrayIndex = 0;
   std::vector<Vesc_controller_wheel_decorator*> wheelDecorators;
-  static void serialInit();
-  static void serialRead();
-  static void serialWrite(unsigned char * data, unsigned int len);
-  static void setValues(mc_values * val);
+  mc_values mMotorValues;
+  bool mVescDefaultSerial;
+  void setValues(mc_values * val);
+  void print(char *str);
+  void setFirmware(int major, int minor);
+  void setRotorPos(float pos);
+  void setMotorConfiguration(mc_configuration *conf);
+  void setAppConfiguration(app_configuration *conf);
+  void setDetect(float cycle_int_limit, float coupling_k, const signed char *hall_table, signed char hall_res);
+  void setPPM(float val, float ms);
+  void setADC(float val, float voltage);
+  void setChuk(float val);
+  void motorConfigurationRecieved();
+  void appConfigurationRecieved();
 protected:
   void onDisable();
   void onEvent(byte eventId)
@@ -42,7 +55,8 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Vesc_controller(byte id, FMV *fmv, Vesc_controller_config* cfg = nullptr) : Power_module(id, Modules::VESC_CONTROLLER)  {
+
+  Vesc_controller(byte id, FMV *fmv, Vesc_controller_config* cfg = nullptr) : Power_module(id, Modules::VESC_CONTROLLER) {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Vesc_controller_config*>(Configurator::Instance().createConfig(id, Configurations::VESC_CONTROLLER_CONFIG));
@@ -75,6 +89,7 @@ public:
   void loop();
   void command(byte command);
   static void timerRun();
+
 };
 
 #endif

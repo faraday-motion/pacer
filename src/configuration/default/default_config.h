@@ -34,8 +34,8 @@ public:
 
       //15
       Vesc_controller_config* cfg15 = new Vesc_controller_config(id++);
-      cfg15 -> defaultSerial = true;
-      cfg15 -> enabled = false;
+      cfg15 -> defaultSerial = false;
+      cfg15 -> enabled = true;
       Configurator::Instance().addConfig(cfg15);
 
       //The drivelog seems to have an issue if configured too late or if the file is too big
@@ -125,7 +125,7 @@ public:
 
       //14
       Serial_control_config* cfg12 = new Serial_control_config(id++);
-      cfg12 -> enabled = true;
+      cfg12 -> enabled = false;
       Configurator::Instance().addConfig(cfg12);
 
       //16

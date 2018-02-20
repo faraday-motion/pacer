@@ -11,6 +11,7 @@
 class Tools
 {
     private:
+      
       Tools(){
       };
     public:
@@ -27,6 +28,7 @@ class Tools
       static String ipAddressToString(IPAddress ip);
       static void copyArray(byte* src, byte* dest, byte arraySize);
       static String resetReason(RESET_REASON reason);
+      static unsigned short crc16(unsigned char *buf, unsigned int len);
 };
 
 #endif

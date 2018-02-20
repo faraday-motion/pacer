@@ -48,6 +48,7 @@ void Websocket_connection::send(String message)
       if (mWebSocketsServer != nullptr)
         mWebSocketsServer -> sendTXT(pClients[i], message);
     }
+    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Finished Websocket_connection::send "));
   }
 }
 

@@ -28,8 +28,8 @@ void FMV::setup() {
 
     Configurator::Instance().initializeSerial();
     Configurator::Instance().initializeSpiff();
-//    pSpiffs_storage = new Spiffs_storage();
-  //  pSpiffs_storage -> remove(SPIFF_DRIVELOG_FILENAME);
+    pSpiffs_storage = new Spiffs_storage();
+    pSpiffs_storage -> remove(SPIFF_DRIVELOG_FILENAME);
 //    pSpiffs_config = new Spiffs_config();
 
     //Will not be logged as the module is not yet loaded, maybe implement a buffer in the log

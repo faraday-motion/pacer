@@ -110,19 +110,26 @@ public:
   bool remove(byte id, bool save = false)
   {
     int toDelete = -1;
-    bool deleted = false;
+    Configbase* config = nullptr;
     for (int i=0; i<mConfigArray.size(); i++)
     {
       if (mConfigArray[i] -> id == id)
       {
+        config = mConfigArray[i];
         toDelete = i;
         break;
       }
     }
-    mConfigArray.erase(mConfigArray.begin() + toDelete);
-    if (save)
-      return mSpiffs_config.remove(id);
-    return true;
+    if (toDelete > -1)
+    {
+      mConfigArray.erase(mConfigArray.begin() + toDelete);
+      if (config != nullptr)
+        delete config;
+      if (save)
+        return mSpiffs_config.remove(id);
+      return true;
+    }
+    return false;
   }
 
   void clear(bool deleteConfigs = false)

@@ -5,7 +5,7 @@
 #include "./vehiclecontrol.h"
 #include "../../configuration/default/configuration.h"
 #include "../../configuration/wheel.h"
-#include "datatypes.h"
+#include "./vesc_datatypes.h"
 
 class Vesc_controller_wheel_decorator{
 private:
@@ -49,7 +49,7 @@ public:
   void setVescValues(mc_values vescValues)
   {
     mVescValues = vescValues;
-    
+
   }
 
   bool isMaster()

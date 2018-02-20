@@ -5,6 +5,10 @@
 using namespace std;
 using namespace std::placeholders;
 
+//http://www.mqtt-dashboard.com/
+//http://www.hivemq.com/demos/websocket-client/
+
+
 void Mqtt_client::setup() {
   if (mIsSetup == false)
   {

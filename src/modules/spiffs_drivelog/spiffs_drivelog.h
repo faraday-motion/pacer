@@ -33,11 +33,12 @@ class Spiffs_drivelog : virtual public Modulebase
       mSimpleTimer.setName("Spiffs_drivelog");
       mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
       mDriveLog = mCfg -> driveLog;
+      setEnabled(mCfg -> enabled);
     }
 
-  void setup();
-  void loop();
-  void command(byte command);
+    void setup();
+    void loop();
+    void command(byte command);
 
 };
 

@@ -15,11 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
 
-#ifndef DATATYPES_H_
-#define DATATYPES_H_
-
-#include <stdint.h>
-#include <stdbool.h>
+#ifndef VESC_DATATYPES_H
+#define VESC_DATATYPES_H
 
 typedef enum {
 	PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended

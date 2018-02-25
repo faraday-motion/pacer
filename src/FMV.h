@@ -5,8 +5,7 @@
 #include <vector>
 #include "./utility/simpletimer.h"
 #include "./macros.h"
-#include "./logs/logger.h"
-#include "./sensors/base/sensorbase.h"
+#include "./log/logger.h"
 #include "./sensors/sensor_value.h"
 #include "./enums/enums.hpp"
 #include "./modules/base/base.hpp"
@@ -22,7 +21,6 @@ private:
   void getFactoryInstances(std::vector<Configbase*> mConfigArray);
   const String mVersion = "1.0";
   std::vector<Wheel*> wheelArray;
-  std::vector<Sensorbase*> sensorArray;
   bool mIsSetup = false;
   ModuleList * mModules = new ModuleList();
   SensorList * mSensors = new SensorList();
@@ -37,19 +35,18 @@ public:
   virtual void setup();
   virtual void loop();
   void moduleEvent(Modulebase* sender, byte eventId);
-  Sensorbase* getSensor(byte id);
 
   std::vector<Wheel*> getWheelValues() const
   {
     return wheelArray;
   }
 
-  ModuleList &modules() const
+  ModuleList &modules()
   {
     return *mModules;
   }
 
-  SensorList &sensors() const
+  SensorList &sensors()
   {
     return *mSensors;
   }

@@ -5,12 +5,10 @@
 void Force_control::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Force_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
-    if (mSensorY != nullptr)
-      mSensorY -> setup();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Force_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -19,15 +17,15 @@ void Force_control::loop()
 {
   if (enabled())
   {
-    return;
     if (mSensorY != nullptr)
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::loop"));
-      mSensorY -> loop();
-      if (mSensorY -> valueChanged())
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+      if (mSensorY == nullptr)
+        mSensorY = mFMV -> sensors().get(mSensorName);
+      if (mSensorY != nullptr && mSensorY -> valueChanged())
       {
-        int valueY = constrain(mSensorY -> value(), mLimitYMin, mLimitYMax);
-        mFMV -> sensors().add("FORCE", valueY);
+        int valueY = constrain(mSensorY -> getIntValue(), mLimitYMin, mLimitYMax);
+        //mFMV -> sensors().add("FORCE", valueY);
         if (valueY > mNeutralY + mDeadbandY)
         {
           //Accelerate
@@ -57,9 +55,9 @@ void Force_control::loop()
       }
       if (isActive())
       {
-        mFMV -> sensors().add("active", id());
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
+        //mFMV -> sensors().add("active", id());
+        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
+        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
       }
     }
     clientTimeoutCheck();

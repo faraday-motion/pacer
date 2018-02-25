@@ -5,7 +5,6 @@
 #include "../../configuration/configurator.h"
 #include "./websocket_drivelog_config.h"
 #include "../../utility/simpletimer.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Websocket_drivelog : virtual public Modulebase
 {
@@ -31,12 +30,17 @@ class Websocket_drivelog : virtual public Modulebase
     {
       mSimpleTimer.setName("Websocket_drivelog");
       mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
+      setEnabled(mCfg -> enabled);
     }
 
   void setup();
   void loop();
   void command(byte command);
 
+  String getModuleName()
+  {
+    return FPSTR("WEBSOCKET_DRIVELOG");
+  }
 };
 
 #endif

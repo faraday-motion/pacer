@@ -6,16 +6,16 @@
 #include "./voltage_monitor_config.h"
 #include "../base/modulebase.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Voltage_monitor : virtual public Modulebase
 {
 private:
   FMV *mFMV;
-  Sensorbase *mSensor;
+  Sensor_value * mSensor;
   float mMinVoltage = 0;
   float mMaxVoltage = 1023;
   Voltage_monitor_config* mCfg = nullptr;
+  String mSensorName = "";
 protected:
   void onEvent(byte eventId)
   {
@@ -38,9 +38,10 @@ public:
 
   void setConfig()
   {
-    mSensor = mFMV -> getSensor(mCfg -> sensorId);
     setMinVoltage(mCfg -> minVoltage);
     setMaxVoltage(mCfg -> maxVoltage);
+    mSensorName = mCfg -> sensorName;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
@@ -55,6 +56,11 @@ public:
   void setMinVoltage(int min) {
     min = constrain(min, 0, 1023);
     mMinVoltage = min;
+  }
+
+  String getModuleName()
+  {
+    return FPSTR("VOLTAGE_MONITOR");
   }
 };
 

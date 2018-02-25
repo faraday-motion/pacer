@@ -32,6 +32,13 @@ public:
     static const int WEBSOCKET_CONNECTION = 25;
     static const int WEBSOCKET_DRIVELOG = 26;
     static const int MQTT_CLIENT = 27;
+    static const int ESP32_DIGITAL_LED = 28;
+    static const int ANALOG_SENSOR = 29;
+    static const int BOOLEAN_SENSOR = 30;
+    static const int SERIAL_LOG = 31;
+    static const int SPIFFS_LOG = 32;
+    static const int WEBSOCKET_SERVER_LOG = 33;
+
 };
 
 #endif

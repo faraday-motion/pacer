@@ -4,7 +4,7 @@
 
 class IConfigurable {
    public:
-     virtual void getConfiguration(JsonObject &root) = 0;
-     virtual void setConfiguration(JsonObject &root) = 0;
+     void getConfiguration(JsonObject &root);
+     void setConfiguration(JsonObject &root);
 };
 #endif

@@ -8,7 +8,6 @@
 #include "./pwm_controller_wheel_decorator.h"
 #include "../base/power_module.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 #include "../../utility/tools.h"
 
 class Pwm_controller : virtual public Power_module
@@ -57,6 +56,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("PWM_CONTROLLER");
+  }
 };
 
 #endif

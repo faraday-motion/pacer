@@ -5,8 +5,8 @@
 #include "../enums/loglevel.h"
 #include "./ienableable.h"
 
-class ILog : public IEnableable {
+class ILog {
    public:
-      virtual void write(LogLevel level, String message);
+      virtual void write(LogLevel level, String message) = 0;
 };
 #endif

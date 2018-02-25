@@ -6,9 +6,9 @@
 void Power_limit::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Power_limit"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Power_limit"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -17,7 +17,7 @@ void Power_limit::loop()
 {
   if (enabled())
   {
-    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Power_limit::loop"));
+    Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
     if (mIsVehicleDead)
     {
       mInputControl.reset();
@@ -25,9 +25,10 @@ void Power_limit::loop()
     }
     else if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::MODULATION_MODULE);
+      Modulebase* mb = mFMV -> modules().getEnabledByRole(Roles::MODULATION_MODULE);
       if (mb != nullptr )
       {
+        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Power_limit::Modulation_module"));
         Modulation_module* ic = static_cast<Modulation_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)

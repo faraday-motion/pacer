@@ -12,19 +12,16 @@ public:
   Wheel_config(byte id) : Configbase(id, Configurations::WHEEL_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["index"] = index;
     root["isElectric"] = isElectric;
     root["canSteer"] = canSteer;
     root["isInverse"] = isInverse;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     index = byte(root["index"]);
     isElectric = bool(root["isElectric"]);
     canSteer = bool(root["canSteer"]);

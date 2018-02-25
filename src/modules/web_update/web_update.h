@@ -9,7 +9,6 @@
 #include <Arduino.h>
 #include "../base/modulebase.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Web_update : virtual public Modulebase
 {
@@ -46,7 +45,10 @@ public:
   void setup();
   void loop();
   void command(byte command);
-
+  String getModuleName()
+  {
+    return FPSTR("WEB_UPDATE");
+  }
 };
 
 #endif

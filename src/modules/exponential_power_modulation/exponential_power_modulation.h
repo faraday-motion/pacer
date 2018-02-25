@@ -10,7 +10,7 @@
 class Exponential_power_modulation : virtual public Modulation_module
 {
 private:
-  FMV *mFMV;
+  FMV * mFMV = nullptr;
   SimpleTimer mSimpleTimer;
   byte mPreviousPower = 0;
   byte mPreviousBrake = 0;
@@ -35,11 +35,17 @@ public:
     mSimpleTimer.setName("Exponential_power_modulation");
     mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
     mSmoothAlpha = mCfg -> smoothAlpha;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("EXPONENTIAL_POWER_MODULATION");
+  }
 };
 
 #endif

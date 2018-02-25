@@ -10,13 +10,15 @@
 class Ntp_timeservice : virtual public Modulebase
 {
 private:
-  FMV *mFMV;
+  FMV * mFMV = nullptr;
   String mTimeServer = "";
   String mTimeZone = "";
   String mDateTimeFormat = "";
   struct tm mTimeInfo;
   Ntp_timeservice_config* mCfg = nullptr;
   void getTime();
+  SimpleTimer mSimpleTimer;
+  bool mGotDateTime = false;
 protected:
 
 public:
@@ -42,12 +44,18 @@ public:
     mTimeServer = mCfg -> timeServer;
     mTimeZone = mCfg -> timeZone;
     mDateTimeFormat = mCfg -> dateTimeFormat;
+    mSimpleTimer.setInterval(1000);
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
 
+  String getModuleName()
+  {
+    return FPSTR("NTP_TIMESERVICE");
+  }
 };
 
 #endif

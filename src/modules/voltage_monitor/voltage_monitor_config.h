@@ -12,26 +12,26 @@ public:
   Voltage_monitor_config(byte id) : Configbase(id, Configurations::VOLTAGE_MONITOR_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["sensorId"] = sensorId;
     root["minVoltage"] = minVoltage;
     root["maxVoltage"] = maxVoltage;
+    root["sensorName"] = sensorName;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     sensorId = byte(root["sensorId"]);
     minVoltage = byte(root["minVoltage"]);
     maxVoltage = int(root["maxVoltage"]);
+    sensorName = root["sensorName"].as<String>();
   }
 
   byte sensorId = 0;
   int minVoltage = 0;
   int maxVoltage = 1023;
+  String sensorName = "";
 };
 
 #endif

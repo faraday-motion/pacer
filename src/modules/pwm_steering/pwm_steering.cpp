@@ -7,12 +7,12 @@
 #include "../../configuration/default/configuration.h"
 #include "../base/limit_module.h"
 #include "../../utility/tools.h"
-#include "../../logs/logger.h"
+#include "../../log/logger.h"
 
 void Pwm_steering::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Pwm_steering"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     std::vector<Wheel*> wheelArray = mFMV -> getWheelValues();
     for (int i=0; i < wheelArray.size(); i++)
@@ -26,7 +26,7 @@ void Pwm_steering::setup() {
         wheelDecorators.push_back(new Pwm_steering_wheel_decorator(wheelArray[i], mServo));
       }
     }
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Pwm_steering"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -38,10 +38,10 @@ void Pwm_steering::loop()
   {
     if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::LIMIT_MODULE);
+      Modulebase* mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
-        Logger::Instance().write(LogLevel::DEBUG, "Pwm_steering::loop");
+        Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
         Limit_module* ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
 

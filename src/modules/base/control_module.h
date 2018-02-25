@@ -3,21 +3,18 @@
 #include <Arduino.h>
 #include "./base.hpp"
 #include "../../configuration/default/configuration.h"
-#include "../../enums/enums.hpp"
 #include "../../vehiclecontrol.h"
-#include "../../logs/logger.h"
+#include "../../log/logger.h"
 #include "../../utility/simpletimer.h"
 
 class Control_module : public Modulebase, public IRecieve, public IActive, public IClient  {
 private:
   bool mIsActive = false;
   bool mHasClient = false;
-  //FMV* mFMV = nullptr;
   SimpleTimer mSimpleTimerClientTimeout;
 protected:
   Vehiclecontrol mOutputControl;
   Control_module(byte id, int module) : Modulebase(id, module, Roles::CONTROL_MODULE) {
-    //mFMV = fmv;
     mSimpleTimerClientTimeout.setInterval(30000);
   }
 
@@ -52,15 +49,17 @@ protected:
 
   void recieve(byte command, byte value)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("recieve Command: "), String(command) + " Value" + String(value));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::recieve Command: "), String(command) + " Value: " + String(value));
     if (enabled())
     {
+      Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::enabled true"));
       //If the command is not allowed to be executed
       if (command > EXTERNALCOMMANDS_LIMIT)
         return;
       //The commands that are allowed to be executed
       if (command == ExternalCommands::DRIVE_POWER)
       {
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::setPower:"), String(value));
         mOutputControl.setPower(value);
         if (value != 0)
           onEvent(Events::DRIVE_POWER);

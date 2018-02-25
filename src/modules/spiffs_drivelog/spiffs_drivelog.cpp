@@ -9,10 +9,10 @@
 void Spiffs_drivelog::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Spiffs_drivelog"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Configurator::Instance().initializeSpiff();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Spiffs_drivelog"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -23,7 +23,7 @@ void Spiffs_drivelog::loop()
   {
     if (mSimpleTimer.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Spiffs_drivelog::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       writeSensorValues();
     }
   }

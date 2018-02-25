@@ -12,32 +12,26 @@ public:
   Vesc_controller_config(byte id) : Configbase(id, Configurations::VESC_CONTROLLER_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = configuration;
     root["maxPowerCurrent"] = maxPowerCurrent;
     root["maxBrakeCurrent"] = maxBrakeCurrent;
     root["maxRpm"] = maxRpm;
     root["defaultSerial"] = defaultSerial;
-    root["enabled"] = enabled;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     maxPowerCurrent = byte(root["maxPowerCurrent"]);
     maxBrakeCurrent = byte(root["maxBrakeCurrent"]);
     maxRpm = int(root["maxRpm"]);
     defaultSerial = root["defaultSerial"];
-    enabled = root["enabled"];
   }
 
   byte maxPowerCurrent = 60;
   byte maxBrakeCurrent = 60;
   int maxRpm = 0;
   bool defaultSerial = true;
-  bool enabled = MODULE_DEFAULT_ENABLED;
 };
 
 #endif

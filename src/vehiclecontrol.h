@@ -2,7 +2,7 @@
 #define VEHICLECONTROL_H
 
 #include <Arduino.h>
-#include "./logs/logger.h"
+#include "./log/logger.h"
 
 class Vehiclecontrol {
 private:
@@ -103,32 +103,28 @@ public:
   void setPower(byte power)
   {
     power = constrain(power, 0, mPowerMax);
-    if (power > 0)
-      mBrake = 0;
+    mBrake = 0;
     mPower = power;
   }
 
   void setBrake(byte brake)
   {
     brake = constrain(brake, 0, mBrakeMax);
-    if (brake > 0)
-      mPower = 0;
+    mPower = 0;
     mBrake = brake;
   }
 
   void setLeft(byte left)
   {
     left = constrain(left, 0, mLeftMax);
-    if (left > 0)
-      mRight = 0;
+    mRight = 0;
     mLeft = left;
   }
 
   void setRight(byte right)
   {
     right = constrain(right, 0, mRightMax);
-    if (right > 0)
-      mLeft = 0;
+    mLeft = 0;
     mRight = right;
   }
 

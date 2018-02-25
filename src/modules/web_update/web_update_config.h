@@ -12,20 +12,14 @@ public:
   Web_update_config(byte id) : Configbase(id, Configurations::WEB_UPDATE_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
-    root["enabled"] = enabled;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
-    enabled = bool(root["enabled"]);
   }
 
-  bool enabled = MODULE_DEFAULT_ENABLED;
 };
 
 #endif

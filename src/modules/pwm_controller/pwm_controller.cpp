@@ -10,7 +10,7 @@
 void Pwm_controller::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Pwm_controller"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     //Configure the servos's
     std::vector<Wheel*> wheelArray = mFMV -> getWheelValues();
@@ -25,7 +25,7 @@ void Pwm_controller::setup() {
         wheelDecorators.push_back(new Pwm_controller_wheel_decorator(wheelArray[i], mServo));
       }
     }
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Pwm_controller"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -36,10 +36,10 @@ void Pwm_controller::loop()
   {
     if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabled(Roles::LIMIT_MODULE);
+      Modulebase* mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Pwm_controller::loop"));
+        Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
         Limit_module* ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         //Copy all inputs to the individual powered wheels

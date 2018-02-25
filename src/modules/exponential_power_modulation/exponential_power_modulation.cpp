@@ -7,9 +7,9 @@
 void Exponential_power_modulation::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Exponential_power_modulation"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Exponential_power_modulation"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -20,7 +20,7 @@ void Exponential_power_modulation::loop()
   {
     if (mSimpleTimer.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Exponential_power_modulation::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       Control_module* mb = mFMV -> modules().getActiveControl();
       if (mb != nullptr)
       {

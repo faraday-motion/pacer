@@ -13,11 +13,11 @@ static byte sWiFiEventId = 0;
 void Wifi_connection::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Wifi_connection"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     //setWifiStation();
     setWifiAp();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Wifi_connection"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -26,6 +26,7 @@ void Wifi_connection::loop()
 {
   if (enabled())
   {
+    Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
     if (sWiFiEventId==1)
     {
       if (!MDNS.begin(mHost.c_str())) {
@@ -107,7 +108,7 @@ void Wifi_connection::command(byte command)
     Commands comm = static_cast<Commands>(command);
     if (comm == Commands::CONNECTION_WIFI_OFF)
     {
-      setWifiOff();
+      //setWifiOff();
     }
     else if (comm == Commands::CONNECTION_WIFI_AP)
     {
@@ -122,6 +123,6 @@ void Wifi_connection::command(byte command)
 
 void Wifi_connection::onDisable()
 {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("WifiOff"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection::onDisable::WifiOff"));
     WiFi.mode(WIFI_OFF);
 }

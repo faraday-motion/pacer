@@ -12,10 +12,8 @@ public:
   Wifi_connection_config(byte id) : Configbase(id, Configurations::WIFI_CONNECTION_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["host"] = host;
     root["ssid"] = ssid;
     root["password"] = password;
@@ -24,9 +22,8 @@ public:
     root["ap_channel"] = ap_channel;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     host = root["host"].as<String>();
     ssid = root["ssid"].as<String>();
     password = root["password"].as<String>();

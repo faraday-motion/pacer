@@ -5,7 +5,6 @@
 #include "../../configuration/configurator.h"
 #include "./wifi_simple_control_config.h"
 #include "../base/base.hpp"
-#include "../../sensors/base/sensorbase.h"
 
 class Wifi_simple_control : virtual public Control_module
 {
@@ -52,6 +51,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("WIFI_SIMPLE_CONTROL");
+  }
 };
 
 #endif

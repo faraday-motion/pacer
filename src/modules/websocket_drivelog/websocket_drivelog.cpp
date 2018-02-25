@@ -9,10 +9,10 @@
 void Websocket_drivelog::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Websocket_drivelog"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     getWebsocketConnection();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Websocket_drivelog"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -23,7 +23,7 @@ void Websocket_drivelog::loop()
   {
     if (mSimpleTimer.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_drivelog::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       writeSensorValues();
     }
   }
@@ -34,7 +34,7 @@ void Websocket_drivelog::getWebsocketConnection()
   //Find the websocket connection module
   if (pIConnection == nullptr)
   {
-    Modulebase * mb = mFMV -> modules().get(Modules::WEBSOCKET_CONNECTION);
+    Modulebase * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
     if (mb != nullptr)
     {
       Connection_module * conn = static_cast<Connection_module*>(mb);

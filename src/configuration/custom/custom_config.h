@@ -12,7 +12,7 @@ public:
   }
 
 
-  void addConfigs2()
+  void addConfigs0()
   {
     byte id = 0;
 
@@ -22,11 +22,13 @@ public:
     cfg0 -> enabled = true;
     Configurator::Instance().addConfig(cfg0);
 
+/*
     //15
     Vesc_controller_config* cfg15 = new Vesc_controller_config(id++);
     cfg15 -> defaultSerial = false;
     cfg15 -> enabled = true;
     Configurator::Instance().addConfig(cfg15);
+*/
 
     /*
     //The drivelog seems to have an issue if configured too late or if the file is too big
@@ -66,10 +68,11 @@ public:
     cfg7 -> isInverse = false;
     Configurator::Instance().addConfig(cfg7);
 
-    /*
+
     //5
     //If the wifi is configured late it gives crashes for some reason
     Wifi_connection_config* cfg13 = new Wifi_connection_config(id++);
+    cfg13 -> enabled = true;
     Configurator::Instance().addConfig(cfg13);
 
     //6
@@ -78,7 +81,7 @@ public:
     Configurator::Instance().addConfig(cfg14);
 
     //7
-    Switch_config* cfg1 = new Switch_config(id++);
+    Boolean_sensor_config* cfg1 = new Boolean_sensor_config(id++);
     cfg1 -> pin = PIN_DEAD_MAN_SWITCH;
     cfg1 -> interval = 100;
     cfg1 -> critical = 200;
@@ -89,11 +92,12 @@ public:
     Dead_man_switch_config* cfg2 = new Dead_man_switch_config(id++);
     cfg2 -> sensorId = cfg1 -> id;
     Configurator::Instance().addConfig(cfg2);
-
+/*
     //9
     Neopixels_config* cfg3 = new Neopixels_config(id++);
     Configurator::Instance().addConfig(cfg3);
-    */
+*/
+    /*
     //10
     Analog_config* cfg8 = new Analog_config(id++);
     cfg8 -> pin = PIN_JOYSTICK_CONTROL_Y;
@@ -106,7 +110,7 @@ public:
     cfg9 -> sensorId = cfg8 -> id;
     cfg9 -> enabled = false;
     Configurator::Instance().addConfig(cfg9);
-
+*/
     //12
     Exponential_power_modulation_config* cfg10 = new Exponential_power_modulation_config(id++);
     Configurator::Instance().addConfig(cfg10);
@@ -125,16 +129,19 @@ public:
     cfg16 -> enabled = false;
     Configurator::Instance().addConfig(cfg16);
 
+*/
     //17
     Pwm_controller_config* cfg17 = new Pwm_controller_config(id++);
-    cfg17 -> enabled = false;
+    cfg17 -> enabled = true;
     Configurator::Instance().addConfig(cfg17);
 
+/*
     //18
     Web_update_config* cfg18 = new Web_update_config(id++);
     cfg18 -> enabled = true;
     Configurator::Instance().addConfig(cfg18);
 */
+/*
     //19
     Websocket_connection_config* cfg25 = new Websocket_connection_config(id++);
     cfg25 -> enabled = true;
@@ -148,16 +155,17 @@ public:
     Websocket_drivelog_config* cfg26 = new Websocket_drivelog_config(id++);
     cfg26 -> enabled = true;
     Configurator::Instance().addConfig(cfg26);
-/*
+  */
     //21
     Control_priority_config* cfg20 = new Control_priority_config(id++);
     cfg20 -> enabled = true;
     cfg20 -> priority1 = cfg14 -> id; //Wifi simple
-    cfg20 -> priority2 = cfg19 -> id; //Websocket
-    cfg20 -> priority3 = cfg12 -> id; //Serial
-    cfg20 -> priority4 = cfg9 -> id; //Force
+    //cfg20 -> priority2 = cfg19 -> id; //Websocket
+    //cfg20 -> priority3 = cfg12 -> id; //Serial
+    //cfg20 -> priority4 = cfg9 -> id; //Force
     Configurator::Instance().addConfig(cfg20);
 
+/*
     //22
     Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);
     cfg21 -> enabled = false;
@@ -173,6 +181,8 @@ public:
     Arduino_ota_config* cfg24 = new Arduino_ota_config(id++);
     Configurator::Instance().addConfig(cfg24);
     */
+    Esp32_digital_led_config* cfg27 = new Esp32_digital_led_config(id++);
+    Configurator::Instance().addConfig(cfg27);
   }
 
 };

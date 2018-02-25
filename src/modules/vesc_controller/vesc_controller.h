@@ -9,7 +9,6 @@
 #include "./vesc_controller_wheel_decorator.h"
 #include "../base/power_module.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 #include "./vesc_datatypes.h"
 #include "./vesc_interface.h"
 #include "./ivesc_interface.h"
@@ -23,12 +22,12 @@ private:
   FMV * mFMV;
   SimpleTimer mSimpleTimer;
   Vesc_controller_config * mCfg = nullptr;
-
-
+  bool mHasMCConfiguration = false;
   void setCurrent();
-  void setRpm(int rpm);
+  void setRpm();
   void getValues();
   void createTimerTask();
+  byte mDriveMode = 0;
   byte mMaxPowerCurrent = 0;
   byte mMaxBrakeCurrent = 0;
   int mMaxRpm = 0;
@@ -90,6 +89,10 @@ public:
   void command(byte command);
   static void timerRun();
 
+  String getModuleName()
+  {
+    return FPSTR("VESC_CONTROLLER");
+  }
 };
 
 #endif

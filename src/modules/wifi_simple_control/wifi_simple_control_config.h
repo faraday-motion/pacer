@@ -13,23 +13,16 @@ public:
   Wifi_simple_control_config(byte id) : Configbase(id, Configurations::WIFI_SIMPLE_CONTROL_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
-    root["enabled"] = enabled;
     root["inputTimeout"] = inputTimeout;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
-    enabled = bool(root["enabled"]);
     inputTimeout = int(root["inputTimeout"]);
   }
 
-  byte sensorId = 0;
-  bool enabled = MODULE_DEFAULT_ENABLED;
   int inputTimeout = 500;
 };
 

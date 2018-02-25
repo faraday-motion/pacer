@@ -12,11 +12,8 @@ public:
   Pwm_controller_config(byte id) : Configbase(id, Configurations::PWM_CONTROLLER_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
-    root["enabled"] = enabled;
     JsonArray& pins = root.createNestedArray("servoPins");
     pins.add(servoPins[0]);
     pins.add(servoPins[1]);
@@ -27,10 +24,8 @@ public:
     root["neutral"] = neutral;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
-    enabled = root["enabled"];
     servoPins[0] = root["servoPins"][0];
     servoPins[1] = root["servoPins"][1];
     servoPins[2] = root["servoPins"][2];
@@ -41,7 +36,6 @@ public:
   }
 
   byte servoPins[4] = {27, 26, 12, 14};
-  bool enabled = MODULE_DEFAULT_ENABLED;
   byte minAngle = 0;
   byte maxAngle = 180;
   byte neutral = 90;

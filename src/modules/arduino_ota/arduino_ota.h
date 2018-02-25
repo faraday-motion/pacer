@@ -5,12 +5,11 @@
 #include "./arduino_ota_config.h"
 #include "../base/modulebase.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Arduino_ota : virtual public Modulebase
 {
 private:
-  FMV *mFMV;
+  FMV *mFMV = nullptr;
   void onDisable();
   SimpleTimer mSimpleTimer;
   Arduino_ota_config* mCfg = nullptr;
@@ -45,12 +44,17 @@ public:
     mPort = mCfg -> port;
     mHostName = mCfg -> hostName;
     mPassword = mCfg -> password;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
 
+  String getModuleName()
+  {
+    return FPSTR("ARDUINO_OTA");
+  }
 };
 
 #endif

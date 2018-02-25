@@ -10,7 +10,7 @@
 class Mqtt_client : virtual public Modulebase
 {
 private:
-  FMV *mFMV;
+  FMV * mFMV = nullptr;
   Mqtt_client_config * mCfg = nullptr;
   WiFiClient mClient;
   PubSubClient * pMqttClient;
@@ -43,6 +43,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("MQTT_CLIENT");
+  }
 };
 
 #endif

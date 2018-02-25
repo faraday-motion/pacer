@@ -12,26 +12,26 @@ public:
   Temperature_monitor_config(byte id) : Configbase(id, Configurations::TEMPERATURE_MONITOR_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["sensorId"] = sensorId;
     root["minTemperature"] = minTemperature;
     root["maxTemperature"] = maxTemperature;
+    root["sensorName"] = sensorName;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     sensorId = byte(root["sensorId"]);
     minTemperature = int(root["minTemperature"]);
     maxTemperature = int(root["maxTemperature"]);
+    sensorName = root["sensorName"].as<String>();
   }
 
   byte sensorId = 0;
   int minTemperature = 0;
   int maxTemperature = 1023;
+  String sensorName = "";
 };
 
 #endif

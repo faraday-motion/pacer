@@ -8,7 +8,6 @@
 #include "./wifi_connection_config.h"
 #include "../base/modulebase.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Wifi_connection : virtual public Modulebase
 {
@@ -62,12 +61,17 @@ public:
     mAp_ssid = mCfg -> ap_ssid;
     mAp_password = mCfg -> ap_password;
     mAp_channel = mCfg -> ap_channel;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
 
+  String getModuleName()
+  {
+    return FPSTR("WIFI_CONNECTION");
+  }
 };
 
 #endif

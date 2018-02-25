@@ -2,15 +2,13 @@
 #define SPIFFS_LOG_H
 
 #include <Arduino.h>
-#include "../base/logbase.h"
 #include "../../utility/tools.h"
 #include "../../utility/spiffs_storage.h"
 #include "../../configuration/configurator.h"
 #include "./spiffs_log_config.h"
-#include "../../enums/loglevel.h"
-#include "../../fmv.h"
+#include "../base/base.hpp"
 
-class Spiffs_log : public Logbase
+class Spiffs_log : virtual public Log_module
 {
 private:
       Spiffs_log_config* mCfg = nullptr;
@@ -19,7 +17,7 @@ private:
       FMV * mFMV = nullptr;
 protected:
 public:
-    Spiffs_log(byte id, FMV *fmv = nullptr, Spiffs_log_config* mfg = nullptr) : Logbase(id){
+    Spiffs_log(byte id, FMV * fmv = nullptr, Spiffs_log_config * mfg = nullptr) : Log_module(id, Modules::SPIFFS_LOG){
       mFMV = fmv;
       Configurator::Instance().initializeSpiff();
       if (mfg == nullptr)
@@ -42,6 +40,31 @@ public:
       {
         mSpiffs_storage.append(mLogFile, message + "\n");
       }
+    }
+
+    void setup()
+    {
+      if (mIsSetup == false)
+      {
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        Logger::Instance().addLog(this);
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
+        mIsSetup = true;
+      }
+    }
+
+    void loop()
+    {
+    }
+
+    void command(byte command)
+    {
+    }
+
+    String getModuleName()
+    {
+      return FPSTR("SPIFFS_LOG");
     }
 };
 

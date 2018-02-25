@@ -47,7 +47,7 @@ const char* serverIndex PROGMEM = "<script src='https://ajax.googleapis.com/ajax
 void Web_update::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Web_update"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Configurator::Instance().initializeSpiff();
     mWebserver = new ESP32WebServer(80);
@@ -82,7 +82,7 @@ void Web_update::setup() {
       }
     });
     mWebserver -> begin();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Web_update"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }

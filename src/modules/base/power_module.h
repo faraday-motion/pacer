@@ -2,7 +2,6 @@
 #define POWER_MODULE_H
 #include <Arduino.h>
 #include "./base.hpp"
-#include "../../enums/enums.hpp"
 #include "../../vehiclecontrol.h"
 
 class Power_module : public Modulebase  {

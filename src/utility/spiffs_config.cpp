@@ -6,7 +6,7 @@
 #include "../configuration/default/configuration.h"
 #include "../configuration/base/configbase.h"
 #include "../configuration/configurator.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 #include "../utility/tools.h"
 
 void Spiffs_config::loadBase(String path, byte &id, int &configuration) {

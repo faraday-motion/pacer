@@ -5,17 +5,11 @@
 #include "../configuration/base/configbase.h"
 #include "../configuration/base/default_configbase.h"
 
-#include "../sensors/switch/switch_config.h"
-#include "../sensors/analog/analog_config.h"
-
 #include "../modules/configs.hpp"
 #include "../enums/loglevel.h"
 
-#include "../logs/serial_log/serial_log_config.h"
-#include "../logs/spiffs_log/spiffs_log_config.h"
-#include "../logs/websocket_server_log/websocket_server_log_config.h"
 #include "../configuration/wheel_config.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 
 class Configfactory{
 public:
@@ -25,15 +19,15 @@ public:
       Configbase* cfg = nullptr;
 
       switch(configuration) {
-      case Configurations::SWITCH_CONFIG :
-        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance SWITCH_CONFIG"));
+      case Configurations::BOOLEAN_SENSOR_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance BOOLEAN_SENSOR_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-        cfg = new Switch_config(id);
+        cfg = new Boolean_sensor_config(id);
         break;
-      case Configurations::ANALOG_CONFIG :
-        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance ANALOG_CONFIG"));
+      case Configurations::ANALOG_SENSOR_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance ANALOG_SENSOR_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-        cfg = new Analog_config(id);
+        cfg = new Analog_sensor_config(id);
         break;
       case Configurations::DEAD_MAN_SWITCH_CONFIG :
         Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance DEAD_MAN_SWITCH_CONFIG"));
@@ -160,6 +154,12 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Mqtt_client_config(id);
         break;
+      case Configurations::ESP32_DIGITAL_LED_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance ESP32_DIGITAL_LED_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        cfg = new Esp32_digital_led_config(id);
+        break;
+
       return cfg;
     }
   }

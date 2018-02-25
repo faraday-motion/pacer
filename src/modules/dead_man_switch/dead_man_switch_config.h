@@ -13,20 +13,20 @@ public:
   Dead_man_switch_config(byte id) : Configbase(id, Configurations::DEAD_MAN_SWITCH_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["sensorId"] = sensorId;
+    root["sensorName"] = sensorName;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     sensorId = byte(root["sensorId"]);
+    sensorName = root["sensorName"].as<String>();
   }
 
   byte sensorId = 0;
+  String sensorName = "";
 };
 
 #endif

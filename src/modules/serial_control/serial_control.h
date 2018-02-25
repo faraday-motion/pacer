@@ -38,6 +38,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("SERIAL_CONTROL");
+  }
 };
 
 #endif

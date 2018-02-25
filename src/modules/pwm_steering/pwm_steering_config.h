@@ -12,11 +12,8 @@ public:
   Pwm_steering_config(byte id) : Configbase(id, Configurations::PWM_STEERING_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
-    root["enabled"] = enabled;
     JsonArray& pins = root.createNestedArray("servoPins");
     pins.add(servoPins[0]);
     pins.add(servoPins[1]);
@@ -27,10 +24,8 @@ public:
     root["neutral"] = neutral;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
-    enabled = root["enabled"];
     servoPins[0] = root["servoPins"][0];
     servoPins[1] = root["servoPins"][1];
     servoPins[2] = root["servoPins"][2];
@@ -42,7 +37,6 @@ public:
 
   //All pin numbers are allowed,but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
   byte servoPins[4] = {12, 14, 27, 26};
-  bool enabled = MODULE_DEFAULT_ENABLED;
   byte minAngle = 0;
   byte maxAngle = 180;
   byte neutral = 90;

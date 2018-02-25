@@ -5,11 +5,9 @@
 void Dead_man_switch::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Dead_man_switch"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    if (mSensor != nullptr)
-      mSensor -> setup();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Dead_man_switch"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -18,21 +16,17 @@ void Dead_man_switch::loop()
 {
   if (enabled())
   {
+    if (mSensor == nullptr)
+      mSensor = mFMV -> sensors().get(mSensorName);
     if (mSensor != nullptr)
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Dead_man_switch::loop"));
-      mSensor -> loop();
-      if (mSensor -> valueChanged())
-      {
-        mIsVehicleDead = (bool)mSensor -> value();
-        if (mIsVehicleDead)
-          onEvent(Events::VEHICLE_ISDEAD);
-        else
-          onEvent(Events::VEHICLE_ISALIVE);
-      }
-      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Dead_man_switch: "), String(mIsVehicleDead));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+      mIsVehicleDead = mSensor -> getBoolValue();
+      if (mIsVehicleDead)
+        onEvent(Events::VEHICLE_ISDEAD);
+      else
+        onEvent(Events::VEHICLE_ISALIVE);
     }
-    mFMV -> sensors().add("dead", mIsVehicleDead);
   }
 }
 

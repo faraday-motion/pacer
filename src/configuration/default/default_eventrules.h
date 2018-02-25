@@ -27,7 +27,7 @@ public:
         //Handle vehicle dead
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::VEHICLE_DEAD);
         //Handle neopixels
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::VEHICLE_DEAD);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_DEAD);
         //Handle sta connection
         //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
       }
@@ -36,7 +36,7 @@ public:
         //Handle vehicle dead
         mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::VEHICLE_ALIVE);
         //Handle neopixels
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::VEHICLE_ALIVE);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_ALIVE);
         //Handle sta connection
         //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
@@ -47,7 +47,7 @@ public:
     {
       if (eventId == Wifi_connection::Events::WIFI_STA_STARTED)
       {
-        mModules -> command(Modules::NTP_TIMESERVICE, (byte)Ntp_timeservice::Commands::GET_TIME);
+        //mModules -> command(Modules::NTP_TIMESERVICE, (byte)Ntp_timeservice::Commands::GET_TIME);
       }
     }
 
@@ -57,31 +57,31 @@ public:
       //Handle dead man switch
       if (eventId == Control_module::Events::CONTROL_NONE)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::CONTROL_NONE);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::CONTROL_NONE);
       }
       else if (eventId == Control_module::Events::DRIVE_POWER)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::DRIVE_POWER);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::DRIVE_POWER);
       }
       else if (eventId == Control_module::Events::DRIVE_BRAKE)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::DRIVE_BRAKE);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::DRIVE_BRAKE);
       }
       else if (eventId == Control_module::Events::DRIVE_NEUTRAL)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::DRIVE_NEUTRAL);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::DRIVE_NEUTRAL);
       }
       else if (eventId == Control_module::Events::TURN_LEFT)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::TURN_LEFT);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::TURN_LEFT);
       }
       else if (eventId == Control_module::Events::TURN_NEUTRAL)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::TURN_NEUTRAL);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::TURN_NEUTRAL);
       }
       else if (eventId == Control_module::Events::TURN_RIGHT)
       {
-        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::TURN_RIGHT);
+        mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::TURN_RIGHT);
       }
       else if (eventId == Control_module::Events::DRIVE_MODE_20)
       {
@@ -110,7 +110,7 @@ public:
       //Enable wifi for wifi simple control
       if (eventId == Control_module::Events::CONFIGURE)
       {
-        //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
   }

@@ -1,18 +1,18 @@
 #include <Arduino.h>
 #include "./wifi_simple_control.h"
 #include "../../configuration/default/configuration.h"
-#include "../../logs/logger.h"
+#include "../../log/logger.h"
 
 void Wifi_simple_control::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Wifi_simple_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
     pServer = new WiFiServer(8899);
     pServer -> begin();
     pServer -> setNoDelay(true);
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Wifi_simple_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -27,7 +27,7 @@ void Wifi_simple_control::loop()
     }
     if (mSimpleTimerInput.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Wifi_simple_control::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       readInput();
       if (isActive())
       {
@@ -89,6 +89,7 @@ void Wifi_simple_control::readInput()
 
 void Wifi_simple_control::processInput(byte input)
 {
+  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Wifi_simple_control:processInput "), String(input));
   byte defaultInputNeutral = 50;
   byte defaultInputMinBrake = 48;
   byte defaultInputMaxBrake = 0;

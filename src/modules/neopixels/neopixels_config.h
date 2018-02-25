@@ -5,17 +5,14 @@
 #include "../../configuration/default/configuration.h"
 #include "../../configuration/default/default_pins.h"
 #include "../../configuration/base/configbase.h"
-#include "../../enums/sensors.h"
 
 class Neopixels_config : public Configbase{
 public:
   Neopixels_config(byte id) : Configbase(id, Configurations::NEOPIXELS_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["pin"] = pin;
     root["pixelcount"] = pixelcount;
     root["brightness"] = brightness;
@@ -33,9 +30,8 @@ public:
     root["dashboardLedEndIndex"] = dashboardLedEndIndex;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     pin = byte(root["pin"]);
     pixelcount = byte(root["pixelcount"]);
     brightness = byte(root["brightness"]);

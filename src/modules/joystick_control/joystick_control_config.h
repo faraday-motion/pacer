@@ -12,29 +12,28 @@ public:
   Joystick_control_config(byte id) : Configbase(id, Configurations::JOYSTICK_CONTROL_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["sensorYId"] = sensorYId;
     root["deadbandY"] = deadbandY;
     root["neutralY"] = neutralY;
     root["limitYMin"] = limitYMin;
     root["limitYMax"] = limitYMax;
     root["invertY"] = invertY;
-    root["enabled"] = enabled;
+    root["sensorNameX"] = sensorNameX;
+    root["sensorNameY"] = sensorNameY;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     sensorYId = byte(root["sensorYId"]);
     deadbandY = int(root["deadbandY"]);
     neutralY = int(root["neutralY"]);
     limitYMin = int(root["limitYMin"]);
     limitYMax = int(root["limitYMax"]);
     invertY = bool(root["invertY"]);
-    enabled = bool(root["enabled"]);
+    sensorNameX = root["sensorNameX"].as<String>();
+    sensorNameY = root["sensorNameY"].as<String>();
   }
 
   byte sensorYId = 0;
@@ -43,7 +42,8 @@ public:
   int limitYMin = 0;
   int limitYMax = 1023;
   bool invertY = false;
-  bool enabled = MODULE_DEFAULT_ENABLED;
+  String sensorNameX = "";
+  String sensorNameY = "";
 };
 
 #endif

@@ -20,7 +20,7 @@ public:
 
   void setConfig()
   {
-
+    //setEnabled(mCfg -> enabled);
   }
 
   enum Commands : byte {
@@ -44,6 +44,10 @@ public:
   void left(bool enable);
   void right(bool enable);
 
+  String getModuleName()
+  {
+    return FPSTR("FASTLED");
+  }
 };
 
 #endif

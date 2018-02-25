@@ -4,8 +4,8 @@
 class Default_configurations {
 public:
   static const int NONE = 0;
-  static const int SWITCH_CONFIG = 1;
-  static const int ANALOG_CONFIG = 2;
+  static const int BOOLEAN_SENSOR_CONFIG = 1;
+  static const int ANALOG_SENSOR_CONFIG = 2;
   static const int DEAD_MAN_SWITCH_CONFIG = 3;
   static const int NEOPIXELS_CONFIG = 4;
   static const int CURRENT_MONITOR_CONFIG = 5;
@@ -35,6 +35,7 @@ public:
   static const int WEBSOCKET_CONNECTION_CONFIG = 29;
   static const int WEBSOCKET_DRIVELOG_CONFIG = 30;
   static const int MQTT_CLIENT_CONFIG = 31;
+  static const int ESP32_DIGITAL_LED_CONFIG = 32;
 };
 
 #endif

@@ -7,6 +7,5 @@
 #include "./loglevel.h"
 #include "./modules.h"
 #include "./roles.h"
-#include "./sensors.h"
 
 #endif

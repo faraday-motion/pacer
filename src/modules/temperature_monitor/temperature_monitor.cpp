@@ -5,11 +5,9 @@
 void Temperature_monitor::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Temperature_monitor"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    if (mSensor != nullptr)
-      mSensor -> setup();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Temperature_monitor"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -18,14 +16,15 @@ void Temperature_monitor::loop()
 {
   if (enabled())
   {
+    if (mSensor == nullptr)
+      mSensor = mFMV -> sensors().get(mSensorName);
     if (mSensor != nullptr)
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Temperature_monitor::loop"));
-      mSensor -> loop();
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (mSensor -> hasNewValue())
       {
-        float val = mSensor -> value();
-          mFMV -> sensors().add("Temp", val);
+        int val = mSensor -> getIntValue();
+        //mFMV -> sensors().add("Temp", val);
 
         if (val < mMaxTemperature)
             onEvent(Events::WARNING_LOW_TEMPERATURE);

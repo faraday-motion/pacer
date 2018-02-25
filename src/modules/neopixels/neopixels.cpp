@@ -9,13 +9,13 @@ void Neopixels::setup()
 {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Neopixels"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "),String(ESP.getFreeHeap()));
     pinMode(mPin, OUTPUT);
     mNeopixels = new Adafruit_NeoPixel(mPixelcount, mPin, NEO_GRB + NEO_KHZ800);
     mNeopixels -> setBrightness(mBrightness);
     mNeopixels -> begin();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Neopixels"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -26,7 +26,7 @@ void Neopixels::loop()
   {
     if (mSimpleTimer.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Neopixels::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       //The delay is needed in order to avoid flickering on esp32, as the interrupts are giving issues.
       //Might have to change to another library to fix this issue.
       delay(1);

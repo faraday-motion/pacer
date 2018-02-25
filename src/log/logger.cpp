@@ -34,7 +34,7 @@ void Logger::write(LogLevel level, String message, String value)
   String loggerMesssage = String(millis()) + " ";
   loggerMesssage += levelToString(level);
   loggerMesssage += " --> " + message + value;
-  if (logItemVector.size() > LOGGER_LOG_MAXBUFFER)
+  while (logItemVector.size() > LOGGER_LOG_MAXBUFFER)
   {
     //If the buffer is full, pop the first item
     li = logItemVector.front();
@@ -51,12 +51,11 @@ void Logger::write(LogLevel level, String message, String value)
     for (int i=0; i<loggerVector.size(); i++)
     {
       li = logItemVector.front();
-      if (logItemVector.size() > 0 && loggerVector[i] -> enabled())
+      if (logItemVector.size() > 0)
       {
         popItem = true;
         loggerVector[i] -> write(li -> level, li -> message);
       }
-      yield();
     }
     if (popItem)
     {
@@ -64,6 +63,5 @@ void Logger::write(LogLevel level, String message, String value)
       logItemVector.pop();
       delete li;
     }
-    yield();
   }
 }

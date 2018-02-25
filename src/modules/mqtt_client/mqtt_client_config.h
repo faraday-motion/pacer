@@ -12,26 +12,20 @@ public:
   Mqtt_client_config(byte id) : Configbase(id, Configurations::MQTT_CLIENT_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = configuration;
     root["mqttServer"] = mqttServer;
     root["mqttPort"] = mqttPort;
-    root["enabled"] = enabled;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     mqttServer = root["mqttServer"].as<String>();;
     mqttPort = int(root["mqttPort"]);
-    enabled = bool(root["enabled"]);
   }
 
   String mqttServer = MQTT_CLIENT_SERVER;
   int mqttPort = MQTT_CLIENT_PORT;
-  bool enabled = MODULE_DEFAULT_ENABLED;
 };
 
 #endif

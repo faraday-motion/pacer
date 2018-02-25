@@ -8,8 +8,6 @@
 #include "./pwm_steering_wheel_decorator.h"
 #include "../base/power_module.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
-//#include "datatypes.h"
 
 class Pwm_steering : virtual public Power_module
 {
@@ -56,6 +54,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("PWM_STEERING");
+  }
 };
 
 #endif

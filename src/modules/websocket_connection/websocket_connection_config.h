@@ -13,24 +13,18 @@ public:
   Websocket_connection_config(byte id) : Configbase(id, Configurations::WEBSOCKET_CONNECTION_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
-    root["enabled"] = enabled;
     root["port"] = port;
     root["clientMax"] = clientMax;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
-    enabled = bool(root["enabled"]);
     port = int(root["port"]);
     clientMax = byte(root["clientMax"]);
   }
 
-  bool enabled = MODULE_DEFAULT_ENABLED;
   int port = WEBSOCKET_PORT;
   byte clientMax = 2;
 };

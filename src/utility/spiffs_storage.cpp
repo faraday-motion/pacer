@@ -5,7 +5,7 @@
 #include "../configuration/default/configuration.h"
 #include "../configuration/base/configbase.h"
 #include "../configuration/configurator.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 #include "../interfaces/isend.h"
 
 void Spiffs_storage::append(String path, const String message){

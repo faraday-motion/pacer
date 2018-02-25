@@ -78,6 +78,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("WEBSOCKET_CONNECTION");
+  }
 };
 
 #endif

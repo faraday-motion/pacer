@@ -13,11 +13,11 @@ using namespace std;
 void Serial_control::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Serial_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
     Configurator::Instance().initializeSerial();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Serial_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -26,7 +26,7 @@ void Serial_control::loop()
 {
   if (enabled())
   {
-    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Pwm_steering::loop"));
+    Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
     byte command = 0;
     byte value = 0;
     if (readSerial(command, value))
@@ -38,9 +38,9 @@ void Serial_control::loop()
 
     if (isActive())
     {
-      mFMV -> sensors().add("active", id());
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Serial_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Serial_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
+      //mFMV -> sensors().add("active", id());
+      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Serial_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
+      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Serial_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
     }
     clientTimeoutCheck();
   }

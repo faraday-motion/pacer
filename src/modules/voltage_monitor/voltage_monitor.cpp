@@ -5,10 +5,9 @@
 void Voltage_monitor::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Voltage_monitor"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    mSensor -> setup();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Voltage_monitor"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -17,12 +16,13 @@ void Voltage_monitor::loop()
 {
   if (enabled())
   {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Voltage_monitor::loop"));
-      mSensor -> loop();
-      if (mSensor -> hasNewValue())
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+      if (mSensor == nullptr)
+        mSensor = mFMV -> sensors().get(mSensorName);
+      if (mSensor != nullptr && mSensor -> hasNewValue())
       {
-        float val = mSensor -> value();
-        mFMV -> sensors().add("Voltage", val);
+        int val = mSensor -> getIntValue();
+        //mFMV -> sensors().add("Voltage", val);
         if (val > mMaxVoltage)
         {
             onEvent(Events::WARNING_VOLTAGE_HIGH);

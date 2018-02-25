@@ -2,7 +2,7 @@
 #include "./vesc_interface.h"
 #include <cstring>
 #include <functional>
-#include "../../logs/logger.h"
+#include "../../log/logger.h"
 
 /**
  * Enable or disable can forwarding to other VESCs.

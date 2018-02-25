@@ -4,13 +4,12 @@
 #include "../../configuration/configurator.h"
 #include "./force_control_config.h"
 #include "../base/base.hpp"
-#include "../../sensors/base/sensorbase.h"
 
 class Force_control : virtual public Control_module
 {
 private:
-  FMV *mFMV;
-  Sensorbase *mSensorY = nullptr;
+  FMV * mFMV = nullptr;
+  Sensor_value * mSensorY = nullptr;
   int mDeadbandY = 50;
   int mNeutralY = 512;
   int mLimitYMin = 0;
@@ -19,6 +18,7 @@ private:
   byte mForward = 0;
   byte mBack = 0;
   Force_control_config* mCfg = nullptr;
+  String mSensorName = "";
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
@@ -38,12 +38,12 @@ public:
 
   void setConfig()
   {
-    mSensorY = mFMV -> getSensor(mCfg -> sensorId);
     mDeadbandY = mCfg -> deadbandY;
     mNeutralY = mCfg -> neutralY;
     mLimitYMin = mCfg -> limitYMin;
     mLimitYMax = mCfg -> limitYMax;
     mInvertY = mCfg -> invertY;
+    mSensorName = mCfg -> sensorName;
     setClientTimeout("Force_control", 10000);
     setEnabled(mCfg -> enabled);
   }
@@ -51,6 +51,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("FORCE_CONTROL");
+  }
 };
 
 #endif

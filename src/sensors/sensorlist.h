@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <vector>
 #include "./sensor_value.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 
 class SensorList {
 private:
@@ -19,7 +19,7 @@ public:
     return sensorValueArray;
   }
 
-  Sensor_value* get(String name)
+  Sensor_value * get(String name)
   {
     for (int i=0; i<sensorValueArray.size(); i++)
     {
@@ -48,6 +48,15 @@ public:
   }
 
   void add(String name, int value)
+  {
+    Sensor_value* sv = get(name);
+    if (sv == nullptr)
+      sensorValueArray.push_back(new Sensor_value(name, value));
+    else
+      sv -> setValue(value);
+  }
+
+  void add(String name, bool value)
   {
     Sensor_value* sv = get(name);
     if (sv == nullptr)

@@ -12,17 +12,14 @@ public:
   Arduino_ota_config(byte id) : Configbase(id, Configurations::ARDUINO_OTA_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["hostName"] = hostName;
     root["password"] = password;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     hostName = root["hostName"].as<String>();
     password = root["password"].as<String>();
   }

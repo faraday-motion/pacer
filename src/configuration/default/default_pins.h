@@ -1,7 +1,7 @@
-//Pin definition for all pins
 #ifndef DEFAULT_PINS_H
 #define DEFAULT_PINS_H
 
+//Pin definition for all pins
 #define PIN_DEAD_MAN_SWITCH         23
 #define PIN_NEOPIXELS               18
 #define PIN_FASTLED                 5

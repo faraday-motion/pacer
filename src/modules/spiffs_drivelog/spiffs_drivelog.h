@@ -5,7 +5,6 @@
 #include "./spiffs_drivelog_config.h"
 #include "../../utility/simpletimer.h"
 #include "../base/base.hpp"
-#include "../../sensors/base/sensorbase.h"
 #include "../../utility/spiffs_storage.h"
 
 class Spiffs_drivelog : virtual public Modulebase
@@ -40,6 +39,10 @@ class Spiffs_drivelog : virtual public Modulebase
     void loop();
     void command(byte command);
 
+    String getModuleName()
+    {
+      return FPSTR("SPIFFS_DRIVELOG");
+    }
 };
 
 #endif

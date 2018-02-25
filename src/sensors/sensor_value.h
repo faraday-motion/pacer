@@ -14,6 +14,8 @@ private:
   bool hasIntValue = false;
   bool mBoolValue = 0;
   bool hasBoolValue = false;
+  bool mValueChanged = true;
+  bool mHasNewValue = true;
 protected:
 public:
     Sensor_value(String name, float value) {
@@ -50,7 +52,7 @@ public:
       return mFloatValue;
     }
 
-    String getStringValue()
+    String getStringValue() 
     {
       return mStringValue;
     }
@@ -65,32 +67,70 @@ public:
       return mBoolValue;
     }
 
+    bool valueChanged()
+    {
+      return mValueChanged;
+    }
+
+    bool hasNewValue()
+    {
+      return mHasNewValue;
+    }
+
     void setValue(float value)
     {
        if (!hasFloatValue)
          resetValues();
-       mFloatValue = value;
+       mHasNewValue = true;
+       if (mFloatValue != value)
+       {
+         mFloatValue = value;
+         mValueChanged = true;
+       }
+       else
+         mValueChanged = false;
     }
 
     void setValue(String value)
     {
        if (!hasStringValue)
          resetValues();
-       mStringValue = value;
+       mHasNewValue = true;
+       if (mStringValue != value)
+       {
+         mStringValue = value;
+         mValueChanged = true;
+       }
+       else
+         mValueChanged = false;
     }
 
     void setValue(int value)
     {
        if (!hasIntValue)
          resetValues();
-       mIntValue = value;
+       mHasNewValue = true;
+       if (mIntValue != value)
+       {
+         mIntValue = value;
+         mValueChanged = true;
+       }
+       else
+         mValueChanged = false;
     }
 
     void setValue(bool value)
     {
        if (!hasBoolValue)
          resetValues();
-       mBoolValue = value;
+       mHasNewValue = true;
+       if (mBoolValue != value)
+       {
+         mBoolValue = value;
+         mValueChanged = true;
+       }
+       else
+         mValueChanged = false;
     }
 
     String getValue()

@@ -2,8 +2,6 @@
 #define CONNECTION_MODULE_H
 #include <Arduino.h>
 #include "./base.hpp"
-#include "../../enums/enums.hpp"
-#include "../../interfaces/interfaces.hpp"
 #include "../../vehiclecontrol.h"
 
 class Connection_module : public Modulebase, public IConnection  {

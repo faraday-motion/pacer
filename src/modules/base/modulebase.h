@@ -12,13 +12,11 @@ private:
   Roles mRole = Roles::MODULE;
 protected:
   bool mEnabled = MODULE_DEFAULT_ENABLED;
-  void onEnable(){};
-  void onDisable(){};
+  virtual void onEnable(){};
+  virtual void onDisable(){};
   bool mIsSetup = false;
-
-  virtual void onEvent(byte eventId, bool always = false)
+  void onEvent(byte eventId, bool always = false)
   {
-
   }
 
   Modulebase(byte id, int module, Roles role = Roles::MODULE) {
@@ -28,17 +26,10 @@ protected:
   }
 public:
 
-    virtual void command(byte command)
-    {
+    virtual void command(byte command) = 0;
+    virtual void setConfig() = 0;
 
-    }
-
-    virtual void setConfig()
-    {
-
-    }
-
-    virtual void setEnabled(bool enable)
+    void setEnabled(bool enable)
     {
       if (enable)
       {
@@ -52,7 +43,7 @@ public:
       }
     }
 
-    virtual bool enabled()
+    bool enabled()
     {
       return mEnabled;
     }
@@ -70,6 +61,11 @@ public:
     byte id() const
     {
       return mId;
+    }
+
+    virtual String getModuleName()
+    {
+      return FPSTR("NONE");
     }
 };
 

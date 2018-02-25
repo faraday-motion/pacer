@@ -10,7 +10,7 @@
 #include "../enums/modules.h"
 #include "../enums/configurations.h"
 #include "../utility/tools.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 #include "../modules/configlist.h"
 
 class Configurator{
@@ -79,6 +79,13 @@ public:
       Logger::Instance().write(LogLevel::INFO, FPSTR("Finished initializing Spiff"));
       mIsSpiffInitialized = true;
     }
+  }
+
+  void initializeAnalog()
+  {
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Initializing Analog"));
+    analogReadResolution(10);
+    analogSetAttenuation(ADC_6db);
   }
 
 

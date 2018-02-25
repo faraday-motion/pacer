@@ -4,14 +4,13 @@
 #include "../../configuration/configurator.h"
 #include "./joystick_control_config.h"
 #include "../base/base.hpp"
-#include "../../sensors/base/sensorbase.h"
 
 class Joystick_control : virtual public Control_module
 {
 private:
-  FMV *mFMV;
-  Sensorbase *mSensorX = nullptr;
-  Sensorbase *mSensorY = nullptr;
+  FMV * mFMV = nullptr;
+  Sensor_value * mSensorX = nullptr;
+  Sensor_value * mSensorY = nullptr;
   int mDeadbandY = 50;
   int mNeutralY = 512;
   int mLimitYMin = 0;
@@ -27,6 +26,8 @@ private:
   byte mLeft = 0;
   byte mRight = 0;
   Joystick_control_config* mCfg = nullptr;
+  String mSensorNameX = "";
+  String mSensorNameY = "";
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
@@ -46,12 +47,13 @@ public:
 
   void setConfig()
   {
-    mSensorY = mFMV -> getSensor(mCfg -> sensorYId);
     mDeadbandY = mCfg -> deadbandY;
     mNeutralY = mCfg -> neutralY;
     mLimitYMin = mCfg -> limitYMin;
     mLimitYMax = mCfg -> limitYMax;
     mInvertY = mCfg -> invertY;
+    mSensorNameX = mCfg -> sensorNameX;
+    mSensorNameY = mCfg -> sensorNameY;
     setClientTimeout("Joystick_control", 10000);
     setEnabled(mCfg -> enabled);
   }
@@ -59,6 +61,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("JOYSTICK_CONTROL");
+  }
 };
 
 #endif

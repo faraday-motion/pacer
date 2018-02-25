@@ -13,22 +13,16 @@ public:
   Serial_control_config(byte id) : Configbase(id, Configurations::SERIAL_CONTROL_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
-    root["enabled"] = enabled;
     root["resetInputTimeout"] = resetInputTimeout;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
-    enabled = bool(root["enabled"]);
     resetInputTimeout = int(root["resetInputTimeout"]);
   }
 
-  bool enabled = MODULE_DEFAULT_ENABLED;
   int resetInputTimeout = 10000;
 };
 

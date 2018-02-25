@@ -11,14 +11,15 @@
 using namespace std;
 using namespace std::placeholders;
 
+//Websocket control gives a reset when combined with the new led driver
 void Websocket_control::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Websocket_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(CONFIGURE, true);
     getWebsocketConnection();
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Websocket_control"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -28,13 +29,14 @@ void Websocket_control::getWebsocketConnection()
   //Find the websocket connection module
   if (pIConnection == nullptr)
   {
-    Modulebase * mb = mFMV -> modules().get(Modules::WEBSOCKET_CONNECTION);
+    Modulebase * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
     if (mb != nullptr)
     {
       Connection_module * conn = static_cast<Connection_module*>(mb);
       pIConnection = static_cast<IConnection*>(conn);
       if (pIConnection != nullptr)
       {
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Websocket_control::addReciever"));
         pIConnection -> addReciever(this);
       }
     }
@@ -47,13 +49,12 @@ void Websocket_control::loop()
   {
     if (mSimpleTimer.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::loop"));
-
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (isActive())
       {
-        mFMV -> sensors().add("active", id());
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
+        //mFMV -> sensors().add("active", id());
+        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
+        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
       }
       clientTimeoutCheck();
     }

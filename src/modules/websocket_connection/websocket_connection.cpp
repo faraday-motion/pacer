@@ -14,14 +14,14 @@ using namespace std::placeholders;
 void Websocket_connection::setup() {
   if (mIsSetup == false)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Websocket_connection"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
 //    onEvent(Events::CONFIGURE, true);
     mWebSocketsServer = new WebSocketsServer(mPort);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Websocket on port: "), String(mPort));
     mWebSocketsServer -> begin();
     mWebSocketsServer -> onEvent(std::bind(&Websocket_connection::onWsEvent, this, _1, _2, _3, _4));
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Websocket_connection"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }
 }
@@ -32,7 +32,7 @@ void Websocket_connection::loop()
   {
     if (mSimpleTimer.check())
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_connection::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       mWebSocketsServer -> loop();
     }
   }
@@ -96,6 +96,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
 
         //For each reciever do
         for (byte i=0; i < recievers().size(); i++) {
+          Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Packet recievers:"), String(i));
           recievers()[i] -> recieve(command, value);
         }
 

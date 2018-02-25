@@ -2,7 +2,6 @@
 #define MODULATION_MODULE_H
 #include <Arduino.h>
 #include "./base.hpp"
-#include "../../enums/enums.hpp"
 #include "../../vehiclecontrol.h"
 
 class Modulation_module : public Modulebase  {

@@ -10,7 +10,7 @@
 
 #include "../modules/modules.hpp"
 
-#include "../logs/logger.h"
+#include "../log/logger.h"
 
 
 class Modulefactory{
@@ -139,6 +139,36 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance MQTT_CLIENT_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         mod = new Mqtt_client(id, fmv);
+        break;
+      case Configurations::ESP32_DIGITAL_LED_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance ESP32_DIGITAL_LED_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Esp32_digital_led(id, fmv);
+        break;
+      case Configurations::ANALOG_SENSOR_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance ANALOG_SENSOR_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Analog_sensor(id, fmv);
+        break;
+      case Configurations::BOOLEAN_SENSOR_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance BOOLEAN_SENSOR_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Boolean_sensor(id, fmv);
+        break;
+      case Configurations::SERIAL_LOG_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance SERIAL_LOG_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Serial_log(id, fmv);
+        break;
+      case Configurations::SPIFFS_LOG_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance SPIFFS_LOG_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Spiffs_log(id, fmv);
+        break;
+      case Configurations::WEBSOCKET_SERVER_LOG_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance WEBSOCKET_SERVER_LOG_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        mod = new Websocket_server_log(id, fmv);
         break;
       }
       return mod;

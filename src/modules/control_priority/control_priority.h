@@ -5,12 +5,11 @@
 #include "./control_priority_config.h"
 #include "../../utility/simpletimer.h"
 #include "../base/base.hpp"
-//#include "../../fmv.h"
 
 class Control_priority : virtual public Modulebase
 {
 private:
-  FMV *mFMV;
+  FMV *mFMV = nullptr;
   SimpleTimer mSimpleTimer;
   Control_priority_config* mCfg = nullptr;
   int mPriority1 = -1;
@@ -61,6 +60,11 @@ public:
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("CONTROL_PRIORITY");
+  }
 };
 
 #endif

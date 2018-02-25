@@ -12,32 +12,26 @@ public:
   Control_priority_config(byte id) : Configbase(id, Configurations::CONTROL_PRIORITY_CONFIG) {
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["interval"] = interval;
     root["priority1"] = priority1;
     root["priority2"] = priority2;
     root["priority3"] = priority3;
     root["priority4"] = priority4;
     root["priority5"] = priority5;
-    root["enabled"] = enabled;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     interval = int(root["interval"]);
     priority1 = int(root["priority1"]);
     priority2 = int(root["priority2"]);
     priority3 = int(root["priority3"]);
     priority4 = int(root["priority4"]);
     priority5 = int(root["priority5"]);
-    enabled = bool(root["enabled"]);
   }
 
-  bool enabled = MODULE_DEFAULT_ENABLED;
   int interval = 250;
   int priority1 = -1;
   int priority2 = -1;

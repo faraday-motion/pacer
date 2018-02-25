@@ -2,7 +2,6 @@
 #define BT_CONNECTION_H
 
 #include "../base/base.hpp"
-#include "../../sensors/base/sensorbase.h"
 
 class Bt_connection : virtual public Modulebase
 {
@@ -23,13 +22,17 @@ public:
 
   void setConfig()
   {
-
+    //setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
 
+  String getModuleName()
+  {
+    return FPSTR("BT_CONNECTION");
+  }
 };
 
 #endif

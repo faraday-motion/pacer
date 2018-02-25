@@ -4,15 +4,15 @@
 #include "./dead_man_switch_config.h"
 #include "../base/modulebase.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Dead_man_switch : virtual public Modulebase
 {
 private:
-  FMV *mFMV;
-  Sensorbase *mSensor;
+  FMV *mFMV = nullptr;
+  Sensor_value * mSensor;
   bool mIsVehicleDead = false;
-  Dead_man_switch_config* mCfg = nullptr;
+  Dead_man_switch_config * mCfg = nullptr;
+  String mSensorName = "";
 protected:
     void onDisable();
     void onEvent(byte eventId)
@@ -36,13 +36,18 @@ public:
 
   void setConfig()
   {
-    mSensor = mFMV -> getSensor(mCfg -> sensorId);
+    mSensorName = mCfg -> sensorName;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
-  //bool isVehicleDead();
+
+  String getModuleName()
+  {
+    return FPSTR("DEAD_MAN_SWITCH");
+  }
 };
 
 #endif

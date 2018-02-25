@@ -5,7 +5,6 @@
 #include "./power_limit_config.h"
 #include "../base/limit_module.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Power_limit : virtual public Limit_module
 {
@@ -60,11 +59,17 @@ public:
   {
     mSimpleTimer.setName("Power_limit");
     mSimpleTimer.setInterval(15, 30);
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
+
+  String getModuleName()
+  {
+    return FPSTR("POWER_LIMIT");
+  }
 };
 
 #endif

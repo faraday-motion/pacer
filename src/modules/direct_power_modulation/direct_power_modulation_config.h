@@ -13,17 +13,14 @@ public:
 
   }
 
-  void getConfiguration(JsonObject &root)
+  void getModuleConfiguration(JsonObject &root)
   {
-    root["id"] = id;
-    root["configuration"] = (int)configuration;
     root["interval"] = interval;
     root["critical"] = critical;
   }
 
-  void setConfiguration(JsonObject &root)
+  void setModuleConfiguration(JsonObject &root)
   {
-    id = byte(root["id"]);
     interval = int(root["interval"]);
     critical = int(root["critical"]);
   }

@@ -1,21 +1,16 @@
-#ifndef LOGBASE_H
-#define LOGBASE_H
-
+#ifndef LOG_MODULE_H
+#define LOG_MODULE_H
 #include <Arduino.h>
-#include "../../configuration/default/configuration.h"
-#include "../../enums/enums.hpp"
-#include "../../interfaces/interfaces.hpp"
+#include "./base.hpp"
 
-class Logbase : public ILog
+class Log_module : public Modulebase, public ILog
 {
 private:
-  bool mIsEnabled = LOGGER_LOG_DEFALT_ENABLED;
   LogLevel mLogLevel = LogLevel::DEBUG; // default log level.
 protected:
-  byte mId = 0;
-  ISend * pSender = nullptr;
-  Logbase(byte id) : ILog() {
-    mId = id;
+  //ISend * pSender = nullptr;
+  Log_module(byte id, int module) : Modulebase(id, module, Roles::LOG_MODULE) {
+
   };
 public:
     // write() uses these variables to determine which messages should be written where.
@@ -34,17 +29,10 @@ public:
       return mLogLevel;
     }
 
-    void setSender(ISend * sender);
-    virtual void write(LogLevel level, String message);
-
-    void setEnabled(bool enabled)
+    //void setSender(ISend * sender);
+    virtual void write(LogLevel level, String message)
     {
-      mIsEnabled = enabled;
-    }
-
-    bool enabled()
-    {
-      return mIsEnabled;
+      
     }
 };
 

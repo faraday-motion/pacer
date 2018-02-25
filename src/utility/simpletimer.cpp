@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "./simpletimer.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 
 SimpleTimer::SimpleTimer()
 {

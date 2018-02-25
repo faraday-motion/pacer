@@ -4,16 +4,16 @@
 #include "./current_monitor_config.h"
 #include "../base/modulebase.h"
 #include "../../fmv.h"
-#include "../../sensors/base/sensorbase.h"
 
 class Current_monitor : virtual public Modulebase
 {
 private:
-  FMV *mFMV;
-  Sensorbase *mSensor;
+  FMV *mFMV = nullptr;
+  Sensor_value *mSensor;
   float mMinCurrent = 0;
   float mMaxCurrent = 1023;
   Current_monitor_config* mCfg = nullptr;
+  String mSensorName = "";
 protected:
 public:
   Current_monitor(byte id, FMV *fmv, Current_monitor_config* cfg = nullptr) : Modulebase(id, Modules::CURRENT_MONITOR)  {
@@ -32,9 +32,10 @@ public:
 
   void setConfig()
   {
-    mSensor = mFMV -> getSensor(mCfg -> sensorId);
     setMinCurrent(mCfg -> minCurrent);
     setMaxCurrent(mCfg -> maxCurrent);
+    mSensorName = mCfg -> sensorName;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
@@ -51,6 +52,10 @@ public:
     mMaxCurrent = max;
   }
 
+  String getModuleName()
+  {
+    return FPSTR("CURRENT_MONITOR");
+  }
 };
 
 #endif

@@ -49,6 +49,7 @@ public:
     mRightLedEndIndex = mCfg -> rightLedEndIndex;
     mDashboardLedStartIndex = mCfg -> dashboardLedStartIndex;
     mDashboardLedEndIndex = mCfg -> dashboardLedEndIndex;
+    setEnabled(mCfg -> enabled);
   }
 
   void setup();
@@ -62,6 +63,11 @@ public:
   void left();
   void right();
   void turnNeutral();
+
+  String getModuleName()
+  {
+    return FPSTR("NEOPIXELS");
+  }
 private:
   SimpleTimer mSimpleTimer;
   bool mIsVehicleDead = false;
@@ -82,7 +88,7 @@ private:
   byte mDashboardLedEndIndex = 0;
   Neopixels::Commands mLastCommand = Commands::VEHICLE_ALIVE;
 protected:
-  FMV *mFMV;
+  FMV * mFMV = nullptr;
   void onDisable();
   void onEvent(byte eventId)
   {

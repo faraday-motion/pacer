@@ -9,23 +9,23 @@
 #include "../configuration/default/configuration.h"
 #include "../configuration/base/configbase.h"
 #include "../configuration/configurator.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 
 int Tools::analogReadMultiple(byte pin, byte readings = 3)
 {
   int sum = 0;
-  for (int i=0; i<readings; i++)
+  for (byte i=0; i<readings; i++)
   {
     sum += analogRead(pin);
     delayMicroseconds(1);
   }
-  return sum/int(readings);
+  return sum/((int)readings);
 }
 
 bool Tools::digitalReadMultiple(byte pin, byte readings = 3)
 {
   int sum = 0;
-  for (int i=0; i<readings; i++)
+  for (byte i=0; i<readings; i++)
   {
     sum += (int)digitalRead(pin);
     delayMicroseconds(1);

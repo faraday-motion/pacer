@@ -5,7 +5,7 @@
 #include <vector>
 #include "./base/base.hpp"
 #include "./base/control_module.h"
-#include "../logs/logger.h"
+#include "../log/logger.h"
 
 class ModuleList {
 private:
@@ -41,7 +41,7 @@ public:
       moduleArray.push_back(fb);
   }
 
-  Modulebase* get(int module)
+  Modulebase* getByType(int module)
   {
     for (byte i=0; i<moduleArray.size(); i++)
     {
@@ -68,9 +68,9 @@ public:
       m -> command(command);
   }
 
-  void command(int module, byte command)
+  void commandByType(int module, byte command)
   {
-    Modulebase* m = get(module);
+    Modulebase* m = getByType(module);
     if (m != nullptr)
       m -> command(command);
   }
@@ -101,7 +101,7 @@ public:
     }
   }
 
-  Modulebase* getEnabled(Roles role)
+  Modulebase* getEnabledByRole(Roles role)
   {
     for (byte i=0; i<moduleArray.size(); i++)
     {
@@ -111,6 +111,15 @@ public:
       }
     }
     return nullptr;
+  }
+
+  void listEnabled()
+  {
+    for (byte i=0; i<moduleArray.size(); i++)
+    {
+      if (moduleArray[i] -> enabled())
+        Logger::Instance().write(LogLevel::INFO, FPSTR("ENABLED MODULE: "), moduleArray[i] -> getModuleName() + " " + String(moduleArray[i] -> id()));
+    }
   }
 
   Control_module* getActiveControl()

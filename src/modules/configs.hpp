@@ -28,5 +28,11 @@
 #include "./modules/websocket_connection/websocket_connection_config.h"
 #include "./modules/websocket_drivelog/websocket_drivelog_config.h"
 #include "./modules/mqtt_client/mqtt_client_config.h"
+#include "./modules/esp32_digital_led/esp32_digital_led_config.h"
+#include "./modules/analog_sensor/analog_sensor_config.h"
+#include "./modules/boolean_sensor/boolean_sensor_config.h"
+#include "./modules/serial_log/serial_log_config.h"
+#include "./modules/spiffs_log/spiffs_log_config.h"
+#include "./modules/websocket_server_log/websocket_server_log_config.h"
 
 #endif

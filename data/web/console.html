@@ -19,8 +19,7 @@
     <div class="container content-box">
       <div class="row">
         <h1>Faraday Motion Web App 1.0</h1>
-        <div class="col-50">
-            <h3>Request</h3>
+        <div class="col-100">
             <div class="form-group">
               <p class="strong">Command</p>
               <select name="" id="command">
@@ -39,37 +38,41 @@
                 <option value="12">DRIVE_MODE_100</option>
                 <option value="100">GET DRIVELOG</option>
               </select>
-              
+
               <p class="strong">Value</p>
               <textarea id="payload" style="width:100%" rows="5"></textarea>
 
               <button onClick="event.preventDefault();sendRequest()" class="btn btn-default">Send Command</button>
               <button onClick="event.preventDefault();connect()" class="btn btn-default">Connect</button>
+              <button onClick="event.preventDefault();pause()" class="btn btn-default">Pause</button>
             </div>
-
-            <br><br>
-            <pre style="margin:0 auto;">
-              Available Commands: 
-	MODULE_ON,
-	MODULE_OFF,
-	DRIVE_MODE_20,
-	DRIVE_MODE_40,
-	DRIVE_MODE_60,
-	DRIVE_MODE_80,
-	DRIVE_MODE_100,
-	DISABLE_CONTROLLERS,
-	ENABLE_CONTROLLER,
-	DRIVE_DIRECTION_FORWARD,
-	DRIVE_DIRECTION_BACKWARD,
-	DRIVE_POWER,
-	DRIVE_BRAKE,
-	TURN_LEFT,
-	TURN_RIGHT
-            </pre>
         </div>
-        <div class="col-50">
-          <h3>Response</h3>
-           <pre id="response"></pre>
+      </div>
+      <div class="row">
+        <div class="col-100">
+           <pre id="response">---------------------------------- empty ----------------------------------</pre>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-100">
+          <pre style="margin:0 auto;">
+            Available Commands:
+        MODULE_ON,
+        MODULE_OFF,
+        DRIVE_MODE_20,
+        DRIVE_MODE_40,
+        DRIVE_MODE_60,
+        DRIVE_MODE_80,
+        DRIVE_MODE_100,
+        DISABLE_CONTROLLERS,
+        ENABLE_CONTROLLER,
+        DRIVE_DIRECTION_FORWARD,
+        DRIVE_DIRECTION_BACKWARD,
+        DRIVE_POWER,
+        DRIVE_BRAKE,
+        TURN_LEFT,
+        TURN_RIGHT
+          </pre>
         </div>
       </div>
     </div>

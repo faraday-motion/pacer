@@ -6,7 +6,6 @@ public:
   static const int NONE = 0;
   static const int BOOLEAN_SENSOR_CONFIG = 1;
   static const int ANALOG_SENSOR_CONFIG = 2;
-  static const int DEAD_MAN_SWITCH_CONFIG = 3;
   static const int NEOPIXELS_CONFIG = 4;
   static const int CURRENT_MONITOR_CONFIG = 5;
   static const int VOLTAGE_MONITOR_CONFIG = 6;

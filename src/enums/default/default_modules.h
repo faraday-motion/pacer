@@ -5,7 +5,6 @@
 class Default_modules {
 public:
     static const int NONE = 0;
-    static const int DEAD_MAN_SWITCH = 1;
     static const int NEOPIXELS = 2;
     static const int FASTLED = 3;
     static const int SERIAL_CONTROL = 4;

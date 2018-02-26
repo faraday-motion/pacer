@@ -15,16 +15,16 @@ using namespace std::placeholders;
 void Websocket_control::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(CONFIGURE, true);
-    getWebsocketConnection();
+    addWebsocketReciever();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
-void Websocket_control::getWebsocketConnection()
+void Websocket_control::addWebsocketReciever()
 {
   //Find the websocket connection module
   if (pIConnection == nullptr)
@@ -50,12 +50,6 @@ void Websocket_control::loop()
     if (mSimpleTimer.check())
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      if (isActive())
-      {
-        //mFMV -> sensors().add("active", id());
-        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
-      }
       clientTimeoutCheck();
     }
   }

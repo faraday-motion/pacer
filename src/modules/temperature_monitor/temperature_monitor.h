@@ -9,7 +9,7 @@ class Temperature_monitor : virtual public Modulebase
 {
 private:
   FMV *mFMV;
-  Sensor_value * mSensor;
+  Float_sensor_value * mSensor;
   float mMinTemperature = 0;
   float mMaxTemperature = 1023;
   Temperature_monitor_config* mCfg = nullptr;
@@ -42,13 +42,11 @@ public:
   void loop();
   void command(byte command);
 
-  void setMinTemperature(int min) {
-    min = constrain(min, 0, 1023);
+  void setMinTemperature(float min) {
     mMinTemperature = min;
   }
 
-  void setMaxTemperature(int max) {
-    max = constrain(max, 0, 1023);
+  void setMaxTemperature(float max) {
     mMaxTemperature = max;
   }
 

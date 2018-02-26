@@ -8,11 +8,11 @@
 class Current_monitor : virtual public Modulebase
 {
 private:
-  FMV *mFMV = nullptr;
-  Sensor_value *mSensor;
+  FMV * mFMV = nullptr;
+  Float_sensor_value * mSensor;
   float mMinCurrent = 0;
   float mMaxCurrent = 1023;
-  Current_monitor_config* mCfg = nullptr;
+  Current_monitor_config * mCfg = nullptr;
   String mSensorName = "";
 protected:
 public:
@@ -42,13 +42,11 @@ public:
   void loop();
   void command(byte command);
 
-  void setMinCurrent(int min) {
-    min = constrain(min, 0, 1023);
+  void setMinCurrent(float min) {
     mMinCurrent = min;
   }
 
-  void setMaxCurrent(int max) {
-    max = constrain(max, 0, 1023);
+  void setMaxCurrent(float max) {
     mMaxCurrent = max;
   }
 

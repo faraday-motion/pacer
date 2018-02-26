@@ -12,6 +12,7 @@
 void Pwm_steering::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     std::vector<Wheel*> wheelArray = mFMV -> getWheelValues();
@@ -27,7 +28,6 @@ void Pwm_steering::setup() {
       }
     }
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 

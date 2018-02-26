@@ -13,12 +13,12 @@ using namespace std;
 void Serial_control::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
     Configurator::Instance().initializeSerial();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -34,13 +34,6 @@ void Serial_control::loop()
       recieve(command, value);
       if (command == 99)
         mFMV -> modules().command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
-    }
-
-    if (isActive())
-    {
-      //mFMV -> sensors().add("active", id());
-      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Serial_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Serial_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
     }
     clientTimeoutCheck();
   }

@@ -7,10 +7,10 @@
 void Exponential_power_modulation::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -42,8 +42,6 @@ void Exponential_power_modulation::loop()
 
         mPreviousPower = mOutputControl.getPower();
         mPreviousBrake = mOutputControl.getBrake();
-      //  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Exponential_power_modulation:Power (mOutputControl)"), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Exponential_power_modulation:Turning (mOutputControl)"), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
       }
       else
       {
@@ -56,11 +54,13 @@ void Exponential_power_modulation::loop()
 
 byte Exponential_power_modulation::calculateOutput(byte previousPower, byte power)
 {
+    //TODO Need to rework this calculation as it does not go to max when smoothalpha is less than 0,5
     //Smooth the input
     float targetAlpha = (mSmoothAlpha * (float)power) + ((1 - mSmoothAlpha) * (float)previousPower);
     //If the value is close to target, set it to target
     if (abs(float(power) - float(targetAlpha)) <= 1)
       targetAlpha = power;
+    targetAlpha = constrain(targetAlpha, 0, 100);
     return (byte)targetAlpha;
 }
 

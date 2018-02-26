@@ -48,7 +48,7 @@ public:
   {
     if (enabled() && level >= getLevel())
     {
-      message = ",\"content\":\"" + message + "\"";
+      message = ", \"content\":\"" + message + "\"";
       if (pIConnection != nullptr)
         pIConnection -> send(message);
     }

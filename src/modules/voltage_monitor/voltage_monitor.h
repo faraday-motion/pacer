@@ -11,7 +11,7 @@ class Voltage_monitor : virtual public Modulebase
 {
 private:
   FMV *mFMV;
-  Sensor_value * mSensor;
+  Float_sensor_value * mSensor;
   float mMinVoltage = 0;
   float mMaxVoltage = 1023;
   Voltage_monitor_config* mCfg = nullptr;
@@ -48,13 +48,11 @@ public:
   void loop();
   void command(byte command);
 
-  void setMaxVoltage(int max) {
-    max = constrain(max, 0, 1023);
+  void setMaxVoltage(float max) {
     mMaxVoltage = max;
   }
 
-  void setMinVoltage(int min) {
-    min = constrain(min, 0, 1023);
+  void setMinVoltage(float min) {
     mMinVoltage = min;
   }
 

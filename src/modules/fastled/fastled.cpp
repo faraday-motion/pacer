@@ -12,6 +12,7 @@ void Fastled::setup()
 {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, "Setting up Fastled");
     pinMode(PIN_FASTLED, OUTPUT);
     // set master brightness control
@@ -20,7 +21,6 @@ void Fastled::setup()
     reset();
     neutral();
     Logger::Instance().write(LogLevel::INFO, "Finished setting up Fastled");
-    mIsSetup = true;
   }
 }
 

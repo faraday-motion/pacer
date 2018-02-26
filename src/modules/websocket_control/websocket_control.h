@@ -16,7 +16,7 @@ private:
   SimpleTimer mSimpleTimer;
   Websocket_control_config * mCfg = nullptr;
   IConnection * pIConnection = nullptr;
-  void getWebsocketConnection();
+  void addWebsocketReciever();
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)

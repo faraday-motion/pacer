@@ -9,12 +9,11 @@
 
 class Current_monitor_config : public Configbase{
 public:
-  Current_monitor_config(byte id) : Configbase(id, Configurations::DEAD_MAN_SWITCH_CONFIG) {
+  Current_monitor_config(byte id) : Configbase(id, Configurations::CURRENT_MONITOR_CONFIG) {
   }
 
   void getModuleConfiguration(JsonObject &root)
   {
-    root["sensorId"] = sensorId;
     root["minCurrent"] = minCurrent;
     root["maxCurrent"] = maxCurrent;
     root["sensorName"] = sensorName;
@@ -22,15 +21,13 @@ public:
 
   void setModuleConfiguration(JsonObject &root)
   {
-    sensorId = byte(root["sensorId"]);
-    minCurrent = int(root["minCurrent"]);
-    maxCurrent = int(root["maxCurrent"]);
+    minCurrent = float(root["minCurrent"]);
+    maxCurrent = float(root["maxCurrent"]);
     sensorName = root["sensorName"].as<String>();
   }
 
-  byte sensorId = 0;
-  int minCurrent = 0;
-  int maxCurrent = 1023;
+  float minCurrent = 0;
+  float maxCurrent = 1023;
   String sensorName = "";
 };
 

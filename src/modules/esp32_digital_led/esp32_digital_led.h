@@ -69,8 +69,7 @@ public:
     return FPSTR("ESP32_DIGITAL_LED");
   }
 private:
-  //strand_t STRAND = {.rmtChannel = 2, .gpioNum = 18, .ledType = LED_WS2812B_V3, .brightLimit = 32, .numPixels =  12,.pixels = nullptr, ._stateVars = nullptr};
-  //strand_t * STRANDS = {&STRAND};
+  strand_t * mSTRAND;
   strand_t * mPixels;
   SimpleTimer mSimpleTimer;
   bool mIsVehicleDead = false;

@@ -18,7 +18,7 @@ void Websocket_connection::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-//    onEvent(Events::CONFIGURE, true);
+    //onEvent(Events::CONFIGURE, true);
     mWebSocketsServer = new WebSocketsServer(mPort);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Websocket on port: "), String(mPort));
     mWebSocketsServer -> begin();
@@ -44,13 +44,11 @@ void Websocket_connection::send(String message)
   if (enabled())
   {
     //Not allowed to add any log writes here as it creates a recursive loop.
-    //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_connection::send: "), message);
     message = "{\"response\":\"ok\"" + message + "}";
     for (uint8_t i = 0; i < pClients.size(); i++) {
       if (mWebSocketsServer != nullptr)
         mWebSocketsServer -> sendTXT(pClients[i], message);
     }
-    //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Finished Websocket_connection::send "));
   }
 }
 

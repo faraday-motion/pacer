@@ -34,34 +34,44 @@ void Logger::write(LogLevel level, String message, String value)
   String loggerMesssage = String(millis()) + " ";
   loggerMesssage += levelToString(level);
   loggerMesssage += " --> " + message + value;
-  while (logItemVector.size() > LOGGER_LOG_MAXBUFFER)
+  if (logItemVector.size() == 0 && mLogBufferSize == 0)
   {
-    //If the buffer is full, pop the first item
-    li = logItemVector.front();
-    //Lets delete the object and free the memory
-    logItemVector.pop();
-    delete li;
-  }
-  logItemVector.push(new LogItem(level, loggerMesssage));
-
-  bool popItem = true;
-  while (popItem == true)
-  {
-    popItem = false;
     for (byte i=0; i<loggerVector.size(); i++)
     {
-      if (logItemVector.size() > 0)
-      {
-        popItem = true;
-        li = logItemVector.front();
-        loggerVector[i] -> write(li -> level, li -> message);
-      }
+        loggerVector[i] -> write(level, loggerMesssage);
     }
-    if (popItem)
+  }
+  else
+  {
+    while (logItemVector.size() > mLogBufferSize)
     {
+      //If the buffer is full, pop the first item
+      li = logItemVector.front();
       //Lets delete the object and free the memory
       logItemVector.pop();
       delete li;
+    }
+    logItemVector.push(new LogItem(level, loggerMesssage));
+
+    bool popItem = true;
+    while (popItem == true)
+    {
+      popItem = false;
+      for (byte i=0; i<loggerVector.size(); i++)
+      {
+        if (logItemVector.size() > 0)
+        {
+          popItem = true;
+          li = logItemVector.front();
+          loggerVector[i] -> write(li -> level, li -> message);
+        }
+      }
+      if (popItem)
+      {
+        //Lets delete the object and free the memory
+        logItemVector.pop();
+        delete li;
+      }
     }
   }
 }

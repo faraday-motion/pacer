@@ -29,11 +29,6 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Analog_sensor_config(id);
         break;
-      case Configurations::DEAD_MAN_SWITCH_CONFIG :
-        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance DEAD_MAN_SWITCH_CONFIG"));
-        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-        cfg = new Dead_man_switch_config(id);
-        break;
       case Configurations::NEOPIXELS_CONFIG :
         Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance NEOPIXELS_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));

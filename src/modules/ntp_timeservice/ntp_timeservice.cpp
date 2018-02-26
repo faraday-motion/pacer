@@ -7,6 +7,7 @@
 void Ntp_timeservice::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     configTzTime(mTimeZone.c_str(), mTimeServer.c_str());
@@ -17,7 +18,6 @@ void Ntp_timeservice::setup() {
       Logger::Instance().write(LogLevel::INFO, FPSTR("DateTime: "), Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
     }
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -29,7 +29,7 @@ void Ntp_timeservice::loop()
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (getLocalTime(&mTimeInfo)) {
-        mFMV -> sensors().add("dt", Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
+        mFMV -> sensors().setStringSensor("dt", Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
       }
     }
   }

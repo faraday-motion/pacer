@@ -7,7 +7,7 @@
  * http://insentricity.com
  *
  */
-/* 
+/*
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -108,6 +108,7 @@ const ledParams_t ledParamsAll[] = {  // Still must match order of `led_types`
   [LED_SK6812W_V1] = { .bytesPerPixel = 4, .T0H = 300, .T1H = 600, .T0L = 900, .T1L = 600, .TRS =  80000},
 };
 
+extern int digitalLeds_initStrand(strand_t * pStrand);
 extern int digitalLeds_initStrands(strand_t strands [], int numStrands);
 extern int digitalLeds_updatePixels(strand_t * strand);
 extern void digitalLeds_resetPixels(strand_t * pStrand);
@@ -117,4 +118,3 @@ extern void digitalLeds_resetPixels(strand_t * pStrand);
 #endif
 
 #endif /* ESP32_DIGITAL_LED_LIB_H */
-

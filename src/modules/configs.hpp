@@ -5,7 +5,6 @@
 #include "./modules/arduino_ota/arduino_ota_config.h"
 #include "./modules/control_priority/control_priority_config.h"
 #include "./modules/current_monitor/current_monitor_config.h"
-#include "./modules/dead_man_switch/dead_man_switch_config.h"
 #include "./modules/direct_power_modulation/direct_power_modulation.h"
 #include "./modules/exponential_power_modulation/exponential_power_modulation_config.h"
 #include "./modules/force_control/force_control_config.h"

@@ -46,11 +46,11 @@ public:
     {
       if (mIsSetup == false)
       {
+        mIsSetup = true;
         Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         Logger::Instance().addLog(this);
         Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-        mIsSetup = true;
       }
     }
 

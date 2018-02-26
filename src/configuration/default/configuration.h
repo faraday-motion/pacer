@@ -16,7 +16,7 @@
 #define DEFAULTSMOOTHALPHA            0.5
 #define WIFI_CONNECTION_HOST          "fmwebupdate"
 #define WIFI_CONNECTION_SSID          "c12345"
-#define WIFI_CONNECTION_PASSWORD      "12345678"
+#define WIFI_CONNECTION_PASSWORD      "c12345"
 #define WIFI_CONNECTION_AP_SSID       "FARADAY009"
 #define WIFI_CONNECTION_AP_PASSWORD   "faraday009"
 #define WIFI_CONNECTION_AP_CHANNEL    11
@@ -25,8 +25,7 @@
 #define NTP_TIME_TIMEZONE             "CET-1CEST-2,M3.5.0/2,M10.5.0/3"
 #define NTP_DATETIME_FORMAT           "%Y-%m-%d %H:%M:%S"
 #define MODULE_DEFAULT_ENABLED        true
-#define LOGGER_LOG_DEFALT_ENABLED     true
-#define LOGGER_LOG_MAXBUFFER          50
+#define LOGGER_LOG_BUFFER             100
 #define WEBSOCKET_PORT                81
 #define ARDUINO_OTA_PORT              3232
 #define ARDUINO_OTA_HOSTNAME          "myesp32"

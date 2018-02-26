@@ -19,23 +19,25 @@ public:
   {
     //Hook up module events with commands
     //TODO make this dynamic from a config
-    if (sender -> module() == Modules::DEAD_MAN_SWITCH)
+    if (sender -> module() == Modules::POWER_LIMIT)
     {
       //Handle dead man switch
-      if (eventId == Dead_man_switch::Events::VEHICLE_ISDEAD)
+      if (eventId == Power_limit::Events::LIMIT_DEAD)
       {
         //Handle vehicle dead
-        mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::VEHICLE_DEAD);
+      //  mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::VEHICLE_DEAD);
         //Handle neopixels
+        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::VEHICLE_DEAD);
         mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_DEAD);
         //Handle sta connection
         //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
       }
-      else if (eventId == Dead_man_switch::Events::VEHICLE_ISALIVE)
+      else if (eventId == Power_limit::Events::LIMIT_ALIVE)
       {
         //Handle vehicle dead
-        mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::VEHICLE_ALIVE);
+    //    mModules -> command(Modules::POWER_LIMIT, (byte)Power_limit::Commands::VEHICLE_ALIVE);
         //Handle neopixels
+        mModules -> command(Modules::NEOPIXELS, (byte)Neopixels::Commands::VEHICLE_ALIVE);
         mModules -> command(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_ALIVE);
         //Handle sta connection
         //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);

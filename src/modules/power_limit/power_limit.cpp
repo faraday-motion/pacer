@@ -6,10 +6,10 @@
 void Power_limit::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -18,6 +18,25 @@ void Power_limit::loop()
   if (enabled())
   {
     Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+    if (mSensor == nullptr && mDeadSensorName != "")
+      mSensor = mFMV -> sensors().getBoolSensor(mDeadSensorName);
+
+    bool isDead = mIsVehicleDead;
+    if (mSensor != nullptr)
+      isDead = mSensor -> getValue();
+
+    //Only do on change
+    if (isDead && mIsVehicleDead != isDead)
+    {
+      mIsPowerReset = false;
+      onEvent(Events::LIMIT_DEAD);
+    }
+    else if (!isDead && mIsVehicleDead != isDead)
+    {
+      onEvent(Events::LIMIT_ALIVE);
+    }
+    mIsVehicleDead = isDead;
+
     if (mIsVehicleDead)
     {
       mInputControl.reset();
@@ -63,10 +82,10 @@ void Power_limit::loop()
           mOutputControl.resetDirection();
       }
     }
-    mFMV -> sensors().add("accel", mOutputControl.getPower());
-    mFMV -> sensors().add("brake", mOutputControl.getBrake());
-    mFMV -> sensors().add("left", mOutputControl.getLeft());
-    mFMV -> sensors().add("right", mOutputControl.getRight());
+    mFMV -> sensors().setByteSensor("accel", mOutputControl.getPower());
+    mFMV -> sensors().setByteSensor("brake", mOutputControl.getBrake());
+    mFMV -> sensors().setByteSensor("left", mOutputControl.getLeft());
+    mFMV -> sensors().setByteSensor("right", mOutputControl.getRight());
   }
 }
 
@@ -99,17 +118,6 @@ void Power_limit::command(byte command)
     case Commands::DRIVE_MODE_0 :
       setPowerMax(0);
       onEvent(Events::LIMIT_0);
-      break;
-    case Commands::VEHICLE_DEAD :
-      mIsVehicleDead = true;
-      mIsPowerReset = false;
-      mInputControl.reset();
-      mOutputControl.reset();
-      onEvent(Events::LIMIT_DEAD);
-      break;
-    case Commands::VEHICLE_ALIVE :
-      mIsVehicleDead = false;
-      onEvent(Events::LIMIT_ALIVE);
       break;
     }
   }

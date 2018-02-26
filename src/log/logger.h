@@ -45,6 +45,12 @@ public:
  // @param String, the message.
  void write(LogLevel level, String message, String value = "");
 
+ void setBufferSize(int size)
+ {
+    if (size < 0)
+     size = 0;
+    mLogBufferSize = size;
+ }
 protected:
   Logger(){}; // Constructor is protected
   Logger(Logger const&){};// copy constructor is protected
@@ -52,7 +58,7 @@ protected:
 private:
   std::vector<ILog*> loggerVector;
   std::queue<LogItem*> logItemVector;
-
+  int mLogBufferSize = LOGGER_LOG_BUFFER;
 };
 
 #endif

@@ -31,5 +31,5 @@ void Analog_sensor::command(byte command)
 
 void Analog_sensor::readAnalogPin()
 {
-  mFMV -> sensors().add(mSensorName, Tools::analogReadMultiple(mPin, 3));
+  mFMV -> sensors().setIntSensor(mSensorName, Tools::analogReadMultiple(mPin, 3));
 }

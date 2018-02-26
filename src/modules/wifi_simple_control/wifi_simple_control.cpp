@@ -6,6 +6,7 @@
 void Wifi_simple_control::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
@@ -13,7 +14,6 @@ void Wifi_simple_control::setup() {
     pServer -> begin();
     pServer -> setNoDelay(true);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -29,11 +29,6 @@ void Wifi_simple_control::loop()
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       readInput();
-      if (isActive())
-      {
-        mFMV -> sensors().add("active", id());
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Wifi_simple_control: "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-      }
       clientTimeoutCheck();
     }
   }

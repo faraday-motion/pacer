@@ -16,6 +16,8 @@ private:
   bool mIsVehicleDead = false;
   //Checks if the power has been reset after a dead event
   bool mIsPowerReset = true;
+  Bool_sensor_value * mSensor = nullptr;
+  String mDeadSensorName = "";
 protected:
   void onDisable();
   void onEvent(byte eventId)
@@ -33,8 +35,6 @@ public:
   }
 
   enum Commands : byte {
-    VEHICLE_DEAD,
-    VEHICLE_ALIVE,
     DRIVE_MODE_0,
     DRIVE_MODE_20,
     DRIVE_MODE_40,
@@ -59,6 +59,7 @@ public:
   {
     mSimpleTimer.setName("Power_limit");
     mSimpleTimer.setInterval(15, 30);
+    mDeadSensorName = mCfg -> deadSensorName;
     setEnabled(mCfg -> enabled);
   }
 

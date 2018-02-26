@@ -21,7 +21,7 @@ public:
 
       //0
       Serial_log_config* cfg0 = new Serial_log_config(id++);
-      cfg0 -> logLevel = LogLevel::DEBUG;
+      cfg0 -> logLevel = LogLevel::WARNING;
       cfg0 -> enabled = true;
       Configurator::Instance().addConfig(cfg0);
 
@@ -88,17 +88,9 @@ public:
       cfg1 -> sensorName = "dead";
       Configurator::Instance().addConfig(cfg1);
 
-      //8
-      Dead_man_switch_config* cfg2 = new Dead_man_switch_config(id++);
-      cfg2 -> sensorId = cfg1 -> id;
-      cfg2 -> sensorName = "dead";
-      Configurator::Instance().addConfig(cfg2);
-
       //9
-      /*
       Neopixels_config* cfg3 = new Neopixels_config(id++);
       Configurator::Instance().addConfig(cfg3);
-      */
 
       //10
       Analog_sensor_config* cfg8 = new Analog_sensor_config(id++);
@@ -122,6 +114,7 @@ public:
       //13
       Power_limit_config* cfg11 = new Power_limit_config(id++);
       cfg11 -> enabled = true;
+      cfg11 -> deadSensorName = "dead";
       Configurator::Instance().addConfig(cfg11);
 
       //14
@@ -129,12 +122,10 @@ public:
       cfg12 -> enabled = true;
       Configurator::Instance().addConfig(cfg12);
 
-/*
       //16
       Pwm_steering_config* cfg16 = new Pwm_steering_config(id++);
       cfg16 -> enabled = true;
       Configurator::Instance().addConfig(cfg16);
-*/
 
       //17
       Pwm_controller_config* cfg17 = new Pwm_controller_config(id++);
@@ -173,7 +164,8 @@ public:
 
       //22
       Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);
-      cfg21 -> enabled = false;
+      cfg21 -> enabled = true;
+      cfg21 -> logLevel = LogLevel::INFO;
       Configurator::Instance().addConfig(cfg21);
 
       /*

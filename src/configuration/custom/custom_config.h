@@ -12,7 +12,7 @@ public:
   }
 
 
-  void addConfigs0()
+  void addConfigs2()
   {
     byte id = 0;
 
@@ -36,6 +36,8 @@ public:
     cfg23 -> enabled = false;
     Configurator::Instance().addConfig(cfg23);
     */
+
+    /*
     //1
     Wheel_config* cfg4 = new Wheel_config(id++);
     cfg4 -> index = 0;
@@ -92,6 +94,7 @@ public:
     Dead_man_switch_config* cfg2 = new Dead_man_switch_config(id++);
     cfg2 -> sensorId = cfg1 -> id;
     Configurator::Instance().addConfig(cfg2);
+    */
 /*
     //9
     Neopixels_config* cfg3 = new Neopixels_config(id++);
@@ -111,6 +114,7 @@ public:
     cfg9 -> enabled = false;
     Configurator::Instance().addConfig(cfg9);
 */
+/*
     //12
     Exponential_power_modulation_config* cfg10 = new Exponential_power_modulation_config(id++);
     Configurator::Instance().addConfig(cfg10);
@@ -118,6 +122,7 @@ public:
     //13
     Power_limit_config* cfg11 = new Power_limit_config(id++);
     Configurator::Instance().addConfig(cfg11);
+    */
     /*
     //14
     Serial_control_config* cfg12 = new Serial_control_config(id++);
@@ -130,11 +135,12 @@ public:
     Configurator::Instance().addConfig(cfg16);
 
 */
+/*
     //17
     Pwm_controller_config* cfg17 = new Pwm_controller_config(id++);
     cfg17 -> enabled = true;
     Configurator::Instance().addConfig(cfg17);
-
+*/
 /*
     //18
     Web_update_config* cfg18 = new Web_update_config(id++);
@@ -156,6 +162,7 @@ public:
     cfg26 -> enabled = true;
     Configurator::Instance().addConfig(cfg26);
   */
+  /*
     //21
     Control_priority_config* cfg20 = new Control_priority_config(id++);
     cfg20 -> enabled = true;
@@ -164,7 +171,7 @@ public:
     //cfg20 -> priority3 = cfg12 -> id; //Serial
     //cfg20 -> priority4 = cfg9 -> id; //Force
     Configurator::Instance().addConfig(cfg20);
-
+*/
 /*
     //22
     Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);

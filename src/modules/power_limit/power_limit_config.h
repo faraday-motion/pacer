@@ -14,12 +14,15 @@ public:
 
   void getModuleConfiguration(JsonObject &root)
   {
+    root["deadSensorName"] = deadSensorName;
   }
 
   void setModuleConfiguration(JsonObject &root)
   {
+    deadSensorName = root["deadSensorName"].as<String>();
   }
 
+  String deadSensorName = "";
 };
 
 #endif

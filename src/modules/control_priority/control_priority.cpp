@@ -31,7 +31,7 @@ void Control_priority::loop()
       if (activeControl != nullptr)
       {
         activeId = activeControl -> id();
-        mFMV -> sensors().add("active", activeId);
+        mFMV -> sensors().setIntSensor("active", activeId);
       }
 
       Control_module * priority1 = nullptr;

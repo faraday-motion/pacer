@@ -9,7 +9,7 @@ class Force_control : virtual public Control_module
 {
 private:
   FMV * mFMV = nullptr;
-  Sensor_value * mSensorY = nullptr;
+  Int_sensor_value * mSensorY = nullptr;
   int mDeadbandY = 50;
   int mNeutralY = 512;
   int mLimitYMin = 0;

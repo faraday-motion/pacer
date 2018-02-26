@@ -12,6 +12,7 @@ using namespace std::placeholders;
 void Mqtt_client::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     randomSeed(micros());
@@ -20,7 +21,6 @@ void Mqtt_client::setup() {
     //If setCallback line is failing, the pubsubclient needs to be modified
     pMqttClient -> setCallback(std::bind(&Mqtt_client::callback, this, _1, _2, _3));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 

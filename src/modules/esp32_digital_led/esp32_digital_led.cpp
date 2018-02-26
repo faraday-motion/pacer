@@ -9,16 +9,24 @@ void Esp32_digital_led::setup()
 {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     gpioSetup(mPin, OUTPUT, LOW);
-    strand_t STRAND = {.rmtChannel = 2, .gpioNum = mPin, .ledType = LED_WS2812B_V3, .brightLimit = 32, .numPixels =  mPixelcount,.pixels = nullptr, ._stateVars = nullptr};
-    strand_t * STRANDS = {&STRAND};
-    if (digitalLeds_initStrands(STRANDS, 1)) {
-    }
-    mPixels = &STRANDS[0];
+    mSTRAND = new strand_t;
+    mSTRAND -> rmtChannel = 1;
+    mSTRAND -> gpioNum = mPin;
+    mSTRAND -> ledType = LED_WS2812B_V3;
+    mSTRAND -> brightLimit = 32;
+    mSTRAND -> numPixels =  mPixelcount;
+    mSTRAND -> pixels = nullptr;
+    mSTRAND -> _stateVars = nullptr;
+    if (digitalLeds_initStrand(mSTRAND) == -1)
+      Logger::Instance().write(LogLevel::INFO, FPSTR("NOT INITIALIZED"));
+    else
+      Logger::Instance().write(LogLevel::INFO, FPSTR("INITIALIZED"));
+    //dead();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -29,11 +37,11 @@ void Esp32_digital_led::loop()
     if (mSimpleTimer.check())
     {
     //  Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      dead();
+      //dead();
       //if (currIdx >= pStrand->numPixels)
       //digitalLeds_resetPixels(strands[i]);
-      delay(1);
-      digitalLeds_updatePixels(mPixels);
+      //delay(1);
+      //digitalLeds_updatePixels(&mSTRAND);
     }
   }
 }
@@ -92,7 +100,7 @@ void Esp32_digital_led::reset()
   //digitalLeds_resetPixels(mPixels);
   pixelColor_t color = pixelFromRGB(0, 0, 0);
   for(byte i=0;i<mPixelcount;i++){
-    mPixels -> pixels[i] = color;
+    mSTRAND -> pixels[i] = color;
   }
 }
 
@@ -100,7 +108,7 @@ void Esp32_digital_led::dead()
 {
   pixelColor_t color = pixelFromRGB(255, 0, 0);
   for(byte i=0;i<mPixelcount;i++){
-    mPixels -> pixels[i] = color;
+    mSTRAND -> pixels[i] = color;
   }
 }
 

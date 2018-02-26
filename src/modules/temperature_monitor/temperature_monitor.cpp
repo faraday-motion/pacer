@@ -17,16 +17,14 @@ void Temperature_monitor::loop()
   if (enabled())
   {
     if (mSensor == nullptr)
-      mSensor = mFMV -> sensors().get(mSensorName);
+      mSensor = mFMV -> sensors().getFloatSensor(mSensorName);
     if (mSensor != nullptr)
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      if (mSensor -> hasNewValue())
+      if (mSensor -> valueChanged())
       {
-        int val = mSensor -> getIntValue();
-        //mFMV -> sensors().add("Temp", val);
-
-        if (val < mMaxTemperature)
+        float val = mSensor -> getValue();
+        if (val < mMinTemperature)
             onEvent(Events::WARNING_LOW_TEMPERATURE);
         else if (val > mMaxTemperature)
             onEvent(Events::WARNING_HIGH_TEMPERATURE);

@@ -20,11 +20,6 @@ public:
   {
       Modulebase* mod = nullptr;
       switch(configuration) {
-      case Configurations::DEAD_MAN_SWITCH_CONFIG :
-        Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance DEAD_MAN_SWITCH_CONFIG"));
-        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-        mod = new Dead_man_switch(id, fmv);
-        break;
       case Configurations::NEOPIXELS_CONFIG :
         Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance NEOPIXELS_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));

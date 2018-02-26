@@ -5,11 +5,11 @@
 void Joystick_control::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -19,10 +19,10 @@ void Joystick_control::loop()
   {
     Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
     if (mSensorY == nullptr)
-      mSensorY = mFMV -> sensors().get(mSensorNameY);
+      mSensorY = mFMV -> sensors().getIntSensor(mSensorNameY);
     if (mSensorY != nullptr && mSensorY -> valueChanged())
     {
-      int valueY = constrain(mSensorY -> getIntValue(), mLimitYMin, mLimitYMax);
+      int valueY = constrain(mSensorY -> getValue(), mLimitYMin, mLimitYMax);
       if (valueY > mNeutralY + mDeadbandY)
       {
         //Accelerate
@@ -49,10 +49,10 @@ void Joystick_control::loop()
     }
 
     if (mSensorX == nullptr)
-      mSensorX = mFMV -> sensors().get(mSensorNameX);
+      mSensorX = mFMV -> sensors().getIntSensor(mSensorNameX);
     if (mSensorX != nullptr && mSensorX -> valueChanged())
     {
-      int valueX = constrain(mSensorX -> getIntValue(), mLimitXMin, mLimitXMax);
+      int valueX = constrain(mSensorX -> getValue(), mLimitXMin, mLimitXMax);
       if (valueX > mNeutralX + mDeadbandX)
       {
         //Right
@@ -76,12 +76,6 @@ void Joystick_control::loop()
         mLeft = 0;
         mOutputControl.resetDirection();
       }
-    }
-    if (isActive())
-    {
-      //mFMV -> sensors().add("active", id());
-      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Joystick_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-      //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Joystick_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
     }
     clientTimeoutCheck();
   }

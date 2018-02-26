@@ -5,10 +5,10 @@
 void Current_monitor::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -17,13 +17,13 @@ void Current_monitor::loop()
   if (enabled())
   {
     if (mSensor == nullptr)
-      mSensor = mFMV -> sensors().get(mSensorName);
+      mSensor = mFMV -> sensors().getFloatSensor(mSensorName);
     if (mSensor != nullptr)
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      if (mSensor -> hasNewValue())
+      if (mSensor -> valueChanged())
       {
-        if (mSensor -> getIntValue() > mMaxCurrent)
+        if (mSensor -> getValue() > mMaxCurrent)
         {
             onEvent(Events::WARNING_HIGH_CURRENT);
         }

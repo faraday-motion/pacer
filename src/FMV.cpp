@@ -12,6 +12,7 @@
 #include "./configuration/custom/custom_eventrules.h"
 
 #include "./factory/modulefactory.h"
+#include "./sensors/sensors.hpp"
 
 #include "./enums/modules.h"
 
@@ -32,6 +33,7 @@ void FMV::setup() {
 //    pSpiffs_config = new Spiffs_config();
 
     //Delete the SPIFFS file configs if there are problems with the old configuration
+    //No need for buffering after the initializion of serial
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring Modules"));
     Configurator::Instance().configs().load(new Custom_config(), true);
     //Normal loading of saved configurations from spiffs
@@ -44,6 +46,7 @@ void FMV::setup() {
     mEventRules = new Custom_eventrules(mModules);
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));
     mModules -> setup();
+    Logger::Instance().setBufferSize(0);
     mModules -> listEnabled();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Faraday Motion Pacer v"), String(mVersion));

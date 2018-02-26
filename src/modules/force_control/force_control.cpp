@@ -5,11 +5,11 @@
 void Force_control::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE, true);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -21,11 +21,10 @@ void Force_control::loop()
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (mSensorY == nullptr)
-        mSensorY = mFMV -> sensors().get(mSensorName);
+        mSensorY = mFMV -> sensors().getIntSensor(mSensorName);
       if (mSensorY != nullptr && mSensorY -> valueChanged())
       {
-        int valueY = constrain(mSensorY -> getIntValue(), mLimitYMin, mLimitYMax);
-        //mFMV -> sensors().add("FORCE", valueY);
+        int valueY = constrain(mSensorY -> getValue(), mLimitYMin, mLimitYMax);
         if (valueY > mNeutralY + mDeadbandY)
         {
           //Accelerate
@@ -52,12 +51,6 @@ void Force_control::loop()
           mOutputControl.resetPower();
           onEvent(Events::DRIVE_NEUTRAL);
         }
-      }
-      if (isActive())
-      {
-        //mFMV -> sensors().add("active", id());
-        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::Power "), String(mOutputControl.getPower()) + " " + String(mOutputControl.getBrake()));
-        //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Force_control::Turning "), String(mOutputControl.getLeft()) + " " + String(mOutputControl.getRight()));
       }
     }
     clientTimeoutCheck();

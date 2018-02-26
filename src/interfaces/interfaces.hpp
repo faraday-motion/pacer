@@ -11,5 +11,6 @@
 #include "./irecieve.h"
 #include "./iconnection.h"
 #include "./iconfigurable.h"
+#include "./isensorvalue.h"
 
 #endif

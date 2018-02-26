@@ -32,7 +32,7 @@ void Boolean_sensor::command(byte command)
 void Boolean_sensor::readBooleanPin()
 {
   if (!mInvert)
-    mFMV -> sensors().add(mSensorName, !Tools::digitalReadMultiple(mPin, 3));
+    mFMV -> sensors().setBoolSensor(mSensorName, !Tools::digitalReadMultiple(mPin, 3));
   else
-    mFMV -> sensors().add(mSensorName, Tools::digitalReadMultiple(mPin, 3));
+    mFMV -> sensors().setBoolSensor(mSensorName, Tools::digitalReadMultiple(mPin, 3));
 }

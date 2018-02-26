@@ -28,6 +28,7 @@ static void vescTimerTask(void * parameter)
 void Vesc_controller::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("DefaultSerial: "), String(mVescDefaultSerial));
@@ -56,7 +57,6 @@ void Vesc_controller::setup() {
     }
     createTimerTask();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -183,19 +183,19 @@ void Vesc_controller::setValues(mc_values * val)
   {
     wheelDecorators[mVescArrayIndex] -> setVescValues(mMotorValues);
     String idx = String(mVescArrayIndex);
-    mFMV -> sensors().add("vesc_" + idx + "_v_in", wheelDecorators[mVescArrayIndex] -> getVescValues().v_in);
-    mFMV -> sensors().add("vesc_" + idx + "_t_pcb", wheelDecorators[mVescArrayIndex] -> getVescValues().temp_pcb);
-    mFMV -> sensors().add("vesc_" + idx + "_rpm", wheelDecorators[mVescArrayIndex] -> getVescValues().rpm);
-    mFMV -> sensors().add("vesc_" + idx + "_c_mot", wheelDecorators[mVescArrayIndex] -> getVescValues().current_motor);
-    mFMV -> sensors().add("vesc_" + idx + "_c_in", wheelDecorators[mVescArrayIndex] -> getVescValues().current_in);
-    mFMV -> sensors().add("vesc_" + idx + "_duty", wheelDecorators[mVescArrayIndex] -> getVescValues().duty_now);
-    mFMV -> sensors().add("vesc_" + idx + "_a_hours", wheelDecorators[mVescArrayIndex] -> getVescValues().amp_hours);
-    mFMV -> sensors().add("vesc_" + idx + "_a_charged", wheelDecorators[mVescArrayIndex] -> getVescValues().amp_hours_charged);
-    mFMV -> sensors().add("vesc_" + idx + "_w_hours", wheelDecorators[mVescArrayIndex] -> getVescValues().watt_hours);
-    mFMV -> sensors().add("vesc_" + idx + "_w_charged", wheelDecorators[mVescArrayIndex] -> getVescValues().watt_hours_charged);
-    mFMV -> sensors().add("vesc_" + idx + "_tacho", wheelDecorators[mVescArrayIndex] -> getVescValues().tachometer);
-    mFMV -> sensors().add("vesc_" + idx + "_techo_abs", wheelDecorators[mVescArrayIndex] -> getVescValues().tachometer_abs);
-    mFMV -> sensors().add("vesc_" + idx + "_fault", wheelDecorators[mVescArrayIndex] -> getVescValues().fault_code);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_v_in", wheelDecorators[mVescArrayIndex] -> getVescValues().v_in);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_t_pcb", wheelDecorators[mVescArrayIndex] -> getVescValues().temp_pcb);
+    mFMV -> sensors().setIntSensor("vesc_" + idx + "_rpm", wheelDecorators[mVescArrayIndex] -> getVescValues().rpm);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_c_mot", wheelDecorators[mVescArrayIndex] -> getVescValues().current_motor);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_c_in", wheelDecorators[mVescArrayIndex] -> getVescValues().current_in);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_duty", wheelDecorators[mVescArrayIndex] -> getVescValues().duty_now);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_a_hours", wheelDecorators[mVescArrayIndex] -> getVescValues().amp_hours);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_a_charged", wheelDecorators[mVescArrayIndex] -> getVescValues().amp_hours_charged);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_w_hours", wheelDecorators[mVescArrayIndex] -> getVescValues().watt_hours);
+    mFMV -> sensors().setFloatSensor("vesc_" + idx + "_w_charged", wheelDecorators[mVescArrayIndex] -> getVescValues().watt_hours_charged);
+    mFMV -> sensors().setIntSensor("vesc_" + idx + "_tacho", wheelDecorators[mVescArrayIndex] -> getVescValues().tachometer);
+    mFMV -> sensors().setIntSensor("vesc_" + idx + "_techo_abs", wheelDecorators[mVescArrayIndex] -> getVescValues().tachometer_abs);
+    mFMV -> sensors().setByteSensor("vesc_" + idx + "_fault", wheelDecorators[mVescArrayIndex] -> getVescValues().fault_code);
 
     if (mVescArrayIndex+1 >= wheelDecorators.size())
       mVescArrayIndex = 0;

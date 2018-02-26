@@ -11,9 +11,11 @@
 using namespace std;
 using namespace std::placeholders;
 
+//TODO Needs to be merged with the previous fix from Cemal https://github.com/faraday-motion/pacer/commit/4f79a2408992c2b82881a983fc810ae0f4b92f1e
 void Websocket_connection::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
 //    onEvent(Events::CONFIGURE, true);
@@ -22,7 +24,6 @@ void Websocket_connection::setup() {
     mWebSocketsServer -> begin();
     mWebSocketsServer -> onEvent(std::bind(&Websocket_connection::onWsEvent, this, _1, _2, _3, _4));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -42,13 +43,14 @@ void Websocket_connection::send(String message)
 {
   if (enabled())
   {
-    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_connection::send: "), message);
-    message = "{\"response\":" + message + "}";
+    //Not allowed to add any log writes here as it creates a recursive loop.
+    //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket_connection::send: "), message);
+    message = "{\"response\":\"ok\"" + message + "}";
     for (uint8_t i = 0; i < pClients.size(); i++) {
       if (mWebSocketsServer != nullptr)
         mWebSocketsServer -> sendTXT(pClients[i], message);
     }
-    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Finished Websocket_connection::send "));
+    //Logger::Instance().write(LogLevel::DEBUG, FPSTR("Finished Websocket_connection::send "));
   }
 }
 
@@ -71,7 +73,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("Client ID: "), String(i));
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("Client IP: "), Tools::ipAddressToString(clientIp));
         }
-        String response = FPSTR("{\"CONNECTED\":\"true\"}");
+        String response = FPSTR("{\"response\":\"ok\"}");
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket resonse: "), response);
         mWebSocketsServer -> sendTXT(num, response);
       }
@@ -100,13 +102,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           recievers()[i] -> recieve(command, value);
         }
 
-        if (command == 100)
-        {
-          Spiffs_storage storage;
-          //storage.read("/drivelog.txt", pWriter);
-        }
-
-        String response = "{\"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\",\"response\": \"" + "OK" + "\"}";
+        String response = "{\"response\":\"ok\", \"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\"}";
         mWebSocketsServer -> sendTXT(num, response);
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket resonse: "), response);
       }

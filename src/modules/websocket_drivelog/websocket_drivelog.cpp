@@ -45,7 +45,7 @@ void Websocket_drivelog::getWebsocketConnection()
 
 void Websocket_drivelog::writeSensorValues()
 {
-  String sv = "{ \"drive_log\": {";
+  String sv = ", \"content\":{";
   std::vector<Sensor_value*> sensors = mFMV -> sensors().all();
   for (int i=0; i< sensors.size(); i++)
   {
@@ -53,7 +53,7 @@ void Websocket_drivelog::writeSensorValues()
     if (i < sensors.size()-1)
       sv += ",";
   }
-  sv += "}}";
+  sv += "}";
   if (pIConnection != nullptr)
     pIConnection -> send(sv);
 }

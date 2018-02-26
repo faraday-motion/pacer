@@ -48,12 +48,12 @@ void Logger::write(LogLevel level, String message, String value)
   while (popItem == true)
   {
     popItem = false;
-    for (int i=0; i<loggerVector.size(); i++)
+    for (byte i=0; i<loggerVector.size(); i++)
     {
-      li = logItemVector.front();
       if (logItemVector.size() > 0)
       {
         popItem = true;
+        li = logItemVector.front();
         loggerVector[i] -> write(li -> level, li -> message);
       }
     }

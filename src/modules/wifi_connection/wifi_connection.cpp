@@ -13,12 +13,12 @@ static byte sWiFiEventId = 0;
 void Wifi_connection::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     //setWifiStation();
     setWifiAp();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 
@@ -112,11 +112,11 @@ void Wifi_connection::command(byte command)
     }
     else if (comm == Commands::CONNECTION_WIFI_AP)
     {
-      setWifiAp();
+      //setWifiAp();
     }
     else if (comm == Commands::CONNECTION_WIFI_STA)
     {
-      setWifiStation();
+      //setWifiStation();
     }
   }
 }

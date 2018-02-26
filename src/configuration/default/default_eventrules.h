@@ -110,7 +110,7 @@ public:
       //Enable wifi for wifi simple control
       if (eventId == Control_module::Events::CONFIGURE)
       {
-        mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        //mModules -> command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
   }

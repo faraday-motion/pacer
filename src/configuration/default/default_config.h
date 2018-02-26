@@ -162,7 +162,6 @@ public:
       cfg26 -> enabled = true;
       Configurator::Instance().addConfig(cfg26);
 
-
       //21
       Control_priority_config* cfg20 = new Control_priority_config(id++);
       cfg20 -> enabled = true;
@@ -172,12 +171,13 @@ public:
       cfg20 -> priority4 = cfg9 -> id; //Force
       Configurator::Instance().addConfig(cfg20);
 
-      /*
-
       //22
       Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);
       cfg21 -> enabled = false;
       Configurator::Instance().addConfig(cfg21);
+
+      /*
+
       //23
       Ntp_timeservice_config* cfg22 = new Ntp_timeservice_config(id++);
       cfg22 -> enabled = false;

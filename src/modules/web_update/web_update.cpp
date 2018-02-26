@@ -47,6 +47,7 @@ const char* serverIndex PROGMEM = "<script src='https://ajax.googleapis.com/ajax
 void Web_update::setup() {
   if (mIsSetup == false)
   {
+    mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Configurator::Instance().initializeSpiff();
@@ -83,7 +84,6 @@ void Web_update::setup() {
     });
     mWebserver -> begin();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-    mIsSetup = true;
   }
 }
 

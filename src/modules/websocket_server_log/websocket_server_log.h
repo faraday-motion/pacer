@@ -13,6 +13,7 @@ private:
   Websocket_server_log_config* mCfg = nullptr;
   FMV * mFMV = nullptr;
   IConnection * pIConnection = nullptr;
+
   void getWebsocketConnection()
   {
     //Find the websocket connection module
@@ -26,7 +27,6 @@ private:
       }
     }
   }
-
 protected:
 public:
   Websocket_server_log(byte id, FMV * fmv = nullptr, Websocket_server_log_config * mfg = nullptr) : Log_module(id, Modules::WEBSOCKET_SERVER_LOG){
@@ -35,7 +35,6 @@ public:
       mCfg = static_cast<Websocket_server_log_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_SERVER_LOG_CONFIG));
     else
       mCfg = mfg;
-    //getWebsocketConnection();
     setConfig();
   };
 
@@ -49,7 +48,7 @@ public:
   {
     if (enabled() && level >= getLevel())
     {
-      //getWebsocketConnection();
+      message = ",\"content\":\"" + message + "\"";
       if (pIConnection != nullptr)
         pIConnection -> send(message);
     }
@@ -59,11 +58,12 @@ public:
   {
     if (mIsSetup == false)
     {
+      mIsSetup = true;
       Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
       Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+      getWebsocketConnection();
       Logger::Instance().addLog(this);
       Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
-      mIsSetup = true;
     }
   }
 

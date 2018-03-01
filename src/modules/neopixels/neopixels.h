@@ -90,7 +90,7 @@ private:
 protected:
   FMV * mFMV = nullptr;
   void onDisable();
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

@@ -68,6 +68,7 @@ void FMV::moduleEvent(Modulebase* sender, byte eventId)
 {
   //DISABLE FOR NOW
   //return;
+  Logger::Instance().write(LogLevel::DEBUG, FPSTR("FMV::moduleEvent Module: "), String(sender -> module()) + "eventId: " + String(eventId));
   mEventRules -> moduleEvent(sender, eventId);
 }
 

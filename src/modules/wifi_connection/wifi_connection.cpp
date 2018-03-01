@@ -16,8 +16,7 @@ void Wifi_connection::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    //setWifiStation();
-    setWifiAp();
+    onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
@@ -82,7 +81,7 @@ void Wifi_connection::setWifiStation()
        Serial.print(".");
    }
    onEvent(Events::WIFI_STA_STARTED);
-  Logger::Instance().write(LogLevel::INFO, FPSTR("ArduinoOTA IP address: "), Tools::ipAddressToString(WiFi.localIP()));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection IP address: "), Tools::ipAddressToString(WiFi.localIP()));
 }
 
 void Wifi_connection::onWiFiEvent(WiFiEvent_t event)
@@ -90,11 +89,11 @@ void Wifi_connection::onWiFiEvent(WiFiEvent_t event)
     //Hack as i could not make the bind function work
     switch(event) {
     case SYSTEM_EVENT_STA_GOT_IP:
-        Logger::Instance().write(LogLevel::INFO, FPSTR("WiFi connected, IP address: "), String(WiFi.localIP()));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection IP address: "), String(WiFi.localIP()));
         sWiFiEventId = 1;
         break;
     case SYSTEM_EVENT_STA_DISCONNECTED:
-        Logger::Instance().write(LogLevel::INFO, FPSTR("WiFi lost connection"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection lost connection"));
         sWiFiEventId = 2;
         break;
     }
@@ -108,15 +107,15 @@ void Wifi_connection::command(byte command)
     Commands comm = static_cast<Commands>(command);
     if (comm == Commands::CONNECTION_WIFI_OFF)
     {
-      //setWifiOff();
+      setWifiOff();
     }
     else if (comm == Commands::CONNECTION_WIFI_AP)
     {
-      //setWifiAp();
+      setWifiAp();
     }
     else if (comm == Commands::CONNECTION_WIFI_STA)
     {
-      //setWifiStation();
+      setWifiStation();
     }
   }
 }

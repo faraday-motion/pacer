@@ -14,11 +14,12 @@ public:
   static const byte DRIVE_BRAKE = 5;
   static const byte TURN_LEFT = 6;
   static const byte TURN_RIGHT = 7;
-  static const byte DRIVE_MODE_20 = 8;
-  static const byte DRIVE_MODE_40 = 9;
-  static const byte DRIVE_MODE_60 = 10;
-  static const byte DRIVE_MODE_80 = 11;
-  static const byte DRIVE_MODE_100 = EXTERNALCOMMANDS_LIMIT;
+  static const byte DRIVE_MODE_0 = 8;
+  static const byte DRIVE_MODE_20 = 9;
+  static const byte DRIVE_MODE_40 = 10;
+  static const byte DRIVE_MODE_60 = 11;
+  static const byte DRIVE_MODE_80 = 12;
+  static const byte DRIVE_MODE_100 = 13;
 };
 
 #endif

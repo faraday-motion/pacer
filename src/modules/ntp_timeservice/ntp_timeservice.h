@@ -17,10 +17,14 @@ private:
   struct tm mTimeInfo;
   Ntp_timeservice_config* mCfg = nullptr;
   void getTime();
+  void updateTime();
   SimpleTimer mSimpleTimer;
   bool mGotDateTime = false;
 protected:
-
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Ntp_timeservice(byte id, FMV *fmv, Ntp_timeservice_config* cfg = nullptr) : Modulebase(id, Modules::NTP_TIMESERVICE)  {
     mFMV = fmv;
@@ -36,7 +40,7 @@ public:
   };
 
   enum Events : byte {
-
+    CONFIGURE
   };
 
   void setConfig()

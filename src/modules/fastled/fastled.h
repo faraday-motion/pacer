@@ -11,7 +11,11 @@ private:
   bool mIsDirty = false;
 protected:
   FMV *mFMV;
-    void onDisable();
+  void onDisable();
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Fastled(byte id, FMV *fmv, int interval = 25, int critical = 50) : Modulebase(id, Modules::FASTLED)  {
     mFMV = fmv;

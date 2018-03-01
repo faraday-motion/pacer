@@ -32,8 +32,6 @@ void Serial_control::loop()
     if (readSerial(command, value))
     {
       recieve(command, value);
-      if (command == 99)
-        mFMV -> modules().command(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
     }
     clientTimeoutCheck();
   }

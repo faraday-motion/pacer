@@ -93,11 +93,12 @@ void Power_limit::command(byte command)
 {
   if (enabled())
   {
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Power_limit::command: "), String(command));
     Commands comm = static_cast<Commands>(command);
     switch(comm) {
     case Commands::DRIVE_MODE_100 :
       setPowerMax(100);
-      onEvent(Events::LIMIT_NONE);
+      onEvent(Events::LIMIT_100);
       break;
     case Commands::DRIVE_MODE_80 :
       setPowerMax(80);
@@ -135,5 +136,5 @@ void Power_limit::onDisable()
     setPowerMax(100);
     mInputControl.reset();
     mOutputControl.reset();
-    onEvent(Events::LIMIT_NONE);
+    onEvent(Events::LIMIT_100);
 }

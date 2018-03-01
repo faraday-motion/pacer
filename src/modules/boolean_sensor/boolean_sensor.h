@@ -18,6 +18,10 @@ private:
   String mSensorName = "";
   SimpleTimer mSimpleTimer;
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
     Boolean_sensor(byte id, FMV *fmv, Boolean_sensor_config * cfg = nullptr) : Modulebase(id, Modules::BOOLEAN_SENSOR)
     {

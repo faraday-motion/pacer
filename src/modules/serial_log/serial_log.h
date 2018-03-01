@@ -12,7 +12,7 @@ private:
     Serial_log_config* mCfg = nullptr;
     FMV * mFMV = nullptr;
 protected:
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

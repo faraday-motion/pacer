@@ -61,7 +61,7 @@ public:
     return nullptr;
   }
 
-  void command(byte id, byte command)
+  void commandById(byte id, byte command)
   {
     Modulebase* m = get(id);
     if (m != nullptr)

@@ -25,8 +25,12 @@ protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {
+    Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent eventId: ") + String(eventId));
     if (always || isActive())
+    {
+      Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent moduleEvent eventId: ") + String(eventId));
       mFMV -> moduleEvent(this, eventId);
+    }
   }
 public:
   Wifi_simple_control(byte id, FMV *fmv, Wifi_simple_control_config* cfg = nullptr) : Control_module(id, Modules::WIFI_SIMPLE_CONTROL)  {

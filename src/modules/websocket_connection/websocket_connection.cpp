@@ -100,7 +100,12 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           recievers()[i] -> recieve(command, value);
         }
 
-        String response = "{\"response\":\"ok\", \"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\"}";
+
+        String response = "";
+        if (id > 0)
+          response = "{\"response\":\"ok\", \"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\"}";
+        else
+          response = "{\"response\":\"ok\", \"command\":\"" + String(command) + "\"}";
         mWebSocketsServer -> sendTXT(num, response);
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket resonse: "), response);
       }

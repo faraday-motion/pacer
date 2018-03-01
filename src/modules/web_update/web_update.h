@@ -21,7 +21,7 @@ private:
   SimpleTimer mSimpleTimer;
   Web_update_config* mCfg = nullptr;
 protected:
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

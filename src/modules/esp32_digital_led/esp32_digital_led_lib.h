@@ -108,7 +108,6 @@ const ledParams_t ledParamsAll[] = {  // Still must match order of `led_types`
   [LED_SK6812W_V1] = { .bytesPerPixel = 4, .T0H = 300, .T1H = 600, .T0L = 900, .T1L = 600, .TRS =  80000},
 };
 
-extern int digitalLeds_initStrand(strand_t * pStrand);
 extern int digitalLeds_initStrands(strand_t strands [], int numStrands);
 extern int digitalLeds_updatePixels(strand_t * strand);
 extern void digitalLeds_resetPixels(strand_t * pStrand);

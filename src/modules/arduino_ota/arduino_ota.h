@@ -17,7 +17,7 @@ private:
   String mHostName = "";
   String mPassword = "";
 protected:
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

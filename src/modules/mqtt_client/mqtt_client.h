@@ -19,7 +19,7 @@ private:
   void reconnect() ;
   void callback(char* topic, uint8_t* payload, unsigned int length);
 protected:
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

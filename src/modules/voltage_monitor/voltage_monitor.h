@@ -17,7 +17,7 @@ private:
   Voltage_monitor_config* mCfg = nullptr;
   String mSensorName = "";
 protected:
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

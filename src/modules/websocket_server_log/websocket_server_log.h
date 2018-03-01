@@ -28,6 +28,10 @@ private:
     }
   }
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Websocket_server_log(byte id, FMV * fmv = nullptr, Websocket_server_log_config * mfg = nullptr) : Log_module(id, Modules::WEBSOCKET_SERVER_LOG){
     mFMV = fmv;

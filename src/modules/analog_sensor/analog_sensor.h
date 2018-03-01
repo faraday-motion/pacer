@@ -18,6 +18,10 @@ private:
   Analog_sensor_config * mCfg = nullptr;
   SimpleTimer mSimpleTimer;
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
     Analog_sensor(byte id, FMV *fmv, Analog_sensor_config* cfg = nullptr) : Modulebase(id, Modules::ANALOG_SENSOR){
       mFMV = fmv;

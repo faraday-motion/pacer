@@ -20,7 +20,7 @@ private:
   String mDeadSensorName = "";
 protected:
   void onDisable();
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }
@@ -51,7 +51,7 @@ public:
     LIMIT_40,
     LIMIT_60,
     LIMIT_80,
-    LIMIT_NONE,
+    LIMIT_100,
     WARNING_SET_INPUT_NEUTRAL
   };
 

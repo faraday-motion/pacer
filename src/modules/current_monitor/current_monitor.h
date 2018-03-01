@@ -15,6 +15,10 @@ private:
   Current_monitor_config * mCfg = nullptr;
   String mSensorName = "";
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Current_monitor(byte id, FMV *fmv, Current_monitor_config* cfg = nullptr) : Modulebase(id, Modules::CURRENT_MONITOR)  {
     mFMV = fmv;

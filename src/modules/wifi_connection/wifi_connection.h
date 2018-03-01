@@ -25,7 +25,7 @@ private:
   void setWifiAp();
   void setWifiStation();
 protected:
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }
@@ -47,6 +47,7 @@ public:
   };
 
   enum Events : byte {
+    CONFIGURE,
     WIFI_AP_STARTED,
     WIFI_STA_STARTED,
     WIFI_STA_ENDED,

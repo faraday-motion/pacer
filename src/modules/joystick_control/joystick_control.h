@@ -32,8 +32,12 @@ protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {
+    Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent eventId: ") + String(eventId));
     if (always || isActive())
+    {
+      Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent moduleEvent eventId: ") + String(eventId));
       mFMV -> moduleEvent(this, eventId);
+    }
   }
 public:
   Joystick_control(byte id, FMV *fmv, Joystick_control_config* cfg = nullptr) : Control_module(id, Modules::JOYSTICK_CONTROL)  {

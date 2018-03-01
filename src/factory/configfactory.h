@@ -14,9 +14,9 @@
 class Configfactory{
 public:
 
-  static Configbase* getConfigInstance(int id, int configuration)
+  static Configbase * getConfigInstance(int id, int configuration)
   {
-      Configbase* cfg = nullptr;
+      Configbase * cfg = nullptr;
 
       switch(configuration) {
       case Configurations::BOOLEAN_SENSOR_CONFIG :

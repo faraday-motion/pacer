@@ -69,7 +69,7 @@ public:
     return FPSTR("ESP32_DIGITAL_LED");
   }
 private:
-  strand_t * mSTRAND;
+  //strand_t * mSTRAND;
   strand_t * mPixels;
   SimpleTimer mSimpleTimer;
   bool mIsVehicleDead = false;
@@ -92,7 +92,7 @@ private:
 protected:
   FMV *mFMV = nullptr;
   void onDisable();
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

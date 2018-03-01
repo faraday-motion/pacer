@@ -23,7 +23,7 @@ private:
   void onWsEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
 protected:
   void onDisable();
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

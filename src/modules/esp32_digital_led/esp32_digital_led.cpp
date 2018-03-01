@@ -13,19 +13,28 @@ void Esp32_digital_led::setup()
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     gpioSetup(mPin, OUTPUT, LOW);
-    mSTRAND = new strand_t;
-    mSTRAND -> rmtChannel = 1;
-    mSTRAND -> gpioNum = mPin;
-    mSTRAND -> ledType = LED_WS2812B_V3;
-    mSTRAND -> brightLimit = 32;
-    mSTRAND -> numPixels =  mPixelcount;
-    mSTRAND -> pixels = nullptr;
-    mSTRAND -> _stateVars = nullptr;
-    if (digitalLeds_initStrand(mSTRAND) == -1)
+
+    /*
+    mPixels = strand_t;
+    mPixels -> rmtChannel = 1;
+    mPixels -> gpioNum = mPin;
+    mPixels -> ledType = LED_WS2812B_V3;
+    mPixels -> brightLimit = 32;
+    mPixels -> numPixels =  mPixelcount;
+    mPixels -> pixels = nullptr;
+    mPixels -> _stateVars = nullptr;
+    */
+    static strand_t STRANDS[] = {{.rmtChannel = 2, .gpioNum = mPin, .ledType = LED_WS2812B_V3, .brightLimit = 32, .numPixels =  mPixelcount, .pixels = nullptr, ._stateVars = nullptr}};
+    //strand_t strands[] = {px};
+    //digitalLeds_initStrand(mPixels);
+    if (digitalLeds_initStrands(STRANDS, 1) == -1)
       Logger::Instance().write(LogLevel::INFO, FPSTR("NOT INITIALIZED"));
     else
       Logger::Instance().write(LogLevel::INFO, FPSTR("INITIALIZED"));
-    //dead();
+    mPixels = &STRANDS[0];
+    if (mPixels -> pixels == nullptr)
+      Logger::Instance().write(LogLevel::INFO, FPSTR("BADLY WRONG"));
+
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
@@ -36,12 +45,12 @@ void Esp32_digital_led::loop()
   {
     if (mSimpleTimer.check())
     {
-    //  Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+      Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       //dead();
       //if (currIdx >= pStrand->numPixels)
       //digitalLeds_resetPixels(strands[i]);
       //delay(1);
-      //digitalLeds_updatePixels(&mSTRAND);
+      digitalLeds_updatePixels(mPixels);
     }
   }
 }
@@ -51,7 +60,7 @@ void Esp32_digital_led::command(byte command)
   if (enabled())
   {
     //Logger::Instance().write(LogLevel::DEBUG, "Esp32_digital_led::command: " + (String)command);
-    return;
+    //return;
     Commands comm = static_cast<Commands>(command);
     mLastCommand = comm;
     if (comm == Commands::VEHICLE_DEAD)
@@ -100,7 +109,7 @@ void Esp32_digital_led::reset()
   //digitalLeds_resetPixels(mPixels);
   pixelColor_t color = pixelFromRGB(0, 0, 0);
   for(byte i=0;i<mPixelcount;i++){
-    mSTRAND -> pixels[i] = color;
+    mPixels -> pixels[i] = color;
   }
 }
 
@@ -108,7 +117,7 @@ void Esp32_digital_led::dead()
 {
   pixelColor_t color = pixelFromRGB(255, 0, 0);
   for(byte i=0;i<mPixelcount;i++){
-    mSTRAND -> pixels[i] = color;
+    mPixels -> pixels[i] = color;
   }
 }
 

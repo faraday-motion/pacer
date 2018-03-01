@@ -17,6 +17,10 @@ class Spiffs_drivelog : virtual public Modulebase
     Spiffs_storage mSpiffs_storage;
     Spiffs_drivelog_config* mCfg = nullptr;
   protected:
+    void onEvent(byte eventId, bool always = false)
+    {
+      mFMV -> moduleEvent(this, eventId);
+    }
   public:
     Spiffs_drivelog(byte id, FMV *fmv, Spiffs_drivelog_config* cfg = nullptr) : Modulebase(id, Modules::SPIFFS_DRIVELOG)  {
       mFMV = fmv;

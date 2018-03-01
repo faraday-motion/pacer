@@ -16,6 +16,10 @@ private:
       Spiffs_storage mSpiffs_storage;
       FMV * mFMV = nullptr;
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
     Spiffs_log(byte id, FMV * fmv = nullptr, Spiffs_log_config * mfg = nullptr) : Log_module(id, Modules::SPIFFS_LOG){
       mFMV = fmv;

@@ -16,6 +16,10 @@ class Websocket_drivelog : virtual public Modulebase
     IConnection * pIConnection = nullptr;
     void getWebsocketConnection();
   protected:
+    void onEvent(byte eventId, bool always = false)
+    {
+      mFMV -> moduleEvent(this, eventId);
+    }
   public:
     Websocket_drivelog(byte id, FMV *fmv, Websocket_drivelog_config* cfg = nullptr) : Modulebase(id, Modules::WEBSOCKET_DRIVELOG)  {
       mFMV = fmv;

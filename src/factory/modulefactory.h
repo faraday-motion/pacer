@@ -16,9 +16,9 @@
 class Modulefactory{
 public:
 
-  static Modulebase* getModuleInstance(byte id, int configuration, FMV *fmv)
+  static Modulebase * getModuleInstance(byte id, int configuration, FMV *fmv)
   {
-      Modulebase* mod = nullptr;
+      Modulebase * mod = nullptr;
       switch(configuration) {
       case Configurations::NEOPIXELS_CONFIG :
         Logger::Instance().write(LogLevel::INFO, FPSTR("getModuleInstance NEOPIXELS_CONFIG"));

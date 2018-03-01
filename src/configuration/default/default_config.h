@@ -21,7 +21,7 @@ public:
 
       //0
       Serial_log_config* cfg0 = new Serial_log_config(id++);
-      cfg0 -> logLevel = LogLevel::WARNING;
+      cfg0 -> logLevel = LogLevel::INFO;
       cfg0 -> enabled = true;
       Configurator::Instance().addConfig(cfg0);
 
@@ -88,10 +88,11 @@ public:
       cfg1 -> sensorName = "dead";
       Configurator::Instance().addConfig(cfg1);
 
+/*
       //9
       Neopixels_config* cfg3 = new Neopixels_config(id++);
       Configurator::Instance().addConfig(cfg3);
-
+*/
       //10
       Analog_sensor_config* cfg8 = new Analog_sensor_config(id++);
       cfg8 -> pin = PIN_JOYSTICK_CONTROL_Y;
@@ -168,24 +169,21 @@ public:
       cfg21 -> logLevel = LogLevel::INFO;
       Configurator::Instance().addConfig(cfg21);
 
-      /*
-
       //23
       Ntp_timeservice_config* cfg22 = new Ntp_timeservice_config(id++);
-      cfg22 -> enabled = false;
+      cfg22 -> enabled = true;
       Configurator::Instance().addConfig(cfg22);
-      */
 
 /*
       //23
       Arduino_ota_config* cfg24 = new Arduino_ota_config(id++);
       Configurator::Instance().addConfig(cfg24);
 */
-/*
+
       Esp32_digital_led_config* cfg27 = new Esp32_digital_led_config(id++);
       cfg27 -> enabled = true;
       Configurator::Instance().addConfig(cfg27);
-*/
+
     }
 };
 

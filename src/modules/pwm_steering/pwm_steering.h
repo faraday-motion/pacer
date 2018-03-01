@@ -23,7 +23,7 @@ private:
   byte mNeutral = 0;
 protected:
   void onDisable();
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

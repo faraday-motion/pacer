@@ -15,6 +15,10 @@ private:
   Temperature_monitor_config* mCfg = nullptr;
   String mSensorName = "";
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Temperature_monitor(byte id, FMV *fmv, Temperature_monitor_config* cfg = nullptr) : Modulebase(id, Modules::TEMPERATURE_MONITOR)  {
     mFMV = fmv;

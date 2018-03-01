@@ -19,6 +19,10 @@ private:
   byte calculateOutput(byte previousPower, byte targetPower);
 protected:
   void onDisable();
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Exponential_power_modulation(byte id, FMV* fmv, Exponential_power_modulation_config* cfg = nullptr) : Modulation_module(id, Modules::EXPONENTIAL_POWER_MODULATION)  {
     mFMV = fmv;

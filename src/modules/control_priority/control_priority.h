@@ -19,7 +19,7 @@ private:
   int mPriority5 = -1;
 protected:
   void onDisable();
-  void onEvent(byte eventId)
+  void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }

@@ -4,6 +4,7 @@
 #include "../../configuration/default/configuration.h"
 #include "../../interfaces/interfaces.hpp"
 #include "../../enums/enums.hpp"
+//#include "./base.hpp"
 
 class Modulebase : public ILoopable, public IEnableable  {
 private:
@@ -15,9 +16,7 @@ protected:
   virtual void onEnable(){};
   virtual void onDisable(){};
   bool mIsSetup = false;
-  void onEvent(byte eventId, bool always = false)
-  {
-  }
+  virtual void onEvent(byte eventId, bool always = false) = 0;
 
   Modulebase(byte id, int module, Roles role = Roles::MODULE) {
     mId = id;

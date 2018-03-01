@@ -9,6 +9,10 @@ private:
   FMV *mFMV;
   void onDisable();
 protected:
+  void onEvent(byte eventId, bool always = false)
+  {
+    mFMV -> moduleEvent(this, eventId);
+  }
 public:
   Bt_connection(byte id, FMV *fmv) : Modulebase(id, Modules::BT_CONNECTION)  {
     mFMV = fmv;

@@ -52,11 +52,6 @@ protected:
     Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::recieve Command: "), String(command) + " Value: " + String(value));
     if (enabled())
     {
-      Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::enabled true"));
-      //If the command is not allowed to be executed
-      if (command > EXTERNALCOMMANDS_LIMIT)
-        return;
-      //The commands that are allowed to be executed
       if (command == ExternalCommands::DRIVE_POWER)
       {
         Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::setPower:"), String(value));
@@ -156,6 +151,7 @@ public:
     DRIVE_NEUTRAL,
     DRIVE_POWER,
     DRIVE_BRAKE,
+    DRIVE_MODE_0,
     DRIVE_MODE_20,
     DRIVE_MODE_40,
     DRIVE_MODE_60,

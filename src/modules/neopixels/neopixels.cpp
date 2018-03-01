@@ -40,7 +40,7 @@ void Neopixels::command(byte command)
 {
   if (enabled())
   {
-    //Logger::Instance().write(LogLevel::DEBUG, "recievecommand: " + (String)command);
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Neopixels::command: "), String(command));
     Commands comm = static_cast<Commands>(command);
     mLastCommand = comm;
     if (comm == Commands::VEHICLE_DEAD)

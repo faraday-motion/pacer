@@ -19,7 +19,7 @@ private:
   void getTime();
   void updateTime();
   SimpleTimer mSimpleTimer;
-  bool mGotDateTime = false;
+  bool mGotTimeInfo = false;
 protected:
   void onEvent(byte eventId, bool always = false)
   {

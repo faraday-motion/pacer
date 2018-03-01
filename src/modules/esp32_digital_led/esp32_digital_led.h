@@ -36,6 +36,7 @@ public:
   {
     mSimpleTimer.setName("Esp32_digital_led");
     mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
+    mTurnTimer.setInterval(1000);
     mPin = mCfg -> pin;
     mPixelcount = mCfg -> pixelcount;
     mBrightness = mCfg -> brightness;
@@ -55,24 +56,16 @@ public:
   void setup();
   void loop();
   void command(byte command);
-  void reset();
-  void dead();
-  void powerNeutral();
-  void accelerate();
-  void brake();
-  void left();
-  void right();
-  void turnNeutral();
+
 
   String getModuleName()
   {
     return FPSTR("ESP32_DIGITAL_LED");
   }
 private:
-  //strand_t * mSTRAND;
   strand_t * mPixels;
   SimpleTimer mSimpleTimer;
-  bool mIsVehicleDead = false;
+  SimpleTimer mTurnTimer;
   byte mPin = 0;
   byte mPixelcount = 0;
   byte mBrightness = 0;
@@ -87,8 +80,27 @@ private:
   byte mRightLedEndIndex = 0;
   byte mDashboardLedStartIndex = 0;
   byte mDashboardLedEndIndex = 0;
-  Esp32_digital_led::Commands mLastCommand = Commands::VEHICLE_ALIVE;
+  bool mIsVehicleDead = false;
+  bool mLeft = false;
+  bool mRight = false;
+  bool mPower = false;
+  bool mBrake = false;
+  bool mBlinkOn = false;
+  bool mLightsEnabled = true;
   void gpioSetup(int gpioNum, int gpioMode, int gpioVal);
+  void reset();
+  void dead();
+  void accelerate();
+  void brake();
+  void left();
+  void right();
+  void handlePower();
+  void handleDirection();
+  void setPixelColor(byte index, byte r, byte g, byte b);
+  void setPixelColor(byte index, byte color);
+  void setPixelColor(byte fromIndex, byte toIndex, byte color);
+  void setPixelColor(byte fromIndex, byte toIndex, byte r, byte g, byte b);
+  pixelColor_t colorWheel(byte color);
 protected:
   FMV *mFMV = nullptr;
   void onDisable();

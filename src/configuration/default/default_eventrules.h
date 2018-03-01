@@ -58,7 +58,7 @@ public:
         mModules -> commandByType(Modules::NEOPIXELS, (byte)Neopixels::Commands::VEHICLE_DEAD);
         mModules -> commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_DEAD);
         //Handle sta connection
-        mModules -> commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
+        //mModules -> commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
       }
       else if (eventId == Power_limit::Events::LIMIT_ALIVE)
       {
@@ -66,7 +66,7 @@ public:
         mModules -> commandByType(Modules::NEOPIXELS, (byte)Neopixels::Commands::VEHICLE_ALIVE);
         mModules -> commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_ALIVE);
         //Handle sta connection
-        mModules -> commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        //mModules -> commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
 
@@ -134,10 +134,7 @@ public:
         mModules -> commandByType(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_100);
       }
     }
-
-
   }
-
 };
 
 #endif

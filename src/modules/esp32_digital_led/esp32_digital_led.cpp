@@ -13,28 +13,10 @@ void Esp32_digital_led::setup()
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     gpioSetup(mPin, OUTPUT, LOW);
-
-    /*
-    mPixels = strand_t;
-    mPixels -> rmtChannel = 1;
-    mPixels -> gpioNum = mPin;
-    mPixels -> ledType = LED_WS2812B_V3;
-    mPixels -> brightLimit = 32;
-    mPixels -> numPixels =  mPixelcount;
-    mPixels -> pixels = nullptr;
-    mPixels -> _stateVars = nullptr;
-    */
     static strand_t STRANDS[] = {{.rmtChannel = 2, .gpioNum = mPin, .ledType = LED_WS2812B_V3, .brightLimit = 32, .numPixels =  mPixelcount, .pixels = nullptr, ._stateVars = nullptr}};
-    //strand_t strands[] = {px};
-    //digitalLeds_initStrand(mPixels);
     if (digitalLeds_initStrands(STRANDS, 1) == -1)
-      Logger::Instance().write(LogLevel::INFO, FPSTR("NOT INITIALIZED"));
-    else
-      Logger::Instance().write(LogLevel::INFO, FPSTR("INITIALIZED"));
+      Logger::Instance().write(LogLevel::WARNING, getModuleName(), FPSTR(" NOT INITIALIZED"));
     mPixels = &STRANDS[0];
-    if (mPixels -> pixels == nullptr)
-      Logger::Instance().write(LogLevel::INFO, FPSTR("BADLY WRONG"));
-
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
@@ -46,161 +28,87 @@ void Esp32_digital_led::loop()
     if (mSimpleTimer.check())
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      //dead();
-      //if (currIdx >= pStrand->numPixels)
-      //digitalLeds_resetPixels(strands[i]);
-      //delay(1);
+      if (mIsVehicleDead)
+        dead();
+      else if (mLightsEnabled == false)
+        reset();
+      else
+      {
+        handlePower();
+        handleDirection();
+      }
       digitalLeds_updatePixels(mPixels);
-    }
-  }
-}
-
-void Esp32_digital_led::command(byte command)
-{
-  if (enabled())
-  {
-    //Logger::Instance().write(LogLevel::DEBUG, "Esp32_digital_led::command: " + (String)command);
-    //return;
-    Commands comm = static_cast<Commands>(command);
-    mLastCommand = comm;
-    if (comm == Commands::VEHICLE_DEAD)
-    {
-      mIsVehicleDead = true;
-      dead();
-    }
-    else if (comm == Commands::VEHICLE_ALIVE)
-    {
-      mIsVehicleDead = false;
-      reset();
-    }
-    else if (!mIsVehicleDead && comm == Commands::CONTROL_NONE)
-    {
-      reset();
-    }
-    else if (!mIsVehicleDead && comm == Commands::DRIVE_NEUTRAL)
-    {
-      powerNeutral();
-    }
-    else if (!mIsVehicleDead && comm == Commands::DRIVE_POWER)
-    {
-      accelerate();
-    }
-    else if (!mIsVehicleDead && comm == Commands::DRIVE_BRAKE)
-    {
-      brake();
-    }
-    else if (!mIsVehicleDead && comm == Commands::TURN_LEFT)
-    {
-      left();
-    }
-    else if (!mIsVehicleDead && comm == Commands::TURN_RIGHT)
-    {
-      right();
-    }
-    else if (!mIsVehicleDead && comm == Commands::TURN_NEUTRAL)
-    {
-      turnNeutral();
     }
   }
 }
 
 void Esp32_digital_led::reset()
 {
-  //digitalLeds_resetPixels(mPixels);
-  pixelColor_t color = pixelFromRGB(0, 0, 0);
-  for(byte i=0;i<mPixelcount;i++){
-    mPixels -> pixels[i] = color;
-  }
+  digitalLeds_resetPixels(mPixels);
 }
 
 void Esp32_digital_led::dead()
 {
-  pixelColor_t color = pixelFromRGB(255, 0, 0);
-  for(byte i=0;i<mPixelcount;i++){
-    mPixels -> pixels[i] = color;
-  }
-}
-
-void Esp32_digital_led::powerNeutral()
-{
-  for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
+  //Add index from-to for DEAD instead of full range
+  if (mPixelcount > 0)
   {
-    mPixels -> pixels[i] = pixelFromRGB(50, 0, 0);
-  }
-  for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(100, 100, 100);
-  }
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(0, 0, 0);
-  }
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(0, 0, 0);
+    byte i;
+    static byte c1 = 0;
+    static byte c2 = 5;
+    for (i = 0; i < mPixelcount; i++)
+      setPixelColor(i, c1, 0, 0);
+    c1 += c2;
+    if ((c1 >= 255) || (c1 <= 0))
+      c2 = -c2;
   }
 }
 
 void Esp32_digital_led::accelerate()
 {
-  for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(100, 100, 100);
-  }
-  for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(50, 0, 0);
-  }
+  setPixelColor(mFrontLedStartIndex, mFrontLedEndIndex, 100, 100, 100);
+  setPixelColor(mBackLedStartIndex, mBackLedEndIndex, 50, 0, 0);
 }
 
 void Esp32_digital_led::brake()
 {
-  for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(100, 100, 100);
-  }
-  for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(255, 0, 0);
-  }
+  setPixelColor(mBackLedStartIndex, mBackLedEndIndex, 255, 0, 0);
 }
 
 void Esp32_digital_led::left()
 {
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(0, 0, 0);
-  }
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(100, 100, 0);
-  }
+  setPixelColor(mFrontLedStartIndex, 100, 100, 0);
+  setPixelColor(mBackLedEndIndex, 100, 100, 0);
+  setPixelColor(mLeftLedStartIndex, mLeftLedEndIndex, 100, 100, 0);
 }
 
 void Esp32_digital_led::right()
 {
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(0, 0, 0);
-  }
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(100, 100, 0);
-  }
+  setPixelColor(mFrontLedEndIndex, 100, 100, 0);
+  setPixelColor(mBackLedStartIndex, 100, 100, 0);
+  setPixelColor(mRightLedStartIndex, mRightLedEndIndex, 100, 100, 0);
 }
 
-void Esp32_digital_led::turnNeutral()
+void Esp32_digital_led::handlePower()
 {
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(0, 0, 0);
-  }
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
-  {
-    mPixels -> pixels[i] = pixelFromRGB(0, 0, 0);
-  }
+  accelerate();
+  if (mBrake)
+    brake();
 }
 
+void Esp32_digital_led::handleDirection()
+{
+  setPixelColor(mLeftLedStartIndex, mLeftLedEndIndex, 0, 0, 0);
+  setPixelColor(mRightLedStartIndex, mRightLedEndIndex, 0, 0, 0);
+  if (mTurnTimer.check())
+    mBlinkOn = !mBlinkOn;
+  if (mBlinkOn)
+  {
+    if (mLeft)
+      left();
+    else if (mRight)
+      right();
+  }
+}
 
 void Esp32_digital_led::gpioSetup(int gpioNum, int gpioMode, int gpioVal) {
     gpio_num_t gpioNumNative = static_cast<gpio_num_t>(gpioNum);
@@ -210,7 +118,112 @@ void Esp32_digital_led::gpioSetup(int gpioNum, int gpioMode, int gpioVal) {
     gpio_set_level(gpioNumNative, gpioVal);
 }
 
+void Esp32_digital_led::command(byte command)
+{
+  if (enabled())
+  {
+    Commands comm = static_cast<Commands>(command);
+    if (comm == Commands::VEHICLE_DEAD)
+    {
+      mIsVehicleDead = true;
+    }
+    else if (comm == Commands::VEHICLE_ALIVE)
+    {
+      mIsVehicleDead = false;
+    }
+    else if (!mIsVehicleDead && comm == Commands::CONTROL_NONE)
+    {
+      mPower = false;
+      mBrake = false;
+      mLeft = false;
+      mRight = false;
+    }
+    else if (!mIsVehicleDead && comm == Commands::DRIVE_NEUTRAL)
+    {
+      mPower = false;
+      mBrake = false;
+    }
+    else if (!mIsVehicleDead && comm == Commands::DRIVE_POWER)
+    {
+      mPower = true;
+      mBrake = false;
+    }
+    else if (!mIsVehicleDead && comm == Commands::DRIVE_BRAKE)
+    {
+      mPower = false;
+      mBrake = true;
+    }
+    else if (!mIsVehicleDead && comm == Commands::TURN_LEFT)
+    {
+      mTurnTimer.reset();
+      mBlinkOn = true;
+      mLeft = true;
+      mRight = false;
+    }
+    else if (!mIsVehicleDead && comm == Commands::TURN_RIGHT)
+    {
+      mTurnTimer.reset();
+      mBlinkOn = true;
+      mLeft = false;
+      mRight = true;
+    }
+    else if (!mIsVehicleDead && comm == Commands::TURN_NEUTRAL)
+    {
+      mLeft = false;
+      mRight = false;
+    }
+  }
+}
+
 void Esp32_digital_led::onDisable()
 {
   reset();
+}
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+pixelColor_t Esp32_digital_led::colorWheel(byte color)
+{
+  color = 255 - color;
+  if (color < 85) {
+    return pixelFromRGB(255 - color * 3, 0, color * 3);
+  }
+  if (color < 170) {
+    color -= 85;
+    return pixelFromRGB(0, color * 3, 255 - color * 3);
+  }
+  color -= 170;
+  return pixelFromRGB(color * 3, 255 - color * 3, 0);
+}
+
+void Esp32_digital_led::setPixelColor(byte index, byte r, byte g, byte b)
+{
+  if (index >= 0 && index < mPixelcount)
+  {
+    mPixels -> pixels[index] = pixelFromRGB(r, g, b);
+  }
+}
+
+void Esp32_digital_led::setPixelColor(byte index, byte color)
+{
+  if (index >= 0 && index < mPixelcount)
+  {
+    mPixels -> pixels[index] = colorWheel(color);
+  }
+}
+
+void Esp32_digital_led::setPixelColor(byte fromIndex, byte toIndex, byte r, byte g, byte b)
+{
+  pixelColor_t pc = pixelFromRGB(r, g, b);
+  for(byte i=fromIndex; i<=toIndex; i++){
+    mPixels -> pixels[i] = pc;
+  }
+}
+
+void Esp32_digital_led::setPixelColor(byte fromIndex, byte toIndex, byte color)
+{
+  pixelColor_t pc = colorWheel(color);
+  for(byte i=fromIndex; i<=toIndex; i++){
+    mPixels -> pixels[i] = pc;
+  }
 }

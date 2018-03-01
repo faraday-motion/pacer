@@ -42,7 +42,7 @@ void Ntp_timeservice::getTime()
     int	tm_isdst;
   */
   if (getLocalTime(&mTimeInfo, 10000)) {  // wait up to 10sec to sync
-    mGotDateTime = true;
+    mGotTimeInfo = true;
     Logger::Instance().write(LogLevel::DEBUG, FPSTR("DateTime: "), Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
     mFMV -> sensors().setStringSensor("dt", Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
   }
@@ -50,7 +50,7 @@ void Ntp_timeservice::getTime()
 
 void Ntp_timeservice::updateTime()
 {
-  if (mGotDateTime && getLocalTime(&mTimeInfo))
+  if (mGotTimeInfo && getLocalTime(&mTimeInfo))
   {
       time_t now;
       time(&now);

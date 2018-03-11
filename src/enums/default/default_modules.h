@@ -5,8 +5,8 @@
 class Default_modules {
 public:
     static const int NONE = 0;
-    static const int NEOPIXELS = 2;
-    static const int FASTLED = 3;
+    static const int NEOPIXELS_LED = 2;
+    static const int FASTLED_LED = 3;
     static const int SERIAL_CONTROL = 4;
     static const int JOYSTICK_CONTROL = 5;
     static const int FORCE_CONTROL = 6;

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "../interfaces/interfaces.hpp"
 
-class Byte_sensor_value : public ISensorvalue {
+class Byte_sensor_value : public ISensorValue {
 private:
   String mName = "";
   byte mValue = 0;

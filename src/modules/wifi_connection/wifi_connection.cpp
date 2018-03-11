@@ -14,6 +14,7 @@ void Wifi_connection::setup() {
   if (mIsSetup == false)
   {
     mIsSetup = true;
+    sWiFiEventId = 0;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE);

@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include "../../utility/simpletimer.h"
-#include "./neopixels.h"
+#include "./neopixels_led.h"
 #include "../../configuration/default/configuration.h"
-#include "./neopixels_config.h"
+#include "./neopixels_led_config.h"
 
-void Neopixels::setup()
+void Neopixels_led::setup()
 {
   if (mIsSetup == false)
   {
@@ -20,7 +20,7 @@ void Neopixels::setup()
   }
 }
 
-void Neopixels::loop()
+void Neopixels_led::loop()
 {
   if (enabled())
   {
@@ -36,13 +36,12 @@ void Neopixels::loop()
   }
 }
 
-void Neopixels::command(byte command)
+void Neopixels_led::command(byte command)
 {
   if (enabled())
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Neopixels::command: "), String(command));
     Commands comm = static_cast<Commands>(command);
-    mLastCommand = comm;
     if (comm == Commands::VEHICLE_DEAD)
     {
       mIsVehicleDead = true;
@@ -84,19 +83,19 @@ void Neopixels::command(byte command)
   }
 }
 
-void Neopixels::reset()
+void Neopixels_led::reset()
 {
   mNeopixels -> clear();
 }
 
-void Neopixels::dead()
+void Neopixels_led::dead()
 {
   for(byte i=0;i<mPixelcount;i++){
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(255,0,0));
   }
 }
 
-void Neopixels::powerNeutral()
+void Neopixels_led::powerNeutral()
 {
   for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
   {
@@ -116,7 +115,7 @@ void Neopixels::powerNeutral()
   }
 }
 
-void Neopixels::accelerate()
+void Neopixels_led::accelerate()
 {
   for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
   {
@@ -128,7 +127,7 @@ void Neopixels::accelerate()
   }
 }
 
-void Neopixels::brake()
+void Neopixels_led::brake()
 {
   for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
   {
@@ -140,7 +139,7 @@ void Neopixels::brake()
   }
 }
 
-void Neopixels::left()
+void Neopixels_led::left()
 {
   for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
   {
@@ -152,7 +151,7 @@ void Neopixels::left()
   }
 }
 
-void Neopixels::right()
+void Neopixels_led::right()
 {
   for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
   {
@@ -164,7 +163,7 @@ void Neopixels::right()
   }
 }
 
-void Neopixels::turnNeutral()
+void Neopixels_led::turnNeutral()
 {
   for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
   {
@@ -176,7 +175,7 @@ void Neopixels::turnNeutral()
   }
 }
 
-void Neopixels::onDisable()
+void Neopixels_led::onDisable()
 {
   reset();
   mNeopixels -> show();

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "../interfaces/interfaces.hpp"
 
-class Bool_sensor_value : public ISensorvalue {
+class Bool_sensor_value : public ISensorValue {
 private:
   String mName = "";
   bool mValue = false;

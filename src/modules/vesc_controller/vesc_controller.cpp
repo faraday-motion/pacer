@@ -32,6 +32,7 @@ void Vesc_controller::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("DefaultSerial: "), String(mVescDefaultSerial));
+    //Set default mode
     mDriveMode = Commands::CURRENT_MODE;
     if (mVescDefaultSerial)
     {
@@ -49,20 +50,21 @@ void Vesc_controller::setup() {
     }
 
     //Configure the vesc's
-    std::vector<Wheel*> wheelArray = mFMV -> getWheelValues();
+    std::vector<IWheel*> wheelArray = mFMV -> getWheelValues();
     for (byte i=0; i<wheelArray.size(); i++)
     {
       if (wheelArray[i] -> isElectric())
         wheelDecorators.push_back(new Vesc_controller_wheel_decorator(wheelArray[i]));
     }
     createTimerTask();
+
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
 
 void Vesc_controller::createTimerTask()
 {
-  xTaskCreate(vescTimerTask, "vescTimerTask", 4096, NULL, 1, NULL);
+  xTaskCreate(vescTimerTask, "vescTimerTask", 2048, NULL, 1, NULL);
 //  xTaskCreatePinnedToCore(vescTimerTask, "vescTimerTask", 4096, NULL, 1, NULL, xPortGetCoreID());
 }
 
@@ -71,23 +73,20 @@ void Vesc_controller::loop()
   if (enabled())
   {
     pVescInterface -> loop();
-    if (mSimpleTimer.check()) {
-      Modulebase* mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
+    if (mSimpleTimer.check())
+    {
+
+      IModule * mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
+//      Modulebase * mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
         Limit_module* ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         getValues();
-/*
-        //Not working currently
-        //Get the motor configuration
-        Logger::Instance().write(LogLevel::INFO, FPSTR("Requesting motor configuration"));
-        pVescInterface -> set_forward_can(-1);
-        pVescInterface -> get_mcconf();
-*/
+
         //Copy all inputs to the individual powered wheels
-        float minRpm = 10000;
+        float minRpm = 2000;
         for (byte i=0; i<wheelDecorators.size(); i++)
         {
           minRpm = std::min(minRpm, wheelDecorators[i] -> getVescValues().rpm);
@@ -95,6 +94,13 @@ void Vesc_controller::loop()
           wheelDecorators[i] -> setWheelControl(mInputControl);
         }
 
+/*
+        //TODO move this to other section
+        //Get the motor configuration
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Requesting motor configuration"));
+        pVescInterface -> set_forward_can(-1);
+        pVescInterface -> get_mcconf();
+*/
         //Set master
         for (byte i=0; i<wheelDecorators.size(); i++)
         {
@@ -215,7 +221,7 @@ void Vesc_controller::setRotorPos(float pos){
 
 void Vesc_controller::setMotorConfiguration(mc_configuration *conf){
   mHasMCConfiguration = true;
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::setMotorConfiguration "));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Vesc_controller::setMotorConfiguration "));
   mc_configuration actual ;
   actual.pwm_mode = conf -> pwm_mode;
 	actual.comm_mode = conf -> comm_mode;
@@ -223,15 +229,15 @@ void Vesc_controller::setMotorConfiguration(mc_configuration *conf){
 	actual.sensor_mode = conf -> sensor_mode;
 	// Limits
 	actual.l_current_max = conf -> l_current_max;
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::l_current_max "), String(actual.l_current_max));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Vesc_controller::l_current_max "), String(actual.l_current_max));
 	actual.l_current_min = conf -> l_current_min;
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::l_current_min "), String(actual.l_current_min));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Vesc_controller::l_current_min "), String(actual.l_current_min));
 	actual.l_in_current_max = conf -> l_in_current_max;
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::l_in_current_max "), String(actual.l_in_current_max));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Vesc_controller::l_in_current_max "), String(actual.l_in_current_max));
 	actual.l_in_current_min = conf -> l_in_current_min;
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::l_in_current_min "), String(actual.l_in_current_min));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Vesc_controller::l_in_current_min "), String(actual.l_in_current_min));
 	actual.l_abs_current_max = conf -> l_abs_current_max;
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::l_abs_current_max "), String(actual.l_abs_current_max));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Vesc_controller::l_abs_current_max "), String(actual.l_abs_current_max));
 	actual.l_min_erpm = conf -> l_min_erpm;
 	actual.l_max_erpm = conf -> l_max_erpm;
 	actual.l_max_erpm_fbrake = conf -> l_max_erpm_fbrake;
@@ -370,7 +376,7 @@ void Vesc_controller::setRpm()
   Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::setRpm "));
   for (int i=0; i<wheelDecorators.size(); i++)
   {
-      int rpm = map(wheelDecorators[i] -> getWheelControl().getBrake(), 0, 100, 0, mMaxRpm);
+      int rpm = map(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0, mMaxRpm);
       pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
       pVescInterface -> set_rpm(rpm);
   }

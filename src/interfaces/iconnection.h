@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "./isend.h"
 
-class IConnection : public ISend {
+class IConnection : public virtual ISend {
    public:
       virtual void addReciever(IRecieve * reciever) = 0;
 };

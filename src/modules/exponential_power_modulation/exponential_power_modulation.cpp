@@ -21,10 +21,15 @@ void Exponential_power_modulation::loop()
     if (mSimpleTimer.check())
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      Control_module* mb = mFMV -> modules().getActiveControl();
+      IControlModule * mb = mFMV -> modules().getActiveControl();
       if (mb != nullptr)
       {
-        Control_module* ic = static_cast<Control_module*>(mb);
+        IControlModule * ib = static_cast<IControlModule*>(mb);
+        if (ib == nullptr)
+          return;
+        Control_module * ic = static_cast<Control_module*>(ib);
+        if (ic == nullptr)
+          return;
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)
           mOutputControl.setPower(calculateOutput(mPreviousPower, mInputControl.getPower()));

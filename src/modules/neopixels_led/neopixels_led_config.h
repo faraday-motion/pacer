@@ -1,14 +1,14 @@
-#ifndef NEOPIXELS_CONFIG_H
-#define NEOPIXELS_CONFIG_H
+#ifndef NEOPIXELS_LED_CONFIG_H
+#define NEOPIXELS_LED_CONFIG_H
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include "../../configuration/default/configuration.h"
 #include "../../configuration/default/default_pins.h"
 #include "../../configuration/base/configbase.h"
 
-class Neopixels_config : public Configbase{
+class Neopixels_led_config : public Configbase{
 public:
-  Neopixels_config(byte id) : Configbase(id, Configurations::NEOPIXELS_CONFIG) {
+  Neopixels_led_config(byte id) : Configbase(id, Configurations::NEOPIXELS_LED_CONFIG) {
   }
 
   void getModuleConfiguration(JsonObject &root)

@@ -6,11 +6,12 @@
 #include "../../configuration/configurator.h"
 #include "./exponential_power_modulation_config.h"
 #include "../../utility/simpletimer.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Exponential_power_modulation : virtual public Modulation_module
+class Exponential_power_modulation : public Modulation_module
 {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   SimpleTimer mSimpleTimer;
   byte mPreviousPower = 0;
   byte mPreviousBrake = 0;
@@ -24,7 +25,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Exponential_power_modulation(byte id, FMV* fmv, Exponential_power_modulation_config* cfg = nullptr) : Modulation_module(id, Modules::EXPONENTIAL_POWER_MODULATION)  {
+  Exponential_power_modulation(byte id, IFMV * fmv, Exponential_power_modulation_config * cfg = nullptr) : Modulation_module(id, Modules::EXPONENTIAL_POWER_MODULATION)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Exponential_power_modulation_config*>(Configurator::Instance().createConfig(id, Configurations::EXPONENTIAL_POWER_MODULATION_CONFIG));

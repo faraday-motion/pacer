@@ -1,20 +1,22 @@
-#ifndef NEOPIXELS_H
-#define NEOPIXELS_H
+#ifndef NEOPIXELS_LED_H
+#define NEOPIXELS_LED_H
 #include <Adafruit_NeoPixel.h>
 #include "../../configuration/configurator.h"
-#include "./neopixels_config.h"
+#include "./neopixels_led_config.h"
 #include "../../utility/simpletimer.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Neopixels : virtual public Modulebase
+//#include "../../fmv.h"
+
+class Neopixels_led : public virtual Modulebase
 {
 
 public:
-  Neopixels(byte id, FMV *fmv, Neopixels_config* cfg = nullptr) : Modulebase(id, Modules::NEOPIXELS)  {
+  Neopixels_led(byte id, IFMV * fmv, Neopixels_led_config* cfg = nullptr) : Modulebase(id, Modules::NEOPIXELS_LED)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Neopixels_config*>(Configurator::Instance().createConfig(id, Configurations::NEOPIXELS_CONFIG));
+      mCfg = static_cast<Neopixels_led_config*>(Configurator::Instance().createConfig(id, Configurations::NEOPIXELS_LED_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -74,8 +76,8 @@ private:
   byte mPin = 0;
   byte mPixelcount = 0;
   byte mBrightness = 0;
-  Adafruit_NeoPixel* mNeopixels;
-  Neopixels_config* mCfg = nullptr;
+  Adafruit_NeoPixel * mNeopixels;
+  Neopixels_led_config * mCfg = nullptr;
   byte mBackLedStartIndex = 0;
   byte mBackLedEndIndex = 0;
   byte mLeftLedStartIndex = 0;
@@ -86,9 +88,8 @@ private:
   byte mRightLedEndIndex = 0;
   byte mDashboardLedStartIndex = 0;
   byte mDashboardLedEndIndex = 0;
-  Neopixels::Commands mLastCommand = Commands::VEHICLE_ALIVE;
 protected:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {

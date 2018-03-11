@@ -15,14 +15,20 @@
 class Configlist {
 private:
   std::vector<Configbase*> mConfigArray;
-  Spiffs_config mSpiffs_config;
-  Spiffs_storage mSpiffs_storage;
-  static bool sort(Configbase* a, Configbase* b) {
-     return (a -> id < b -> id);
+  IStore * pIStore;
+  IConfigStore * pIConfigstore;
+  static bool sort(Configbase * a, Configbase * b) {
+     return (a -> getId() < b -> getId());
   }
 public:
   Configlist() {
+    pIStore = new Spiffs_storage();
+    pIConfigstore = new Spiffs_config(pIStore);
+  };
 
+  Configlist(IStore * iStore, IConfigStore * iConfigstore) {
+    pIStore = iStore;
+    pIConfigstore = iConfigstore;
   };
 
   void setup()
@@ -47,14 +53,15 @@ public:
     return mConfigArray;
   }
 
-  bool load(Default_configbase* default_config = nullptr, bool deleteOldConfig = false, bool addInstances = true)
+  bool load(Default_configbase * default_config = nullptr, bool deleteOldConfig = false)
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Configlist::load"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     if (deleteOldConfig)
       clear(true);
 
-    std::vector <String> files = mSpiffs_config.list();
+    std::vector <String> files;
+    pIConfigstore -> list(files);
     if (files.size() == 0 && default_config != nullptr) {
       default_config -> addConfigs();
       if (deleteOldConfig)
@@ -67,38 +74,43 @@ public:
     for (int i = 0; i < files.size(); i++) {
       //id and configuration are passed by reference
       //Load the shared id and configuration part of the config file
-      mSpiffs_config.loadBase(files[i], id, configuration);
+      pIConfigstore -> load(files[i], id, configuration);
       //Get the instance
       Configbase* config = Configfactory::getConfigInstance(id, configuration);
       //Populate the values
-      mSpiffs_config.load(config);
-      if (addInstances) {
-        mConfigArray.push_back(config);
-      }
+      pIConfigstore -> load(config);
+      mConfigArray.push_back(config);
     //else
       //mSpiffs_storage.read(files[i], new Logger_writer());
     }
     return true;
   }
 
-  bool add(Configbase* config, bool save = false)
+  bool add(Configbase * config, bool store = false)
   {
     if (config != nullptr)
     {
-      if (get(config -> id) == nullptr)
-      {
-        mConfigArray.push_back(config);
-        if (save)
-          mSpiffs_config.save(config);
-        return true;
-      }
+      while (get(config -> getId()) != nullptr)
+        config -> setId(config -> getId()+1);
+      mConfigArray.push_back(config);
+      if (store)
+        pIConfigstore -> save(config);
+      return true;
     }
     return false;
   }
 
-  Configbase* create(byte id, int configuration)
+  bool add(int configuration, bool store = false)
   {
-    Configbase* baseCfg = get(id, configuration);
+    Configbase * config = create(configuration);
+    if (store)
+      pIConfigstore -> save(config);
+    return true;
+  }
+
+  Configbase * create(byte id, int configuration)
+  {
+    Configbase * baseCfg = get(id, configuration);
     if (baseCfg == nullptr)
     {
       baseCfg = Configfactory::getConfigInstance(id, configuration);
@@ -107,13 +119,23 @@ public:
     return baseCfg;
   }
 
+  Configbase * create(int configuration)
+  {
+    byte id = 0;
+    Configbase * config = Configfactory::getConfigInstance(id, configuration);
+    while (get(config -> getId()) != nullptr)
+      config -> setId(config -> getId()+1);
+    mConfigArray.push_back(config);
+    return config;
+  }
+
   bool remove(byte id, bool save = false)
   {
     int toDelete = -1;
-    Configbase* config = nullptr;
+    Configbase * config = nullptr;
     for (int i=0; i<mConfigArray.size(); i++)
     {
-      if (mConfigArray[i] -> id == id)
+      if (mConfigArray[i] -> getId() == id)
       {
         config = mConfigArray[i];
         toDelete = i;
@@ -126,7 +148,7 @@ public:
       if (config != nullptr)
         delete config;
       if (save)
-        return mSpiffs_config.remove(id);
+        pIConfigstore -> remove(id);
       return true;
     }
     return false;
@@ -139,34 +161,35 @@ public:
       Configbase* config = nullptr;
       config = mConfigArray.back();
       mConfigArray.pop_back();
-      //config = nullptr;
       delete config;
     }
     mConfigArray.clear();
     mConfigArray.shrink_to_fit();
     if (deleteConfigs)
-      mSpiffs_config.removeAll();
+      pIConfigstore -> remove();
   }
 
   void save()
   {
     for (int i=0; i<mConfigArray.size(); i++)
-      mSpiffs_config.save(mConfigArray[i]);
+      pIConfigstore -> save(mConfigArray[i]);
   }
 
-  void swap(byte id1, byte id2)
+  void swap(byte id1, byte id2, bool store = false)
   {
-    Configbase* config1 = get(id1);
-    Configbase* config2 = get(id2);
-    std::swap(config1, config2);
-    save();
+    Configbase * config1 = get(id1);
+    Configbase * config2 = get(id2);
+    config1 -> setId(id2);
+    config2 -> setId(id1);
+    if (store)
+      save();
   }
 
   Configbase* get(byte id, int configuration = Configurations::NONE)
   {
     for (int i=0; i<mConfigArray.size(); i++)
     {
-      if (mConfigArray[i] -> id == id && (mConfigArray[i] -> configuration == configuration || configuration == Configurations::NONE))
+      if (mConfigArray[i] -> getId() == id && (mConfigArray[i] -> configuration == configuration || configuration == Configurations::NONE))
         return mConfigArray[i];
     }
     return nullptr;
@@ -176,9 +199,10 @@ public:
   {
     for (int i=0; i<mConfigArray.size(); i++)
     {
-      if (mConfigArray[i] -> id == id)
-        return mSpiffs_config.save(mConfigArray[i]);
+      if (mConfigArray[i] -> getId() == id)
+        pIConfigstore -> save(mConfigArray[i]);
     }
+    return true;
   }
 };
 #endif

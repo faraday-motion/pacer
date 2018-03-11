@@ -5,12 +5,13 @@
 #include "../../configuration/configurator.h"
 #include "./voltage_monitor_config.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
+#include "../../sensors/sensors.hpp"
 
-class Voltage_monitor : virtual public Modulebase
+class Voltage_monitor : public Modulebase
 {
 private:
-  FMV *mFMV;
+  IFMV * mFMV;
   Float_sensor_value * mSensor;
   float mMinVoltage = 0;
   float mMaxVoltage = 1023;
@@ -22,7 +23,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Voltage_monitor(byte id, FMV *fmv, Voltage_monitor_config* cfg = nullptr) : Modulebase(id, Modules::VOLTAGE_MONITOR)  {
+  Voltage_monitor(byte id, IFMV * fmv, Voltage_monitor_config * cfg = nullptr) : Modulebase(id, Modules::VOLTAGE_MONITOR)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Voltage_monitor_config*>(Configurator::Instance().createConfig(id, Configurations::VOLTAGE_MONITOR_CONFIG));

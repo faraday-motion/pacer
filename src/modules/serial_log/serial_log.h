@@ -6,18 +6,18 @@
 #include "./serial_log_config.h"
 #include "../base/base.hpp"
 
-class Serial_log : virtual public Log_module
+class Serial_log : public virtual Log_module
 {
 private:
     Serial_log_config* mCfg = nullptr;
-    FMV * mFMV = nullptr;
+    IFMV * mFMV = nullptr;
 protected:
   void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-    Serial_log(byte id, FMV * fmv = nullptr, Serial_log_config * mfg = nullptr) : Log_module(id, Modules::SERIAL_LOG){
+    Serial_log(byte id, IFMV * fmv = nullptr, Serial_log_config * mfg = nullptr) : Log_module(id, Modules::SERIAL_LOG){
       mFMV = fmv;
       Configurator::Instance().initializeSerial();
       if (mfg == nullptr)

@@ -14,7 +14,7 @@
 class Configfactory{
 public:
 
-  static Configbase * getConfigInstance(int id, int configuration)
+  static Configbase * getConfigInstance(byte id, int configuration)
   {
       Configbase * cfg = nullptr;
 
@@ -29,10 +29,10 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Analog_sensor_config(id);
         break;
-      case Configurations::NEOPIXELS_CONFIG :
-        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance NEOPIXELS_CONFIG"));
+      case Configurations::NEOPIXELS_LED_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance NEOPIXELS_LED_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-        cfg = new Neopixels_config(id);
+        cfg = new Neopixels_led_config(id);
         break;
       case Configurations::NTP_TIMESERVICE_CONFIG :
         Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance NTP_TIMESERVICE_CONFIG"));

@@ -27,7 +27,8 @@ void Control_priority::loop()
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       int activeId = -1;
-      Control_module * activeControl = mFMV -> modules().getActiveControl();
+      IControlModule * ac = mFMV -> modules().getActiveControl();
+      Control_module * activeControl = static_cast<Control_module*>(ac);
       if (activeControl != nullptr)
       {
         activeId = activeControl -> id();
@@ -40,6 +41,7 @@ void Control_priority::loop()
       Control_module * priority4 = nullptr;
       Control_module * priority5 = nullptr;
 
+      //Lookup all the controllers
       if (mPriority1 != -1)
       {
         priority1 = static_cast<Control_module*>(mFMV -> modules().get(mPriority1));
@@ -71,6 +73,7 @@ void Control_priority::loop()
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("Control_priority has priority5: "), String(mPriority5));
       }
 
+      //Select the controller if higher priority
       if (priority1 != nullptr && priority1 -> enabled() && priority1 -> hasClient())
       {
         if (mPriority1 != activeId)

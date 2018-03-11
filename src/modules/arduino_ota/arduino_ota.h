@@ -4,12 +4,13 @@
 #include "../../configuration/configurator.h"
 #include "./arduino_ota_config.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
+#include "../../utility/simpletimer.h"
 
-class Arduino_ota : virtual public Modulebase
+class Arduino_ota : public virtual Modulebase
 {
 private:
-  FMV *mFMV = nullptr;
+  IFMV *mFMV = nullptr;
   void onDisable();
   SimpleTimer mSimpleTimer;
   Arduino_ota_config* mCfg = nullptr;
@@ -22,7 +23,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Arduino_ota(byte id, FMV *fmv, Arduino_ota_config* cfg = nullptr) : Modulebase(id, Modules::ARDUINO_OTA)  {
+  Arduino_ota(byte id, IFMV * fmv, Arduino_ota_config * cfg = nullptr) : Modulebase(id, Modules::ARDUINO_OTA)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Arduino_ota_config*>(Configurator::Instance().createConfig(id, Configurations::ARDUINO_OTA_CONFIG));

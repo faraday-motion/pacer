@@ -4,12 +4,12 @@
 #include <Arduino.h>
 #include <vector>
 #include "../log/logger.h"
+#include "../interfaces/interfaces.hpp"
 #include "./sensors.hpp"
 
-
-class SensorList {
+class SensorList : public ISensorList {
 private:
-  std::vector<ISensorvalue*> mAllVector;
+  std::vector<ISensorValue*> mAllVector;
   std::vector<Bool_sensor_value*> mBoolVector;
   std::vector<Float_sensor_value*> mFloatVector;
   std::vector<Int_sensor_value*> mIntVector;
@@ -20,12 +20,12 @@ public:
 
   };
 
-  std::vector<ISensorvalue*> all() const
+  std::vector<ISensorValue*> all() const
   {
     return mAllVector;
   }
 
-  ISensorvalue * getSensor(const String& name)
+  ISensorValue * getSensor(const String& name)
   {
     if (name == "")
     {
@@ -209,7 +209,5 @@ public:
       sv -> setValue(value);
     return sv;
   }
-
-
 };
 #endif

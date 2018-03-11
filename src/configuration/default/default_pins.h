@@ -11,7 +11,7 @@
 #define PIN_CURRENT_MONITOR         A17
 #define PIN_TEMPERATURE_MONITOR     A18
 #define PIN_VOLTAGE_MONITOR         A19
-#define PIN_SERIAL2_RX         A19
-#define PIN_SERIAL2_TX         A19
+#define PIN_SERIAL2_RX              A19
+#define PIN_SERIAL2_TX              A19
 
 #endif // DEFAULT_PINS_H

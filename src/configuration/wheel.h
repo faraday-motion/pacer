@@ -4,8 +4,9 @@
 #include <Arduino.h>
 #include "./configurator.h"
 #include "./configuration/wheel_config.h"
+#include "../interfaces/interfaces.hpp"
 
-class Wheel {
+class Wheel : public IWheel{
 private:
   byte mId = 0;
   byte mIndex = 0;

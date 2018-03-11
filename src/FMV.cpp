@@ -28,26 +28,25 @@ void FMV::setup() {
     Configurator::Instance().initializeAnalog();
     Configurator::Instance().initializeSerial();
     Configurator::Instance().initializeSpiff();
-    //pSpiffs_storage = new Spiffs_storage();
-    //pSpiffs_storage -> remove(SPIFF_DRIVELOG_FILENAME);
-//    pSpiffs_config = new Spiffs_config();
 
     //Delete the SPIFFS file configs if there are problems with the old configuration
-    //No need for buffering after the initializion of serial
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring Modules"));
     Configurator::Instance().configs().load(new Custom_config(), true);
     //Normal loading of saved configurations from spiffs
-    //Configurator::Instance().configs().load(new Custom_config());
+//    Configurator::Instance().configs().load(new Custom_config());
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Creating Module Instances"));
+    //Configurator::Instance().configs().swap(0, 1, true);
     getFactoryInstances(Configurator::Instance().configs().all());
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Clearing Configurations"));
+    //TODO need to rewrite modules to use the config values at runtime, and then remove the clear
     Configurator::Instance().configs().clear();
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring EventRules"));
-    mEventRules = new Custom_eventrules(mModules);
+    setEventRules(new Custom_eventrules());
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));
-    mModules -> setup();
+    modules().setup();
+    //No need for buffering anymore
     Logger::Instance().setBufferSize(0);
-    mModules -> listEnabled();
+    modules().listEnabled();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Faraday Motion Pacer v"), String(mVersion));
     mIsSetup = true;
@@ -64,7 +63,7 @@ void FMV::loop()
   }
 }
 
-void FMV::moduleEvent(Modulebase* sender, byte eventId)
+void FMV::moduleEvent(IModule * sender, byte eventId)
 {
   //DISABLE FOR NOW
   //return;
@@ -77,9 +76,9 @@ void FMV::getFactoryInstances(std::vector<Configbase*> mConfigArray)
   for (int i=0; i<mConfigArray.size(); i++)
   {
     int configuration = mConfigArray[i] -> configuration;
-    byte id = mConfigArray[i] -> id;
+    byte id = mConfigArray[i] -> getId();
 
-    Modulebase* fb = Modulefactory::getModuleInstance(id, configuration, this);
+    IModule * fb = Modulefactory::getModuleInstance(id, configuration, this);
     mModules -> add(fb);
 
     switch(configuration) {

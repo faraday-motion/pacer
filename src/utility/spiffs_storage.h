@@ -5,17 +5,19 @@
 #include "FS.h"
 #include "SPIFFS.h"
 #include "../configuration/base/configbase.h"
-#include "../interfaces/isend.h"
+#include "../interfaces/interfaces.hpp"
 
-class Spiffs_storage
+class Spiffs_storage : public virtual IStore
 {
     private:
       fs::FS &fs = SPIFFS;
     public:
-      Spiffs_storage(){
+      Spiffs_storage() : IStore(){
       };
-      void append(String path, const String message);
-      void read(String path, ISend* sender);
+      bool save(String path, const String message);
+      bool append(String path, const String message, size_t maxSize = 0);
+      bool read(String path, ISend * sender);
+      bool read(String path, File &file);
       bool remove(String path);
 };
 

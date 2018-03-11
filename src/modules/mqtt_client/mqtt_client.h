@@ -7,10 +7,10 @@
 #include "./mqtt_client_config.h"
 #include "../base/base.hpp"
 
-class Mqtt_client : virtual public Modulebase
+class Mqtt_client : public virtual Modulebase
 {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   Mqtt_client_config * mCfg = nullptr;
   WiFiClient mClient;
   PubSubClient * pMqttClient;
@@ -24,7 +24,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Mqtt_client(byte id, FMV *fmv, Mqtt_client_config* cfg = nullptr) : Modulebase(id, Modules::MQTT_CLIENT)  {
+  Mqtt_client(byte id, IFMV * fmv, Mqtt_client_config * cfg = nullptr) : Modulebase(id, Modules::MQTT_CLIENT)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Mqtt_client_config*>(Configurator::Instance().createConfig(id, Configurations::MQTT_CLIENT_CONFIG));

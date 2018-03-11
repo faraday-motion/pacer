@@ -7,13 +7,13 @@
 #include "./pwm_controller_config.h"
 #include "./pwm_controller_wheel_decorator.h"
 #include "../base/power_module.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
 #include "../../utility/tools.h"
 
-class Pwm_controller : virtual public Power_module
+class Pwm_controller : public virtual Power_module
 {
 private:
-  FMV *mFMV;
+  IFMV *mFMV;
   SimpleTimer mSimpleTimer;
   Pwm_controller_config* mCfg = nullptr;
   std::vector<Pwm_controller_wheel_decorator*> wheelDecorators;
@@ -30,7 +30,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Pwm_controller(byte id, FMV *fmv, Pwm_controller_config* cfg = nullptr) : Power_module(id, Modules::PWM_CONTROLLER)  {
+  Pwm_controller(byte id, IFMV *fmv, Pwm_controller_config* cfg = nullptr) : Power_module(id, Modules::PWM_CONTROLLER)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Pwm_controller_config*>(Configurator::Instance().createConfig(id, Configurations::PWM_CONTROLLER_CONFIG));

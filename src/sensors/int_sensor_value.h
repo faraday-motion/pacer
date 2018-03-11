@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "../interfaces/interfaces.hpp"
 
-class Int_sensor_value : public ISensorvalue {
+class Int_sensor_value : public ISensorValue {
 private:
   String mName = "";
   int mValue = 0;

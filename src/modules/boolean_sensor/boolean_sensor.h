@@ -9,9 +9,9 @@
 #include "../../fmv.h"
 #include "../../utility/simpletimer.h"
 
-class Boolean_sensor : virtual public Modulebase {
+class Boolean_sensor : public virtual Modulebase {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   byte mPin = 0;
   bool mInvert = false;
   Boolean_sensor_config * mCfg = nullptr;
@@ -23,7 +23,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-    Boolean_sensor(byte id, FMV *fmv, Boolean_sensor_config * cfg = nullptr) : Modulebase(id, Modules::BOOLEAN_SENSOR)
+    Boolean_sensor(byte id, IFMV * fmv, Boolean_sensor_config * cfg = nullptr) : Modulebase(id, Modules::BOOLEAN_SENSOR)
     {
       mFMV = fmv;
       if(cfg == nullptr)

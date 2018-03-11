@@ -10,7 +10,15 @@
 #include "./isend.h"
 #include "./irecieve.h"
 #include "./iconnection.h"
-#include "./iconfigurable.h"
+#include "./iconfig.h"
 #include "./isensorvalue.h"
+#include "./istore.h"
+#include "./iconfigstore.h"
+#include "./imodule.h"
+#include "./icontrolmodule.h"
+#include "./imodulelist.h"
+#include "./isensorlist.h"
+#include "./iwheel.h"
+#include "./ifmv.h"
 
 #endif

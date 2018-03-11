@@ -6,7 +6,7 @@
 #include "./vesc_packet.h"
 #include "./ivesc_interface.h"
 
-class Vesc_interface : public IVesc_send_recieve
+class Vesc_interface : public virtual IVesc_send_recieve
 {
   private:
     Vesc_packet * pPacket = nullptr;

@@ -8,29 +8,49 @@
 #include "../log/logger.h"
 #include "../interfaces/isend.h"
 
-void Spiffs_storage::append(String path, const String message){
-    //Dont write to the logger in the appendFile method as this would be a cyclic call
-    //Serial.println("Appending to file: " + path);
+bool Spiffs_storage::save(String path, const String message){
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Save: "), path);
+    File file = fs.open(path, FILE_WRITE);
+    if(!file){
+      Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed open for write: "), path);
+      return false;
+    }
+    if (file.print(message) == 0) {
+      Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to write to file: "), path);
+      return false;
+    }
+    else
+    {
+      Logger::Instance().write(LogLevel::DEBUG, FPSTR("File write success: "), path);
+    }
+    file.close();
+    return true;
+}
+
+bool Spiffs_storage::append(String path, const String message, size_t maxSize){
     File file = fs.open(path, FILE_APPEND);
     if(!file){
       file = fs.open(path, FILE_WRITE);
       if(!file){
-          //Serial.println("Failed to open file for writing: " + path);
-          return;
+          return false;
       }
     }
+    Serial.println("File size: " + String(file.size()));
+    if (maxSize > 0 && file.size() >= maxSize)
+      return false;
     if(!file.print(message)){
-        //Serial.println(F("Append failed"));
+      return false;
     }
     file.close();
+    return true;
 }
 
-void Spiffs_storage::read(String path, ISend* sender){
+bool Spiffs_storage::read(String path, ISend* sender){
     Logger::Instance().write(LogLevel::DEBUG, FPSTR("Reading file: "), path);
     File file = fs.open(path);
     if(!file || file.isDirectory()){
       Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to open file for reading: "), path);
-      return;
+      return false;
     }
     int i = 0;
     while(file.available()) { // && i < 100
@@ -41,6 +61,17 @@ void Spiffs_storage::read(String path, ISend* sender){
     }
     file.close();
     Logger::Instance().write(LogLevel::DEBUG, FPSTR("Sucessfully read file: "), path);
+    return true;
+}
+
+bool Spiffs_storage::read(String path, File &file){
+    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Reading file: "), path);
+    file = fs.open(path);
+    if(!file){
+      Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to open file for reading: "), path);
+      return false;
+    }
+    return true;
 }
 
 bool Spiffs_storage::remove(String path){

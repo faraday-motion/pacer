@@ -8,23 +8,22 @@
 #include "./log/logger.h"
 #include "./enums/enums.hpp"
 #include "./modules/base/base.hpp"
-#include "./configuration/wheel.h"
 #include "./modules/modulelist.h"
 #include "./sensors/sensorlist.h"
 #include "./utility/spiffs_config.h"
 #include "./utility/spiffs_storage.h"
 #include "./configuration/base/default_eventrulesbase.h"
+#include "./interfaces/interfaces.hpp"
 
-
-class FMV {
+class FMV : public virtual IFMV {
 private:
   void getFactoryInstances(std::vector<Configbase*> mConfigArray);
   const String mVersion = "1.0";
-  std::vector<Wheel*> wheelArray;
+  std::vector<IWheel*> wheelArray;
   bool mIsSetup = false;
-  ModuleList * mModules = new ModuleList();
-  SensorList * mSensors = new SensorList();
-  Default_eventrulesbase* mEventRules = nullptr;
+  IModuleList * mModules = new ModuleList();
+  ISensorList * mSensors = new SensorList();
+  Default_eventrulesbase * mEventRules = nullptr;
   Spiffs_config * pSpiffs_config;
   Spiffs_storage * pSpiffs_storage;
   SimpleTimer * pSimpleTimerPingPong = new SimpleTimer(1000);
@@ -32,23 +31,34 @@ public:
   FMV() {
 
   };
-  virtual void setup();
-  virtual void loop();
-  void moduleEvent(Modulebase* sender, byte eventId);
+  void setup();
+  void loop();
+  void moduleEvent(IModule * sender, byte eventId);
 
-  std::vector<Wheel*> getWheelValues() const
+  std::vector<IWheel*> getWheelValues() const
   {
     return wheelArray;
   }
 
-  ModuleList &modules()
+  IModuleList &modules()
   {
-    return *mModules;
+    return * mModules;
   }
 
-  SensorList &sensors()
+  Default_eventrulesbase &eventRules()
   {
-    return *mSensors;
+    return * mEventRules;
+  }
+
+  void setEventRules(Default_eventrulesbase * rules)
+  {
+    mEventRules = rules;
+    mEventRules -> setFMV(this);
+  }
+
+  ISensorList &sensors()
+  {
+    return * mSensors;
   }
 
   String getVersion()

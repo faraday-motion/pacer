@@ -5,11 +5,13 @@
 #include "./control_priority_config.h"
 #include "../../utility/simpletimer.h"
 #include "../base/base.hpp"
+#include "../../interfaces/interfaces.hpp"
 
-class Control_priority : virtual public Modulebase
+
+class Control_priority : public virtual Modulebase
 {
 private:
-  FMV *mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   SimpleTimer mSimpleTimer;
   Control_priority_config* mCfg = nullptr;
   int mPriority1 = -1;
@@ -24,7 +26,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Control_priority(byte id, FMV *fmv, Control_priority_config* cfg = nullptr) : Modulebase(id, Modules::CONTROL_PRIORITY)  {
+  Control_priority(byte id, IFMV * fmv, Control_priority_config * cfg = nullptr) : Modulebase(id, Modules::CONTROL_PRIORITY)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Control_priority_config*>(Configurator::Instance().createConfig(id, Configurations::CONTROL_PRIORITY_CONFIG));

@@ -4,17 +4,17 @@
 #include <Arduino.h>
 #include "./vehiclecontrol.h"
 #include "../../configuration/default/configuration.h"
-#include "../../configuration/wheel.h"
+#include "../../interfaces/interfaces.hpp"
 #include "./vesc_datatypes.h"
 
 class Vesc_controller_wheel_decorator{
 private:
   Vehiclecontrol mWheelControl;
-  Wheel* mWheel = nullptr;
+  IWheel * mWheel = nullptr;
   mc_values mVescValues;
   bool mIsMaster = false;
 public:
-  Vesc_controller_wheel_decorator(Wheel* wheel) {
+  Vesc_controller_wheel_decorator(IWheel * wheel) {
     mWheel = wheel;
   }
 
@@ -36,7 +36,7 @@ public:
       return mWheel -> getIndex();
   }
 
-  Wheel* getWheel() const
+  IWheel * getWheel() const
   {
     return mWheel;
   }
@@ -49,7 +49,6 @@ public:
   void setVescValues(mc_values vescValues)
   {
     mVescValues = vescValues;
-
   }
 
   bool isMaster()

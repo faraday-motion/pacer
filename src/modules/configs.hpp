@@ -9,7 +9,7 @@
 #include "./modules/exponential_power_modulation/exponential_power_modulation_config.h"
 #include "./modules/force_control/force_control_config.h"
 #include "./modules/joystick_control/joystick_control_config.h"
-#include "./modules/neopixels/neopixels_config.h"
+#include "./modules/neopixels_led/neopixels_led_config.h"
 #include "./modules/ntp_timeservice/ntp_timeservice_config.h"
 #include "./modules/power_limit/power_limit_config.h"
 #include "./modules/pwm_controller/pwm_controller_config.h"

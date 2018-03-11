@@ -8,7 +8,7 @@
 class Custom_eventrules : public Default_eventrules{
 private:
 public:
-  Custom_eventrules(ModuleList* modules) : Default_eventrules(modules) {
+  Custom_eventrules() : Default_eventrules() {
   }
   /*
   void moduleEvent(Modulebase* sender, byte eventId)

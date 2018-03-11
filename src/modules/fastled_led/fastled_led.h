@@ -1,23 +1,23 @@
-#ifndef FASTLED_H
-#define FASTLED_H
+#ifndef FASTLED_LED_H
+#define FASTLED_LED_H
 #include "../../utility/simpletimer.h"
 #include "../base/modulebase.h"
 #include "../../fmv.h"
 
-class Fastled : virtual public Modulebase
+class Fastled_led : public virtual Modulebase
 {
 private:
   SimpleTimer mSimpleTimer;
   bool mIsDirty = false;
 protected:
-  FMV *mFMV;
+  IFMV *mFMV;
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Fastled(byte id, FMV *fmv, int interval = 25, int critical = 50) : Modulebase(id, Modules::FASTLED)  {
+  Fastled_led(byte id, IFMV * fmv, int interval = 25, int critical = 50) : Modulebase(id, Modules::FASTLED_LED)  {
     mFMV = fmv;
     mSimpleTimer.setInterval(interval, critical);
   }

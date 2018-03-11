@@ -8,11 +8,12 @@
 #include "../base/modulebase.h"
 #include "../../fmv.h"
 #include "../../utility/simpletimer.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Analog_sensor : virtual public Modulebase
+class Analog_sensor : public virtual Modulebase
 {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   byte mPin = -1;
   String mSensorName = "";
   Analog_sensor_config * mCfg = nullptr;
@@ -23,7 +24,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-    Analog_sensor(byte id, FMV *fmv, Analog_sensor_config* cfg = nullptr) : Modulebase(id, Modules::ANALOG_SENSOR){
+    Analog_sensor(byte id, IFMV * fmv, Analog_sensor_config * cfg = nullptr) : Modulebase(id, Modules::ANALOG_SENSOR){
       mFMV = fmv;
       if(cfg == nullptr)
         mCfg = static_cast<Analog_sensor_config*>(Configurator::Instance().createConfig(id, Configurations::ANALOG_SENSOR_CONFIG));

@@ -7,12 +7,12 @@
 #include "./pwm_steering_config.h"
 #include "./pwm_steering_wheel_decorator.h"
 #include "../base/power_module.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Pwm_steering : virtual public Power_module
+class Pwm_steering : public virtual Power_module
 {
 private:
-  FMV *mFMV;
+  IFMV * mFMV;
   SimpleTimer mSimpleTimer;
   Pwm_steering_config* mCfg = nullptr;
   std::vector<Pwm_steering_wheel_decorator*> wheelDecorators;
@@ -28,7 +28,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Pwm_steering(byte id, FMV *fmv, Pwm_steering_config* cfg = nullptr) : Power_module(id, Modules::PWM_STEERING)  {
+  Pwm_steering(byte id, IFMV * fmv, Pwm_steering_config * cfg = nullptr) : Power_module(id, Modules::PWM_STEERING)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Pwm_steering_config*>(Configurator::Instance().createConfig(id, Configurations::PWM_STEERING_CONFIG));

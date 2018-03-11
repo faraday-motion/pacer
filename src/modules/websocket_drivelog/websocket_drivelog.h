@@ -5,11 +5,12 @@
 #include "../../configuration/configurator.h"
 #include "./websocket_drivelog_config.h"
 #include "../../utility/simpletimer.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Websocket_drivelog : virtual public Modulebase
+class Websocket_drivelog : public virtual Modulebase
 {
   private:
-    FMV *mFMV;
+    IFMV *mFMV;
     void writeSensorValues();
     SimpleTimer mSimpleTimer;
     Websocket_drivelog_config * mCfg = nullptr;
@@ -21,7 +22,7 @@ class Websocket_drivelog : virtual public Modulebase
       mFMV -> moduleEvent(this, eventId);
     }
   public:
-    Websocket_drivelog(byte id, FMV *fmv, Websocket_drivelog_config* cfg = nullptr) : Modulebase(id, Modules::WEBSOCKET_DRIVELOG)  {
+    Websocket_drivelog(byte id, IFMV * fmv, Websocket_drivelog_config * cfg = nullptr) : Modulebase(id, Modules::WEBSOCKET_DRIVELOG)  {
       mFMV = fmv;
       if (cfg == nullptr)
         mCfg = static_cast<Websocket_drivelog_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_DRIVELOG_CONFIG));

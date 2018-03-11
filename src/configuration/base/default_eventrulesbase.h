@@ -1,7 +1,8 @@
 #ifndef DEFAULT_EVENTRULESBASE_H
 #define DEFAULT_EVENTRULESBASE_H
+
 #include <Arduino.h>
-#include "../../modules/base/modulebase.h"
+#include "../../interfaces/interfaces.hpp"
 
 class Default_eventrulesbase {
 public:
@@ -9,7 +10,8 @@ public:
 
   }
 
-  virtual void moduleEvent(Modulebase* sender, byte eventId);
+  virtual void moduleEvent(IModule * sender, byte eventId);
+  virtual void setFMV(IFMV * fmv);
 };
 
 #endif

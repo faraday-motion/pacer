@@ -1,14 +1,16 @@
 #ifndef CURRENT_MONITOR_H
 #define CURRENT_MONITOR_H
+
 #include "../../configuration/configurator.h"
 #include "./current_monitor_config.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
+#include "../../sensors/sensors.hpp"
 
-class Current_monitor : virtual public Modulebase
+class Current_monitor : public Modulebase
 {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   Float_sensor_value * mSensor;
   float mMinCurrent = 0;
   float mMaxCurrent = 1023;
@@ -20,7 +22,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Current_monitor(byte id, FMV *fmv, Current_monitor_config* cfg = nullptr) : Modulebase(id, Modules::CURRENT_MONITOR)  {
+  Current_monitor(byte id, IFMV * fmv, Current_monitor_config * cfg = nullptr) : Modulebase(id, Modules::CURRENT_MONITOR)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Current_monitor_config*>(Configurator::Instance().createConfig(id, Configurations::CURRENT_MONITOR_CONFIG));

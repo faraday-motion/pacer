@@ -11,7 +11,7 @@
 //#include "./modules/fastled/fastled.h"
 #include "./modules/force_control/force_control.h"
 #include "./modules/joystick_control/joystick_control.h"
-#include "./modules/neopixels/neopixels.h"
+#include "./modules/neopixels_led/neopixels_led.h"
 #include "./modules/ntp_timeservice/ntp_timeservice.h"
 #include "./modules/power_limit/power_limit.h"
 #include "./modules/pwm_controller/pwm_controller.h"

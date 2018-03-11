@@ -30,7 +30,7 @@ public:
 
   byte maxPowerCurrent = 60;
   byte maxBrakeCurrent = 60;
-  int maxRpm = 0;
+  int maxRpm = 10000;
   bool defaultSerial = true;
 };
 

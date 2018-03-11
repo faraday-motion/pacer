@@ -7,13 +7,12 @@
 #include "./websocket_connection_config.h"
 #include "../../utility/simpletimer.h"
 #include "../base/connection_module.h"
-#include "../../fmv.h"
 #include "../../interfaces/interfaces.hpp"
 
-class Websocket_connection : public Connection_module
+class Websocket_connection : public virtual Connection_module
 {
 private:
-  FMV *mFMV;
+  IFMV *mFMV;
   SimpleTimer mSimpleTimer;
   Websocket_connection_config* mCfg = nullptr;
   WebSocketsServer* mWebSocketsServer = nullptr;
@@ -28,7 +27,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Websocket_connection(byte id, FMV *fmv, Websocket_connection_config* cfg = nullptr) : Connection_module(id, Modules::WEBSOCKET_CONNECTION)  {
+  Websocket_connection(byte id, IFMV * fmv, Websocket_connection_config * cfg = nullptr) : Connection_module(id, Modules::WEBSOCKET_CONNECTION)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Websocket_connection_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_CONNECTION_CONFIG));

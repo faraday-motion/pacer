@@ -5,15 +5,15 @@
 #include <Servo.h>
 #include "./vehiclecontrol.h"
 #include "../../configuration/default/configuration.h"
-#include "../../configuration/wheel.h"
+#include "../../interfaces/interfaces.hpp"
 
 class Pwm_controller_wheel_decorator{
 private:
   Vehiclecontrol mWheelControl;
-  Wheel* mWheel = nullptr;
-  Servo* mServo = nullptr;
+  IWheel * mWheel = nullptr;
+  Servo * mServo = nullptr;
 public:
-  Pwm_controller_wheel_decorator(Wheel* wheel, Servo* servo) {
+  Pwm_controller_wheel_decorator(IWheel * wheel, Servo * servo) {
     mWheel = wheel;
     mServo = servo;
   }
@@ -39,12 +39,12 @@ public:
     return mWheelControl;
   }
 
-  Wheel* getWheel() const
+  IWheel * getWheel() const
   {
     return mWheel;
   }
 
-  Servo* getServo() const
+  Servo * getServo() const
   {
     return mServo;
   }

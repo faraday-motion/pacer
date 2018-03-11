@@ -4,11 +4,13 @@
 #include "../../configuration/configurator.h"
 #include "./joystick_control_config.h"
 #include "../base/base.hpp"
+#include "../../interfaces/interfaces.hpp"
+#include "../../sensors/sensors.hpp"
 
-class Joystick_control : virtual public Control_module
+class Joystick_control : public Control_module
 {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   Int_sensor_value * mSensorX = nullptr;
   Int_sensor_value * mSensorY = nullptr;
   int mDeadbandY = 50;
@@ -25,7 +27,7 @@ private:
   byte mBack = 0;
   byte mLeft = 0;
   byte mRight = 0;
-  Joystick_control_config* mCfg = nullptr;
+  Joystick_control_config * mCfg = nullptr;
   String mSensorNameX = "";
   String mSensorNameY = "";
 protected:
@@ -40,7 +42,7 @@ protected:
     }
   }
 public:
-  Joystick_control(byte id, FMV *fmv, Joystick_control_config* cfg = nullptr) : Control_module(id, Modules::JOYSTICK_CONTROL)  {
+  Joystick_control(byte id, IFMV * fmv, Joystick_control_config * cfg = nullptr) : Control_module(id, Modules::JOYSTICK_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Joystick_control_config*>(Configurator::Instance().createConfig(id, Configurations::JOYSTICK_CONTROL_CONFIG));

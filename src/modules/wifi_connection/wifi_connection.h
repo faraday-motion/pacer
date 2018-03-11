@@ -9,10 +9,10 @@
 #include "../base/modulebase.h"
 #include "../../fmv.h"
 
-class Wifi_connection : virtual public Modulebase
+class Wifi_connection : public virtual Modulebase
 {
 private:
-  FMV *mFMV;
+  IFMV * mFMV;
   void onDisable();
   String mHost = "";
   String mSsid = "";
@@ -20,7 +20,7 @@ private:
   String mAp_ssid = "";
   String mAp_password = "";
   int mAp_channel = 0;
-  Wifi_connection_config* mCfg = nullptr;
+  Wifi_connection_config * mCfg = nullptr;
   void setWifiOff();
   void setWifiAp();
   void setWifiStation();
@@ -30,7 +30,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Wifi_connection(byte id, FMV *fmv, Wifi_connection_config* cfg = nullptr) : Modulebase(id, Modules::WIFI_CONNECTION)  {
+  Wifi_connection(byte id, IFMV * fmv, Wifi_connection_config * cfg = nullptr) : Modulebase(id, Modules::WIFI_CONNECTION)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Wifi_connection_config*>(Configurator::Instance().createConfig(id, Configurations::WIFI_CONNECTION_CONFIG));

@@ -5,12 +5,13 @@
 #include "../../configuration/configurator.h"
 #include "./ntp_timeservice_config.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../utility/simpletimer.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Ntp_timeservice : virtual public Modulebase
+class Ntp_timeservice : public virtual Modulebase
 {
 private:
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   String mTimeServer = "";
   String mTimeZone = "";
   String mDateTimeFormat = "";
@@ -26,7 +27,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Ntp_timeservice(byte id, FMV *fmv, Ntp_timeservice_config* cfg = nullptr) : Modulebase(id, Modules::NTP_TIMESERVICE)  {
+  Ntp_timeservice(byte id, IFMV * fmv, Ntp_timeservice_config * cfg = nullptr) : Modulebase(id, Modules::NTP_TIMESERVICE)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Ntp_timeservice_config*>(Configurator::Instance().createConfig(id, Configurations::NTP_TIMESERVICE_CONFIG));

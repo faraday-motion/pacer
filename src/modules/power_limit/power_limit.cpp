@@ -44,7 +44,7 @@ void Power_limit::loop()
     }
     else if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabledByRole(Roles::MODULATION_MODULE);
+      IModule * mb = mFMV -> modules().getEnabledByRole(Roles::MODULATION_MODULE);
       if (mb != nullptr )
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Power_limit::Modulation_module"));

@@ -7,22 +7,22 @@
 #include "../base/base.hpp"
 #include "../../utility/spiffs_storage.h"
 
-class Spiffs_drivelog : virtual public Modulebase
+class Spiffs_drivelog : public virtual Modulebase
 {
   private:
-    FMV *mFMV;
+    IFMV * mFMV;
     void writeSensorValues();
     String mDriveLog = "";
     SimpleTimer mSimpleTimer;
     Spiffs_storage mSpiffs_storage;
-    Spiffs_drivelog_config* mCfg = nullptr;
+    Spiffs_drivelog_config * mCfg = nullptr;
   protected:
     void onEvent(byte eventId, bool always = false)
     {
       mFMV -> moduleEvent(this, eventId);
     }
   public:
-    Spiffs_drivelog(byte id, FMV *fmv, Spiffs_drivelog_config* cfg = nullptr) : Modulebase(id, Modules::SPIFFS_DRIVELOG)  {
+    Spiffs_drivelog(byte id, IFMV * fmv, Spiffs_drivelog_config * cfg = nullptr) : Modulebase(id, Modules::SPIFFS_DRIVELOG)  {
       mFMV = fmv;
       if (cfg == nullptr)
         mCfg = static_cast<Spiffs_drivelog_config*>(Configurator::Instance().createConfig(id, Configurations::SPIFFS_DRIVELOG_CONFIG));
@@ -38,6 +38,10 @@ class Spiffs_drivelog : virtual public Modulebase
       mDriveLog = mCfg -> driveLog;
       setEnabled(mCfg -> enabled);
     }
+
+    enum Commands : byte {
+      CLEAR_LOG
+    };
 
     void setup();
     void loop();

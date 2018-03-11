@@ -16,10 +16,10 @@
 //When the vesc_interface is not static, it gives problems
 static Vesc_interface * pVescInterface;
 
-class Vesc_controller : public Power_module, public IVesc_interface
+class Vesc_controller : public virtual Power_module, public virtual IVesc_interface
 {
 private:
-  FMV * mFMV;
+  IFMV * mFMV;
   SimpleTimer mSimpleTimer;
   Vesc_controller_config * mCfg = nullptr;
   bool mHasMCConfiguration = false;
@@ -55,7 +55,7 @@ protected:
   }
 public:
 
-  Vesc_controller(byte id, FMV *fmv, Vesc_controller_config* cfg = nullptr) : Power_module(id, Modules::VESC_CONTROLLER) {
+  Vesc_controller(byte id, IFMV * fmv, Vesc_controller_config * cfg = nullptr) : Power_module(id, Modules::VESC_CONTROLLER) {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Vesc_controller_config*>(Configurator::Instance().createConfig(id, Configurations::VESC_CONTROLLER_CONFIG));

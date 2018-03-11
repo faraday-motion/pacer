@@ -31,17 +31,25 @@ void Spiffs_drivelog::loop()
 void Spiffs_drivelog::writeSensorValues()
 {
   String sv = "";
-  std::vector<ISensorvalue*> sensors = mFMV -> sensors().all();
+  std::vector<ISensorValue*> sensors = mFMV -> sensors().all();
   for (int i=0; i< sensors.size(); i++)
   {
     sv += String(sensors[i] -> getName()) + ":" + String(sensors[i] -> getStringValue()) + ", ";
   }
   sv += ";\n";
-//  sv += ";";
-  mSpiffs_storage.append(mDriveLog, sv);
+  //TODO Add MAX SIZE
+  mSpiffs_storage.append(mDriveLog, sv, 700000);
 }
 
 void Spiffs_drivelog::command(byte command)
 {
-
+  if (enabled())
+  {
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Spiffs_drivelog::command: "), String(command));
+    Commands comm = static_cast<Commands>(command);
+    if (comm == Commands::CLEAR_LOG)
+    {
+      mSpiffs_storage.remove(mDriveLog);
+    }
+  }
 }

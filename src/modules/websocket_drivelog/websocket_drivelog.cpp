@@ -4,6 +4,7 @@
 #include "../../utility/tools.h"
 #include "../../configuration/default/configuration.h"
 #include "../../configuration/configurator.h"
+#include "../../interfaces/interfaces.hpp"
 
 void Websocket_drivelog::setup() {
   if (mIsSetup == false)
@@ -33,7 +34,8 @@ void Websocket_drivelog::getWebsocketConnection()
   //Find the websocket connection module
   if (pIConnection == nullptr)
   {
-    Modulebase * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
+      IModule * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
+//    Modulebase * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
     if (mb != nullptr)
     {
       Connection_module * conn = static_cast<Connection_module*>(mb);
@@ -45,7 +47,7 @@ void Websocket_drivelog::getWebsocketConnection()
 void Websocket_drivelog::writeSensorValues()
 {
   String sv = ", \"content\":{";
-  std::vector<ISensorvalue*> sensors = mFMV -> sensors().all();
+  std::vector<ISensorValue*> sensors = mFMV -> sensors().all();
   for (int i=0; i< sensors.size(); i++)
   {
     sv += String("\"" + sensors[i] -> getName()) + "\":" + "\"" + String(sensors[i] -> getStringValue()) + "\"";

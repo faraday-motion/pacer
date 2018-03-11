@@ -2,7 +2,7 @@
 #define ROLES_H
 
 enum class Roles {
-  MODULE,
+  MODULE = 0,
   CONTROL_MODULE,
   MODULATION_MODULE,
   LIMIT_MODULE,

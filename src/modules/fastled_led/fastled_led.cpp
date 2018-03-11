@@ -3,12 +3,12 @@
 #include <FastLED.h>
 //FASTLED_USING_NAMESPACE;
 #include "../../utility/simpletimer.h"
-#include "./fastled.h"
+#include "./fastled_led.h"
 #include "../../configuration/default/configuration.h"
 
 CRGB leds[FASTLED_PIXELS];
 
-void Fastled::setup()
+void Fastled_led::setup()
 {
   if (mIsSetup == false)
   {
@@ -24,7 +24,7 @@ void Fastled::setup()
   }
 }
 
-void Fastled::loop()
+void Fastled_led::loop()
 {
   if (enabled())
   {
@@ -42,7 +42,7 @@ void Fastled::loop()
   }
 }
 
-void Fastled::command(byte command)
+void Fastled_led::command(byte command)
 {
   Logger::Instance().write(LogLevel::DEBUG, "recievecommand: " + (String)(command));
   Commands comm = static_cast<Commands>(command);
@@ -82,7 +82,7 @@ void Fastled::command(byte command)
 
 }
 
-void Fastled::reset()
+void Fastled_led::reset()
 {
   for(int i=0;i<FASTLED_PIXELS;i++){
      leds[i] = CRGB(0,0,0);
@@ -90,7 +90,7 @@ void Fastled::reset()
    }
 }
 
-void Fastled::neutral()
+void Fastled_led::neutral()
 {
   for(int i=0;i<FASTLED_PIXELS;i++){
      // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
@@ -102,7 +102,7 @@ void Fastled::neutral()
    }
 }
 
-void Fastled::acc(bool enable)
+void Fastled_led::acc(bool enable)
 {
   if (enable)
   {
@@ -119,7 +119,7 @@ void Fastled::acc(bool enable)
   mIsDirty = true;
 }
 
-void Fastled::brake(bool enable)
+void Fastled_led::brake(bool enable)
 {
   if (enable)
   {
@@ -136,7 +136,7 @@ void Fastled::brake(bool enable)
   mIsDirty = true;
 }
 
-void Fastled::left(bool enable)
+void Fastled_led::left(bool enable)
 {
   if (enable)
   {
@@ -153,7 +153,7 @@ void Fastled::left(bool enable)
   mIsDirty = true;
 }
 
-void Fastled::right(bool enable)
+void Fastled_led::right(bool enable)
 {
   if (enable)
   {
@@ -170,7 +170,7 @@ void Fastled::right(bool enable)
   mIsDirty = true;
 }
 
-void Fastled::onDisable()
+void Fastled_led::onDisable()
 {
   reset();
   FastLED.show();

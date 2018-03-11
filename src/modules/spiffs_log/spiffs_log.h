@@ -7,21 +7,22 @@
 #include "../../configuration/configurator.h"
 #include "./spiffs_log_config.h"
 #include "../base/base.hpp"
+#include "../../interfaces/interfaces.hpp"
 
-class Spiffs_log : virtual public Log_module
+class Spiffs_log : public virtual Log_module
 {
 private:
       Spiffs_log_config* mCfg = nullptr;
       String mLogFile;
       Spiffs_storage mSpiffs_storage;
-      FMV * mFMV = nullptr;
+      IFMV * mFMV = nullptr;
 protected:
   void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-    Spiffs_log(byte id, FMV * fmv = nullptr, Spiffs_log_config * mfg = nullptr) : Log_module(id, Modules::SPIFFS_LOG){
+    Spiffs_log(byte id, IFMV * fmv = nullptr, Spiffs_log_config * mfg = nullptr) : Log_module(id, Modules::SPIFFS_LOG){
       mFMV = fmv;
       Configurator::Instance().initializeSpiff();
       if (mfg == nullptr)

@@ -1,5 +1,4 @@
 #include <fmv.h>
-#include "./modules/neopixels/neopixels.h"
 
 FMV fmv;
 

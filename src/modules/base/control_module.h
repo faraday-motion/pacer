@@ -6,8 +6,9 @@
 #include "../../vehiclecontrol.h"
 #include "../../log/logger.h"
 #include "../../utility/simpletimer.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Control_module : public Modulebase, public IRecieve, public IActive, public IClient  {
+class Control_module : public Modulebase, public IControlModule {
 private:
   bool mIsActive = false;
   bool mHasClient = false;
@@ -50,7 +51,7 @@ protected:
   void recieve(byte command, byte value)
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::recieve Command: "), String(command) + " Value: " + String(value));
-    if (enabled())
+    if (Modulebase::enabled())
     {
       if (command == ExternalCommands::DRIVE_POWER)
       {

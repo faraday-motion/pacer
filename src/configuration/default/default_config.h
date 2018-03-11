@@ -21,7 +21,7 @@ public:
 
       //0
       Serial_log_config* cfg0 = new Serial_log_config(id++);
-      cfg0 -> logLevel = LogLevel::INFO;
+      cfg0 -> logLevel = LogLevel::DEBUG;
       cfg0 -> enabled = true;
       Configurator::Instance().addConfig(cfg0);
 
@@ -31,7 +31,7 @@ public:
       cfg15 -> enabled = true;
       Configurator::Instance().addConfig(cfg15);
 
-      //The drivelog seems to have an issue if configured too late or if the file is too big
+      //The drivelog needs refactoring to tasks as it performs bad ans stalls normal execution
       Spiffs_drivelog_config* cfg23 = new Spiffs_drivelog_config(id++);
       cfg23 -> enabled = false;
       Configurator::Instance().addConfig(cfg23);
@@ -157,15 +157,15 @@ public:
       //21
       Control_priority_config* cfg20 = new Control_priority_config(id++);
       cfg20 -> enabled = true;
-      cfg20 -> priority1 = cfg14 -> id; //Wifi simple
-      cfg20 -> priority2 = cfg19 -> id; //Websocket
-      cfg20 -> priority3 = cfg12 -> id; //Serial
-      cfg20 -> priority4 = cfg9 -> id; //Force
+      cfg20 -> priority1 = cfg14 -> getId(); //Wifi simple
+      cfg20 -> priority2 = cfg19 -> getId(); //Websocket
+      cfg20 -> priority3 = cfg12 -> getId(); //Serial
+      cfg20 -> priority4 = cfg9 -> getId(); //Force
       Configurator::Instance().addConfig(cfg20);
 
       //22
       Websocket_server_log_config* cfg21 = new Websocket_server_log_config(id++);
-      cfg21 -> enabled = true;
+      cfg21 -> enabled = false;
       cfg21 -> logLevel = LogLevel::INFO;
       Configurator::Instance().addConfig(cfg21);
 

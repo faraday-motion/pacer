@@ -9,18 +9,13 @@
 #include "../log/logger.h"
 #include "../utility/tools.h"
 
-void Spiffs_config::loadBase(String path, byte &id, int &configuration) {
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("loadConfigBase: "), path);
-  File file = fs.open(path);
-  if(!file || file.isDirectory()){
-      Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to open config for reading: "), path);
-      return ;
-  }
-  // Allocate the memory pool on the stack.
-  // Don't forget to change the capacity to match your JSON document.
-  // Use arduinojson.org/assistant to compute the capacity.
+bool Spiffs_config::load(String path, byte &id, int &configuration) {
+  Logger::Instance().write(LogLevel::DEBUG, FPSTR("load: "), path);
+  File file;
+  bool success = pStore -> read(path, file);
+  if (!success)
+    return false;
   StaticJsonBuffer<JSONBUFFERSIZE> jsonBuffer;
-  // Parse the root object
   JsonObject &root = jsonBuffer.parseObject(file);
   if (!root.success())
     Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to read config: "), path);
@@ -32,19 +27,14 @@ void Spiffs_config::loadBase(String path, byte &id, int &configuration) {
   file.close();
 }
 
-void Spiffs_config::load(Configbase *config) {
-  String path = "/config" + Tools::prefixInt(config -> id) +  ".json";
+bool Spiffs_config::load(IConfig * config) {
+  String path = "/configs/config" + Tools::prefixInt(config -> getId()) +  ".json";
   Logger::Instance().write(LogLevel::INFO, FPSTR("loadConfig: "), path);
-  File file = fs.open(path);
-  if(!file || file.isDirectory()){
-    Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to open file for reading: "), path);
-    return ;
-  }
-  // Allocate the memory pool on the stack.
-  // Don't forget to change the capacity to match your JSON document.
-  // Use arduinojson.org/assistant to compute the capacity.
+  File file;
+  bool success = pStore -> read(path, file);
+  if (!success)
+    return false;
   StaticJsonBuffer<JSONBUFFERSIZE> jsonBuffer;
-  // Parse the root object
   JsonObject &root = jsonBuffer.parseObject(file);
   if (!root.success())
     Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to read config: "), path);
@@ -53,74 +43,59 @@ void Spiffs_config::load(Configbase *config) {
   file.close();
 }
 
-bool Spiffs_config::save(Configbase *config){
-    String path = "/config" + Tools::prefixInt(config -> id) +  ".json";
+bool Spiffs_config::save(IConfig * config){
+    String path = "/configs/config" + Tools::prefixInt(config -> getId()) +  ".json";
     Logger::Instance().write(LogLevel::INFO, FPSTR("saveConfig: "), path);
-    //deleteFile(path);
-    File file = fs.open(path, FILE_WRITE);
-    if(!file){
-      Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed open for write: "), path);
-      return false;
-    }
-    // Serialize JSON to file
     StaticJsonBuffer<JSONBUFFERSIZE> jsonBuffer;
-    // Parse the root object
     JsonObject &root = jsonBuffer.createObject();
     config -> getConfiguration(root);
-    bool result = false;
-    if (root.printTo(file) == 0) {
+    String configContent;
+    if (root.printTo(configContent) == 0) {
       Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to write to file: "), path);
+      return false;
     }
     else
     {
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("File write success: "), path);
-      result =  true;
+      return pStore -> save(path, configContent);
     }
-    file.close();
 }
 
-std::vector<String> Spiffs_config::list(){
-    String path = "/";
+bool Spiffs_config::list(std::vector<String> &files){
+    String path = "/configs/";
     Logger::Instance().write(LogLevel::DEBUG, FPSTR("Listing directory: "), path);
-    std::vector<String> files;
-    File root = fs.open(path);
-    if(!root){
-      Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to open directory: "), path);
-      return files;
-    }
-    if(!root.isDirectory()){
+    File configDirectory;
+    bool success = pStore -> read(path, configDirectory);
+    if (!success)
+      return false;
+    if(!configDirectory.isDirectory()){
         Logger::Instance().write(LogLevel::WARNING, FPSTR("Not a directory: "), path);
-        return files;
+        return false;
     }
-    File file = root.openNextFile();
+    File file = configDirectory.openNextFile();
     while(file){
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("FILE: "), String(file.name()));
         files.push_back(file.name());
         file.close();
-        file = root.openNextFile();
+        file = configDirectory.openNextFile();
     }
-    return files;
+    return true;
 }
 
 bool Spiffs_config::remove(byte id){
-  String path = "/config" + Tools::prefixInt(id) +  ".json";
-  return deleteFile(path);
+  String path = "/configs/config" + Tools::prefixInt(id) +  ".json";
+  return  pStore -> remove(path);
 }
 
-void Spiffs_config::removeAll()
+bool Spiffs_config::remove()
 {
-  std::vector<String> files = list();
+  std::vector<String> files;
+  list(files);
+  bool success = false;
   for (int i=0; i<files.size(); i++)
-    deleteFile(files[i]);
-}
-
-bool Spiffs_config::deleteFile(String path){
-  Logger::Instance().write(LogLevel::DEBUG, FPSTR("Deleting file: "), path);
-  if(fs.remove(path)){
-    Logger::Instance().write(LogLevel::DEBUG, FPSTR("File deleted"));
-    return true;
-  } else {
-    Logger::Instance().write(LogLevel::WARNING, FPSTR("Delete failed"));
-    return false;
+  {
+    success = pStore -> remove(files[i]);
+    if (!success)
+      return false;
   }
+  return true;
 }

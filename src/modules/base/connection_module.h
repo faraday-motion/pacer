@@ -4,7 +4,7 @@
 #include "./base.hpp"
 #include "../../vehiclecontrol.h"
 
-class Connection_module : public Modulebase, public IConnection  {
+class Connection_module : public Modulebase, public virtual IConnection  {
 private:
   std::vector<IRecieve*> pRecievers;
 protected:

@@ -6,12 +6,13 @@
 #include "../../configuration/configurator.h"
 #include "./websocket_server_log_config.h"
 #include "../base/base.hpp"
+#include "../../interfaces/interfaces.hpp"
 
-class Websocket_server_log : virtual public Log_module
+class Websocket_server_log : public virtual Log_module
 {
 private:
   Websocket_server_log_config* mCfg = nullptr;
-  FMV * mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   IConnection * pIConnection = nullptr;
 
   void getWebsocketConnection()
@@ -19,7 +20,7 @@ private:
     //Find the websocket connection module
     if (pIConnection == nullptr)
     {
-      Modulebase * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
+      IModule * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
       if (mb != nullptr)
       {
         Connection_module * conn = static_cast<Connection_module*>(mb);
@@ -33,7 +34,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Websocket_server_log(byte id, FMV * fmv = nullptr, Websocket_server_log_config * mfg = nullptr) : Log_module(id, Modules::WEBSOCKET_SERVER_LOG){
+  Websocket_server_log(byte id, IFMV * fmv = nullptr, Websocket_server_log_config * mfg = nullptr) : Log_module(id, Modules::WEBSOCKET_SERVER_LOG){
     mFMV = fmv;
     if (mfg == nullptr)
       mCfg = static_cast<Websocket_server_log_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_SERVER_LOG_CONFIG));

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "../interfaces/interfaces.hpp"
 
-class Logger_writer : virtual public ISend
+class Logger_writer : public virtual ISend
 {
 public:
   Logger_writer() : ISend()  {

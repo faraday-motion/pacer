@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-class ISensorvalue {
+class ISensorValue {
    public:
       virtual String getName() = 0;
       virtual String getStringValue() = 0;

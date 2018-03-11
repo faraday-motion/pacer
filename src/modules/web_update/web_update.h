@@ -7,26 +7,29 @@
 #include <WiFiClient.h>
 #include <ESPmDNS.h>
 #include <Arduino.h>
+#include "../../configuration/configurator.h"
+#include "./web_update_config.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
+#include "../../utility/simpletimer.h"
 
-class Web_update : virtual public Modulebase
+class Web_update : public Modulebase
 {
 private:
-  FMV *mFMV;
-  ESP32WebServer *mWebserver;
+  IFMV * mFMV;
+  ESP32WebServer * mWebserver;
   void setRoutes();
   String getContentType(String filename);
   bool handleFileStream(String path);
   SimpleTimer mSimpleTimer;
-  Web_update_config* mCfg = nullptr;
+  Web_update_config * mCfg = nullptr;
 protected:
   void onEvent(byte eventId, bool always = false)
   {
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Web_update(byte id, FMV *fmv, Web_update_config* cfg = nullptr) : Modulebase(id, Modules::WEB_UPDATE)  {
+  Web_update(byte id, IFMV * fmv, Web_update_config * cfg = nullptr) : Modulebase(id, Modules::WEB_UPDATE)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Web_update_config*>(Configurator::Instance().createConfig(id, Configurations::WEB_UPDATE_CONFIG));

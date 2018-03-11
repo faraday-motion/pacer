@@ -4,13 +4,12 @@
 #include "../../configuration/default/configuration.h"
 #include "../../interfaces/interfaces.hpp"
 #include "../../enums/enums.hpp"
-//#include "./base.hpp"
 
-class Modulebase : public ILoopable, public IEnableable  {
+class Modulebase : public IModule  {
 private:
   byte mId = 0;
   int mModule = Modules::NONE;
-  Roles mRole = Roles::MODULE;
+  byte mRole = (byte)Roles::MODULE;
 protected:
   bool mEnabled = MODULE_DEFAULT_ENABLED;
   virtual void onEnable(){};
@@ -21,7 +20,7 @@ protected:
   Modulebase(byte id, int module, Roles role = Roles::MODULE) {
     mId = id;
     mModule = module;
-    mRole = role;
+    mRole = (byte)role;
   }
 public:
 
@@ -47,17 +46,17 @@ public:
       return mEnabled;
     }
 
-    int module() const
+    int module()
     {
       return mModule;
     }
 
-    Roles role() const
+    byte role()
     {
       return mRole;
     }
 
-    byte id() const
+    byte id()
     {
       return mId;
     }

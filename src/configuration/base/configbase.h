@@ -8,20 +8,34 @@
 #include "../../enums/modules.h"
 #include "../../interfaces/interfaces.hpp"
 
-
-class Configbase : public IConfigurable{
+class Configbase : public IConfig{
 private:
+  byte id = 0;
 protected:
-  Configbase(byte id, int configuration) : IConfigurable() {
+  Configbase(byte id, int configuration) : IConfig() {
     this -> id = id;
     this -> configuration = configuration;
   }
   virtual void getModuleConfiguration(JsonObject &root);
   virtual void setModuleConfiguration(JsonObject &root);
 public:
-  byte id = 0;
   int configuration = Configurations::NONE;
   bool enabled = MODULE_DEFAULT_ENABLED;
+
+  byte getId()
+  {
+    return id;
+  }
+
+  void setId(byte id)
+  {
+    this -> id = id;
+  }
+
+  bool getEnabled()
+  {
+    return enabled;
+  }
 
   void getConfiguration(JsonObject &root)
   {
@@ -38,8 +52,6 @@ public:
     enabled = bool(root["enabled"]);
     setModuleConfiguration(root);
   }
-
-
 };
 
 #endif

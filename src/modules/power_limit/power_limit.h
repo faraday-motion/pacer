@@ -4,12 +4,13 @@
 #include "../../configuration/configurator.h"
 #include "./power_limit_config.h"
 #include "../base/limit_module.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
+#include "../../sensors/sensors.hpp"
 
-class Power_limit : virtual public Limit_module
+class Power_limit : public Limit_module
 {
 private:
-  FMV *mFMV;
+  IFMV * mFMV;
   void setPowerMax(byte powermax);
   Power_limit_config* mCfg = nullptr;
   SimpleTimer mSimpleTimer;
@@ -25,7 +26,7 @@ protected:
     mFMV -> moduleEvent(this, eventId);
   }
 public:
-  Power_limit(byte id, FMV *fmv, Power_limit_config* cfg = nullptr) : Limit_module(id, Modules::POWER_LIMIT)  {
+  Power_limit(byte id, IFMV * fmv, Power_limit_config * cfg = nullptr) : Limit_module(id, Modules::POWER_LIMIT)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Power_limit_config*>(Configurator::Instance().createConfig(id, Configurations::POWER_LIMIT_CONFIG));

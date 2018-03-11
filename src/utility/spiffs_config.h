@@ -6,22 +6,23 @@
 #include "FS.h"
 #include "SPIFFS.h"
 #include "../configuration/base/configbase.h"
+#include "../interfaces/interfaces.hpp"
 
-class Spiffs_config
+
+class Spiffs_config : public virtual IConfigStore
 {
     private:
-      fs::FS &fs = SPIFFS;
-      bool deleteFile(String path);
+      IStore * pStore;
     public:
-      Spiffs_config(){
+      Spiffs_config(IStore * store) : IConfigStore() {
+        pStore = store;
       };
-       void loadBase(String path, byte &id, int &configuration);
-       void load(Configbase *config);
-       bool save(Configbase *config);
-       bool remove(byte id);
-       void removeAll();
-       void load(String path, byte &id, int &configuration);
-       std::vector<String> list();
+      bool load(String path, byte &id, int &configuration);
+      bool load(IConfig * config);
+      bool save(IConfig * config);
+      bool remove(byte id);
+      bool remove();
+      bool list(std::vector<String> &files);
 };
 
 #endif

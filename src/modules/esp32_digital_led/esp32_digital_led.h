@@ -5,13 +5,13 @@
 #include "./esp32_digital_led_config.h"
 #include "../../utility/simpletimer.h"
 #include "../base/modulebase.h"
-#include "../../fmv.h"
+#include "../../interfaces/interfaces.hpp"
 
-class Esp32_digital_led : virtual public Modulebase
+class Esp32_digital_led : public virtual Modulebase
 {
 
 public:
-  Esp32_digital_led(byte id, FMV *fmv, Esp32_digital_led_config* cfg = nullptr) : Modulebase(id, Modules::ESP32_DIGITAL_LED)  {
+  Esp32_digital_led(byte id, IFMV * fmv, Esp32_digital_led_config * cfg = nullptr) : Modulebase(id, Modules::ESP32_DIGITAL_LED)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Esp32_digital_led_config*>(Configurator::Instance().createConfig(id, Configurations::ESP32_DIGITAL_LED_CONFIG));
@@ -102,7 +102,7 @@ private:
   void setPixelColor(byte fromIndex, byte toIndex, byte r, byte g, byte b);
   pixelColor_t colorWheel(byte color);
 protected:
-  FMV *mFMV = nullptr;
+  IFMV *mFMV = nullptr;
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {

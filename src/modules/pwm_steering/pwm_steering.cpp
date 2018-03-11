@@ -15,14 +15,14 @@ void Pwm_steering::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    std::vector<Wheel*> wheelArray = mFMV -> getWheelValues();
+    std::vector<IWheel*> wheelArray = mFMV -> getWheelValues();
     for (int i=0; i < wheelArray.size(); i++)
     {
       if (wheelArray[i] -> canSteer())
       {
         //All pin numbers are allowed,but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
         pinMode(mServoPins[wheelDecorators.size()], OUTPUT);
-        Servo* mServo = new Servo();
+        Servo * mServo = new Servo();
         mServo -> attach(mServoPins[wheelDecorators.size()]);
         wheelDecorators.push_back(new Pwm_steering_wheel_decorator(wheelArray[i], mServo));
       }
@@ -38,7 +38,7 @@ void Pwm_steering::loop()
   {
     if (mSimpleTimer.check())
     {
-      Modulebase* mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
+      IModule * mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));

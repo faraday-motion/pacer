@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "./base.hpp"
 
-class Log_module : public Modulebase, public ILog
+class Log_module : public Modulebase, public virtual ILog
 {
 private:
   LogLevel mLogLevel = LogLevel::DEBUG; // default log level.
@@ -32,7 +32,7 @@ public:
     //void setSender(ISend * sender);
     virtual void write(LogLevel level, String message)
     {
-      
+
     }
 };
 

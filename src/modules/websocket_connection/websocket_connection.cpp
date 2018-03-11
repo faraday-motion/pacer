@@ -12,6 +12,14 @@ using namespace std;
 using namespace std::placeholders;
 
 //TODO Needs to be merged with the previous fix from Cemal https://github.com/faraday-motion/pacer/commit/4f79a2408992c2b82881a983fc810ae0f4b92f1e
+//https://jwt.io/#libraries
+//https://devcenter.heroku.com/articles/websocket-security
+//http://simplyautomationized.blogspot.de/2015/09/5-ways-to-secure-websocket-rpi.html
+//https://en.wikipedia.org/wiki/Challenge-Handshake_Authentication_Protocol
+//https://gist.github.com/jfromaniello/8418116
+//https://github.com/auth0/node-jsonwebtoken
+//https://github.com/yutter/ArduinoJWT
+
 void Websocket_connection::setup() {
   if (mIsSetup == false)
   {

@@ -9,10 +9,10 @@
 #include "../base/base.hpp"
 #include "../../interfaces/interfaces.hpp"
 
-class Websocket_control : virtual public Control_module
+class Websocket_control : public virtual Control_module
 {
 private:
-  FMV *mFMV;
+  IFMV *mFMV;
   SimpleTimer mSimpleTimer;
   Websocket_control_config * mCfg = nullptr;
   IConnection * pIConnection = nullptr;
@@ -30,7 +30,7 @@ protected:
   }
   void handleCommand(byte command, byte value);
 public:
-  Websocket_control(byte id, FMV *fmv, Websocket_control_config* cfg = nullptr) : Control_module(id, Modules::WEBSOCKET_CONTROL)  {
+  Websocket_control(byte id, IFMV * fmv, Websocket_control_config * cfg = nullptr) : Control_module(id, Modules::WEBSOCKET_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Websocket_control_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_CONTROL_CONFIG));

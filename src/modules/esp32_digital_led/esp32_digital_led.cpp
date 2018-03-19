@@ -172,6 +172,14 @@ void Esp32_digital_led::command(byte command)
       mLeft = false;
       mRight = false;
     }
+    else if (comm == Commands::LED_ENABLED)
+    {
+      mLightsEnabled = true;
+    }
+    else if (comm == Commands::LED_DISABLED)
+    {
+      mLightsEnabled = false;
+    }
   }
 }
 

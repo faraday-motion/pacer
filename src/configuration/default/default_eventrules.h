@@ -62,15 +62,24 @@ public:
         mFMV -> modules().commandByType(Modules::NEOPIXELS_LED, (byte)Neopixels_led::Commands::VEHICLE_DEAD);
         mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_DEAD);
         //Handle sta connection
-        //mModules -> commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
+      }
+      if (eventId == Power_limit::Events::LIMIT_DEAD_PAUSE)
+      {
+        //Handle vehicle dead
+        //Handle neopixels
+        //mFMV -> modules().commandByType(Modules::NEOPIXELS_LED, (byte)Neopixels_led::Commands::VEHICLE_DEAD);
+        mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_DISABLED);
+        //Handle sta connection
+        mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
       }
       else if (eventId == Power_limit::Events::LIMIT_ALIVE)
       {
         //Handle neopixels
         mFMV -> modules().commandByType(Modules::NEOPIXELS_LED, (byte)Neopixels_led::Commands::VEHICLE_ALIVE);
+        mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_ENABLED);
         mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_ALIVE);
         //Handle sta connection
-        //mModules -> commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
 

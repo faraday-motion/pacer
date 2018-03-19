@@ -37,10 +37,21 @@ void Power_limit::loop()
     }
     mIsVehicleDead = isDead;
 
+    if (!mIsVehicleDead)
+    {
+      mPauseSimpleTimer.reset();
+      mIsPause = false;
+    }
+
     if (mIsVehicleDead)
     {
       mInputControl.reset();
       mOutputControl.reset();
+      if (mPauseSimpleTimer.check() && mIsPause == false)
+      {
+        mIsPause = true;
+        onEvent(Events::LIMIT_DEAD_PAUSE);
+      }
     }
     else if (mSimpleTimer.check())
     {

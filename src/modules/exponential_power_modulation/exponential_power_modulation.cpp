@@ -32,9 +32,9 @@ void Exponential_power_modulation::loop()
           return;
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)
-          mOutputControl.setPower(calculateOutput(mPreviousPower, mInputControl.getPower()));
+          mOutputControl.setPower(calculateOutput(mPreviousPower, mInputControl.getPower(), mInputControl.getPowerMax()));
         else if (mInputControl.getBrake() > 0)
-          mOutputControl.setBrake(calculateOutput(mPreviousBrake, mInputControl.getBrake()));
+          mOutputControl.setBrake(calculateOutput(mPreviousBrake, mInputControl.getBrake(), mInputControl.getBrakeMax()));
         else
           mOutputControl.resetPower();
 
@@ -57,16 +57,18 @@ void Exponential_power_modulation::loop()
   }
 }
 
-byte Exponential_power_modulation::calculateOutput(byte previousPower, byte power)
+byte Exponential_power_modulation::calculateOutput(byte previousPower, byte power, byte maxPower)
 {
-    //TODO Need to rework this calculation as it does not go to max when smoothalpha is less than 0,5
     //Smooth the input
-    float targetAlpha = (mSmoothAlpha * (float)power) + ((1 - mSmoothAlpha) * (float)previousPower);
+    float targetAlpha = float(power);
+    if (power > previousPower)
+      targetAlpha = (mSmoothAlphaPositive * (float)power) + ((1.0 - mSmoothAlphaPositive) * (float)previousPower);
+    else if (power < previousPower)
+      targetAlpha = (mSmoothAlphaNegative * (float)power) + ((1.0 - mSmoothAlphaNegative) * (float)previousPower);
     //If the value is close to target, set it to target
-    if (abs(float(power) - float(targetAlpha)) <= 1)
+    if ((float(power) - targetAlpha) < 1.0)
       targetAlpha = power;
-    targetAlpha = constrain(targetAlpha, 0, 100);
-    return (byte)targetAlpha;
+    return constrain((byte)targetAlpha, 0, maxPower);
 }
 
 void Exponential_power_modulation::command(byte command)

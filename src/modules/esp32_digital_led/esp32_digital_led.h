@@ -7,7 +7,7 @@
 #include "../base/modulebase.h"
 #include "../../interfaces/interfaces.hpp"
 
-class Esp32_digital_led : public virtual Modulebase
+class Esp32_digital_led : public Modulebase
 {
 
 public:
@@ -29,7 +29,9 @@ public:
     DRIVE_BRAKE,
     TURN_NEUTRAL,
     TURN_LEFT,
-    TURN_RIGHT
+    TURN_RIGHT,
+    LED_ENABLED,
+    LED_DISABLED
   };
 
   void setConfig()

@@ -12,7 +12,7 @@
 class Websocket_control : public virtual Control_module
 {
 private:
-  IFMV *mFMV;
+  IFMV * mFMV;
   SimpleTimer mSimpleTimer;
   Websocket_control_config * mCfg = nullptr;
   IConnection * pIConnection = nullptr;

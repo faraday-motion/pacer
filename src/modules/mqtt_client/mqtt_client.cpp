@@ -17,7 +17,7 @@ void Mqtt_client::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     randomSeed(micros());
     pMqttClient = new PubSubClient(mClient);
-    pMqttClient -> setServer(mMqttServer.c_str(), mMqttPort);
+    pMqttClient -> setServer(mCfg -> mqttServer.c_str(), mCfg -> mqttPort);
     //If setCallback line is failing, the pubsubclient needs to be modified
     pMqttClient -> setCallback(std::bind(&Mqtt_client::callback, this, _1, _2, _3));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());

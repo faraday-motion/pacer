@@ -10,7 +10,7 @@ void Ntp_timeservice::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    configTzTime(mTimeZone.c_str(), mTimeServer.c_str());
+    configTzTime(mCfg -> timeZone.c_str(), mCfg -> timeServer.c_str());
     onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
@@ -43,8 +43,8 @@ void Ntp_timeservice::getTime()
   */
   if (getLocalTime(&mTimeInfo, 10000)) {  // wait up to 10sec to sync
     mGotTimeInfo = true;
-    Logger::Instance().write(LogLevel::DEBUG, FPSTR("DateTime: "), Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
-    mFMV -> sensors().setStringSensor("dt", Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
+    Logger::Instance().write(LogLevel::DEBUG, FPSTR("DateTime: "), Tools::dateTimeString(&mTimeInfo, mCfg -> dateTimeFormat.c_str()));
+    mFMV -> sensors().setStringSensor("dt", Tools::dateTimeString(&mTimeInfo, mCfg -> dateTimeFormat.c_str()));
   }
 }
 
@@ -55,8 +55,8 @@ void Ntp_timeservice::updateTime()
       time_t now;
       time(&now);
       localtime_r(&now, &mTimeInfo);
-      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Ntp_timeservice::updateTime:"), Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
-      mFMV -> sensors().setStringSensor("dt", Tools::dateTimeString(&mTimeInfo, mDateTimeFormat.c_str()));
+      Logger::Instance().write(LogLevel::DEBUG, FPSTR("Ntp_timeservice::updateTime:"), Tools::dateTimeString(&mTimeInfo, mCfg -> dateTimeFormat.c_str()));
+      mFMV -> sensors().setStringSensor("dt", Tools::dateTimeString(&mTimeInfo, mCfg -> dateTimeFormat.c_str()));
   }
 }
 

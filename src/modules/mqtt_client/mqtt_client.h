@@ -14,8 +14,6 @@ private:
   Mqtt_client_config * mCfg = nullptr;
   WiFiClient mClient;
   PubSubClient * pMqttClient;
-  String mMqttServer = "";
-  int mMqttPort = 0;
   void reconnect() ;
   void callback(char* topic, uint8_t* payload, unsigned int length);
 protected:
@@ -35,8 +33,6 @@ public:
 
   void setConfig()
   {
-    mMqttServer = mCfg -> mqttServer;
-    mMqttPort = mCfg -> mqttPort;
     setEnabled(mCfg -> enabled);
   }
 

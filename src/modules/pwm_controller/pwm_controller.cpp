@@ -20,10 +20,9 @@ void Pwm_controller::setup() {
       if (wheelArray[i] -> isElectric())
       {
         //All pin numbers are allowed,but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
-        pinMode(mServoPins[wheelDecorators.size()], OUTPUT);
+        pinMode(mCfg -> servoPins[wheelDecorators.size()], OUTPUT);
         Servo * mServo = new Servo();
-        mServo -> attach(mServoPins[wheelDecorators.size()]);
-        //IWeel iw = 
+        mServo -> attach(mCfg -> servoPins[wheelDecorators.size()]);
         wheelDecorators.push_back(new Pwm_controller_wheel_decorator(wheelArray[i], mServo));
       }
     }

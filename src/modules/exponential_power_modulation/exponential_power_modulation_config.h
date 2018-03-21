@@ -16,19 +16,22 @@ public:
 
   void getModuleConfiguration(JsonObject &root)
   {
-    root["smoothAlpha"] = smoothAlpha;
+    root["smoothAlphaPositive"] = smoothAlphaPositive;
+    root["smoothAlphaNegative"] = smoothAlphaNegative;
     root["interval"] = interval;
     root["critical"] = critical;
   }
 
   void setModuleConfiguration(JsonObject &root)
   {
-    smoothAlpha = float(root["smoothAlpha"]);
+    smoothAlphaPositive = float(root["smoothAlphaPositive"]);
+    smoothAlphaNegative = float(root["smoothAlphaNegative"]);
     interval = int(root["interval"]);
     critical = int(root["critical"]);
   }
 
-  float smoothAlpha = DEFAULTSMOOTHALPHA;
+  float smoothAlphaPositive = SMOOTH_ALPHA_POSITIVE;
+  float smoothAlphaNegative = SMOOTH_ALPHA_NEGATIVE;
   int interval = 15;
   int critical = 30;
 };

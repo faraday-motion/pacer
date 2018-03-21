@@ -15,9 +15,7 @@ private:
   SimpleTimer mSimpleTimer;
   byte mPreviousPower = 0;
   byte mPreviousBrake = 0;
-  float mSmoothAlphaPositive = 0;
-  float mSmoothAlphaNegative = 0;
-  Exponential_power_modulation_config* mCfg = nullptr;
+  Exponential_power_modulation_config * mCfg = nullptr;
   byte calculateOutput(byte previousPower, byte targetPower, byte maxPower);
 protected:
   void onDisable();
@@ -40,7 +38,6 @@ public:
   {
     mSimpleTimer.setName("Exponential_power_modulation");
     mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
-    mSmoothAlphaPositive = mCfg -> smoothAlpha;
     setEnabled(mCfg -> enabled);
   }
 

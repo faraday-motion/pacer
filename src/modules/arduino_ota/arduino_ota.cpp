@@ -10,15 +10,15 @@ void Arduino_ota::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Arduino_ota"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     // Port defaults to 3232
-    if (mPort != 0)
-      ArduinoOTA.setPort(mPort);
+    if (mCfg -> port != 0)
+      ArduinoOTA.setPort(mCfg -> port);
 
     // Hostname defaults to esp3232-[MAC]
-    if (mHostName != "")
-      ArduinoOTA.setHostname(mHostName.c_str());
+    if (mCfg -> hostName != "")
+      ArduinoOTA.setHostname(mCfg -> hostName.c_str());
 
-    if (mPassword != "")
-      ArduinoOTA.setPassword(mPassword.c_str());
+    if (mCfg -> password != "")
+      ArduinoOTA.setPassword(mCfg -> password.c_str());
 
     // Password can be set with it's md5 value as well
     // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
@@ -84,7 +84,7 @@ void Arduino_ota::command(byte command)
     if (comm == Commands::CONNECTION_WIFI_OFF)
     {
     }
-    */
+*/
   }
 }
 

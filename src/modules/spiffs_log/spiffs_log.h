@@ -12,15 +12,14 @@
 class Spiffs_log : public virtual Log_module
 {
 private:
-      Spiffs_log_config* mCfg = nullptr;
-      String mLogFile;
-      Spiffs_storage mSpiffs_storage;
-      IFMV * mFMV = nullptr;
+    Spiffs_log_config * mCfg = nullptr;
+    Spiffs_storage mSpiffs_storage;
+    IFMV * mFMV = nullptr;
 protected:
-  void onEvent(byte eventId, bool always = false)
-  {
-    mFMV -> moduleEvent(this, eventId);
-  }
+    void onEvent(byte eventId, bool always = false)
+    {
+      mFMV -> moduleEvent(this, eventId);
+    }
 public:
     Spiffs_log(byte id, IFMV * fmv = nullptr, Spiffs_log_config * mfg = nullptr) : Log_module(id, Modules::SPIFFS_LOG){
       mFMV = fmv;
@@ -35,7 +34,6 @@ public:
     void setConfig()
     {
       setLevel(mCfg -> logLevel);
-      mLogFile = mCfg -> logFile;
       setEnabled(mCfg -> enabled);
     }
 
@@ -43,7 +41,7 @@ public:
     {
       if (enabled() && level >= getLevel())
       {
-        mSpiffs_storage.append(mLogFile, message + "\n");
+        mSpiffs_storage.append(mCfg -> logFile, message + "\n");
       }
     }
 

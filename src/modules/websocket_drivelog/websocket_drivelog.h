@@ -10,7 +10,7 @@
 class Websocket_drivelog : public virtual Modulebase
 {
   private:
-    IFMV *mFMV;
+    IFMV * mFMV;
     void writeSensorValues();
     SimpleTimer mSimpleTimer;
     Websocket_drivelog_config * mCfg = nullptr;

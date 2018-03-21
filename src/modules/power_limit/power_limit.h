@@ -12,14 +12,13 @@ class Power_limit : public Limit_module
 private:
   IFMV * mFMV;
   void setPowerMax(byte powermax);
-  Power_limit_config* mCfg = nullptr;
+  Power_limit_config * mCfg = nullptr;
   SimpleTimer mSimpleTimer;
   SimpleTimer mPauseSimpleTimer;
   bool mIsVehicleDead = false;
   //Checks if the power has been reset after a dead event
   bool mIsPowerReset = true;
   Bool_sensor_value * mSensor = nullptr;
-  String mDeadSensorName = "";
   bool mIsPause = false;
 protected:
   void onDisable();
@@ -65,7 +64,6 @@ public:
     mSimpleTimer.setInterval(15, 30);
     mPauseSimpleTimer.setName(FPSTR("Power_limit"));
     mPauseSimpleTimer.setInterval(60*1000);
-    mDeadSensorName = mCfg -> deadSensorName;
     setEnabled(mCfg -> enabled);
   }
 

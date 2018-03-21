@@ -10,10 +10,10 @@ void Neopixels_led::setup()
   if (mIsSetup == false)
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "),String(ESP.getFreeHeap()));
-    pinMode(mPin, OUTPUT);
-    mNeopixels = new Adafruit_NeoPixel(mPixelcount, mPin, NEO_GRB + NEO_KHZ800);
-    mNeopixels -> setBrightness(mBrightness);
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    pinMode(mCfg -> pin, OUTPUT);
+    mNeopixels = new Adafruit_NeoPixel(mCfg -> pixelCount, mCfg -> pin, NEO_GRB + NEO_KHZ800);
+    mNeopixels -> setBrightness(mCfg -> brightness);
     mNeopixels -> begin();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
@@ -28,7 +28,6 @@ void Neopixels_led::loop()
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       //The delay is needed in order to avoid flickering on esp32, as the interrupts are giving issues.
-      //Might have to change to another library to fix this issue.
       delay(1);
       mNeopixels -> show();
       delay(1);
@@ -90,26 +89,26 @@ void Neopixels_led::reset()
 
 void Neopixels_led::dead()
 {
-  for(byte i=0;i<mPixelcount;i++){
+  for(byte i=0;i<mCfg -> pixelCount;i++){
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(255,0,0));
   }
 }
 
 void Neopixels_led::powerNeutral()
 {
-  for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
+  for (byte i = mCfg -> backLedStartIndex; i <= mCfg -> backLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(50,0,0));
   }
-  for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
+  for (byte i = mCfg -> frontLedStartIndex; i <= mCfg -> frontLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(100,100,100));
   }
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
+  for (byte i = mCfg -> leftLedStartIndex; i <= mCfg -> leftLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(0,0,0));
   }
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
+  for (byte i = mCfg -> rightLedStartIndex; i <= mCfg -> rightLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(0,0,0));
   }
@@ -117,11 +116,11 @@ void Neopixels_led::powerNeutral()
 
 void Neopixels_led::accelerate()
 {
-  for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
+  for (byte i = mCfg -> frontLedStartIndex; i <= mCfg -> frontLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(100,100,100));
   }
-  for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
+  for (byte i = mCfg -> backLedStartIndex; i <= mCfg -> backLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(50,0,0));
   }
@@ -129,11 +128,11 @@ void Neopixels_led::accelerate()
 
 void Neopixels_led::brake()
 {
-  for (byte i = mFrontLedStartIndex; i <= mFrontLedEndIndex; i++)
+  for (byte i = mCfg -> frontLedStartIndex; i <= mCfg -> frontLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(100,100,100));
   }
-  for (byte i = mBackLedStartIndex; i <= mBackLedEndIndex; i++)
+  for (byte i = mCfg -> backLedStartIndex; i <= mCfg -> backLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(255,0,0));
   }
@@ -141,11 +140,11 @@ void Neopixels_led::brake()
 
 void Neopixels_led::left()
 {
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
+  for (byte i = mCfg -> rightLedStartIndex; i <= mCfg -> rightLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(0,0,0));
   }
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
+  for (byte i = mCfg -> leftLedStartIndex; i <= mCfg -> leftLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(100,100,0));
   }
@@ -153,11 +152,11 @@ void Neopixels_led::left()
 
 void Neopixels_led::right()
 {
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
+  for (byte i = mCfg -> leftLedStartIndex; i <= mCfg -> leftLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(0,0,0));
   }
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
+  for (byte i = mCfg -> rightLedStartIndex; i <= mCfg -> rightLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(100,100,0));
   }
@@ -165,11 +164,11 @@ void Neopixels_led::right()
 
 void Neopixels_led::turnNeutral()
 {
-  for (byte i = mLeftLedStartIndex; i <= mLeftLedEndIndex; i++)
+  for (byte i = mCfg -> leftLedStartIndex; i <= mCfg -> leftLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(0,0,0));
   }
-  for (byte i = mRightLedStartIndex; i <= mRightLedEndIndex; i++)
+  for (byte i = mCfg -> rightLedStartIndex; i <= mCfg -> rightLedEndIndex; i++)
   {
     mNeopixels -> setPixelColor(i, mNeopixels -> Color(0,0,0));
   }

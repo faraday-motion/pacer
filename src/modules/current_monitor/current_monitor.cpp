@@ -17,13 +17,13 @@ void Current_monitor::loop()
   if (enabled())
   {
     if (mSensor == nullptr)
-      mSensor = mFMV -> sensors().getFloatSensor(mSensorName);
+      mSensor = mFMV -> sensors().getFloatSensor(mCfg -> sensorName);
     if (mSensor != nullptr)
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (mSensor -> valueChanged())
       {
-        if (mSensor -> getValue() > mMaxCurrent)
+        if (mSensor -> getValue() > mCfg -> maxCurrent)
         {
             onEvent(Events::WARNING_HIGH_CURRENT);
         }

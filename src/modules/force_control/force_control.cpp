@@ -21,24 +21,24 @@ void Force_control::loop()
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (mSensorY == nullptr)
-        mSensorY = mFMV -> sensors().getIntSensor(mSensorName);
+        mSensorY = mFMV -> sensors().getIntSensor(mCfg -> sensorName);
       if (mSensorY != nullptr && mSensorY -> valueChanged())
       {
-        int valueY = constrain(mSensorY -> getValue(), mLimitYMin, mLimitYMax);
-        if (valueY > mNeutralY + mDeadbandY)
+        int valueY = constrain(mSensorY -> getValue(), mCfg -> limitYMin, mCfg -> limitYMax);
+        if (valueY > mCfg -> neutralY + mCfg -> deadbandY)
         {
           //Accelerate
           mBack = 0;
-          mForward = map(valueY, mNeutralY + mDeadbandY, mLimitYMax, 0, 100);
+          mForward = map(valueY, mCfg -> neutralY + mCfg -> deadbandY, mCfg -> limitYMax, 0, 100);
           mOutputControl.setPower(mForward);
           onEvent(Events::DRIVE_POWER);
           setHasClient(true);
         }
-        else if (valueY < mNeutralY - mDeadbandY)
+        else if (valueY < mCfg -> neutralY - mCfg -> deadbandY)
         {
           //Brake
           mForward = 0;
-          mBack = map(valueY, mNeutralY - mDeadbandY, mLimitYMin, 0, 100);
+          mBack = map(valueY, mCfg -> neutralY - mCfg -> deadbandY, mCfg -> limitYMin, 0, 100);
           mOutputControl.setBrake(mBack);
           onEvent(Events::DRIVE_BRAKE);
           setHasClient(true);

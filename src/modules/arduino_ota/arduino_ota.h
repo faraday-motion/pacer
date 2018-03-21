@@ -10,13 +10,10 @@
 class Arduino_ota : public virtual Modulebase
 {
 private:
-  IFMV *mFMV = nullptr;
+  IFMV * mFMV = nullptr;
   void onDisable();
   SimpleTimer mSimpleTimer;
-  Arduino_ota_config* mCfg = nullptr;
-  int mPort = 0;
-  String mHostName = "";
-  String mPassword = "";
+  Arduino_ota_config * mCfg = nullptr;
 protected:
   void onEvent(byte eventId, bool always = false)
   {
@@ -42,9 +39,6 @@ public:
   {
     mSimpleTimer.setName("Arduino_ota");
     mSimpleTimer.setInterval(10);
-    mPort = mCfg -> port;
-    mHostName = mCfg -> hostName;
-    mPassword = mCfg -> password;
     setEnabled(mCfg -> enabled);
   }
 

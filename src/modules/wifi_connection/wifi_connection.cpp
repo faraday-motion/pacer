@@ -8,13 +8,13 @@
 using namespace std;
 using namespace std::placeholders;
 
-static byte sWiFiEventId = 0;
+//static byte sWiFiEventId = 0;
 
 void Wifi_connection::setup() {
   if (mIsSetup == false)
   {
     mIsSetup = true;
-    sWiFiEventId = 0;
+    //sWiFiEventId = 0;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE);
@@ -27,9 +27,10 @@ void Wifi_connection::loop()
   if (enabled())
   {
     Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+    /*
     if (sWiFiEventId==1)
     {
-      if (!MDNS.begin(mHost.c_str())) {
+      if (!MDNS.begin(mCfg -> host.c_str())) {
         Logger::Instance().write(LogLevel::WARNING, FPSTR("Error setting up MDNS responder!"));
       }
       Logger::Instance().write(LogLevel::INFO, FPSTR("WIFI_STA_STARTED"));
@@ -42,6 +43,7 @@ void Wifi_connection::loop()
       onEvent(Events::WIFI_STA_ENDED);
       sWiFiEventId = 0;
     }
+    */
   }
 }
 
@@ -59,7 +61,7 @@ void Wifi_connection::setWifiAp()
   WiFi.mode(WIFI_AP);
   delay(50);
   IPAddress apIP(10, 10, 100, 254);
-  WiFi.softAP(mAp_ssid.c_str(), mAp_password.c_str(), mAp_channel);
+  WiFi.softAP(mCfg -> ap_ssid.c_str(), mCfg -> ap_password.c_str(), mCfg -> ap_channel);
   delay(50);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   delay(50);
@@ -74,7 +76,7 @@ void Wifi_connection::setWifiStation()
   //WiFi.onEvent(onWiFiEvent);
   WiFi.mode(WIFI_STA);
   delay(50);
-  WiFi.begin(mSsid.c_str(), mPassword.c_str());
+  WiFi.begin(mCfg -> ssid.c_str(), mCfg -> password.c_str());
 
   delay(50);
   while (WiFi.status() != WL_CONNECTED) {
@@ -85,6 +87,7 @@ void Wifi_connection::setWifiStation()
   Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection IP address: "), Tools::ipAddressToString(WiFi.localIP()));
 }
 
+/*
 void Wifi_connection::onWiFiEvent(WiFiEvent_t event)
 {
     //Hack as i could not make the bind function work
@@ -99,7 +102,7 @@ void Wifi_connection::onWiFiEvent(WiFiEvent_t event)
         break;
     }
 }
-
+*/
 
 void Wifi_connection::command(byte command)
 {

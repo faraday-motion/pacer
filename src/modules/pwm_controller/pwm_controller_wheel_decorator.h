@@ -24,7 +24,6 @@ public:
     if (mServo != nullptr)
     {
       //Logger::Instance().write(LogLevel::DEBUG, "Pwm_controller_wheel_decorator::Power " + String(mWheelControl.getPower()) + " " + String(mWheelControl.getBrake()));
-
       if (mWheelControl.getPower() > 0)
         mServo -> write(map(mWheelControl.getPower(), 0, 100, 91, 180));
       else if (mWheelControl.getBrake() > 0)

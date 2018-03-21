@@ -13,7 +13,7 @@ class Neopixels_led : public virtual Modulebase
 {
 
 public:
-  Neopixels_led(byte id, IFMV * fmv, Neopixels_led_config* cfg = nullptr) : Modulebase(id, Modules::NEOPIXELS_LED)  {
+  Neopixels_led(byte id, IFMV * fmv, Neopixels_led_config * cfg = nullptr) : Modulebase(id, Modules::NEOPIXELS_LED)  {
     mFMV = fmv;
     if (cfg == nullptr)
       mCfg = static_cast<Neopixels_led_config*>(Configurator::Instance().createConfig(id, Configurations::NEOPIXELS_LED_CONFIG));
@@ -38,19 +38,6 @@ public:
   {
     mSimpleTimer.setName("Neopixels");
     mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
-    mPin = mCfg -> pin;
-    mPixelcount = mCfg -> pixelcount;
-    mBrightness = mCfg -> brightness;
-    mBackLedStartIndex = mCfg -> backLedStartIndex;
-    mBackLedEndIndex = mCfg -> backLedEndIndex;
-    mLeftLedStartIndex = mCfg -> leftLedStartIndex;
-    mLeftLedEndIndex = mCfg -> leftLedEndIndex;
-    mFrontLedStartIndex = mCfg -> frontLedStartIndex;
-    mFrontLedEndIndex = mCfg -> frontLedEndIndex;
-    mRightLedStartIndex = mCfg -> rightLedStartIndex;
-    mRightLedEndIndex = mCfg -> rightLedEndIndex;
-    mDashboardLedStartIndex = mCfg -> dashboardLedStartIndex;
-    mDashboardLedEndIndex = mCfg -> dashboardLedEndIndex;
     setEnabled(mCfg -> enabled);
   }
 

@@ -12,14 +12,9 @@
 class Wifi_connection : public virtual Modulebase
 {
 private:
+
   IFMV * mFMV;
   void onDisable();
-  String mHost = "";
-  String mSsid = "";
-  String mPassword = "";
-  String mAp_ssid = "";
-  String mAp_password = "";
-  int mAp_channel = 0;
   Wifi_connection_config * mCfg = nullptr;
   void setWifiOff();
   void setWifiAp();
@@ -38,7 +33,7 @@ public:
       mCfg = cfg;
     setConfig();
   }
-  static void onWiFiEvent(WiFiEvent_t event);
+  //static void onWiFiEvent(WiFiEvent_t event);
 
   enum Commands : byte {
     CONNECTION_WIFI_OFF,
@@ -56,12 +51,6 @@ public:
 
   void setConfig()
   {
-    mHost = mCfg -> host;
-    mSsid = mCfg -> ssid;
-    mPassword = mCfg -> password;
-    mAp_ssid = mCfg -> ap_ssid;
-    mAp_password = mCfg -> ap_password;
-    mAp_channel = mCfg -> ap_channel;
     setEnabled(mCfg -> enabled);
   }
 

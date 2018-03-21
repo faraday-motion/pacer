@@ -14,7 +14,7 @@ public:
   void getModuleConfiguration(JsonObject &root)
   {
     root["pin"] = pin;
-    root["pixelcount"] = pixelcount;
+    root["pixelCount"] = pixelCount;
     root["brightness"] = brightness;
     root["interval"] = interval;
     root["critical"] = critical;
@@ -33,7 +33,7 @@ public:
   void setModuleConfiguration(JsonObject &root)
   {
     pin = byte(root["pin"]);
-    pixelcount = byte(root["pixelcount"]);
+    pixelCount = byte(root["pixelCount"]);
     brightness = byte(root["brightness"]);
     interval = int(root["interval"]);
     critical = int(root["critical"]);
@@ -50,7 +50,7 @@ public:
   }
 
   byte pin = PIN_NEOPIXELS;
-  byte pixelcount = NEOPIXELS_PIXELS;
+  byte pixelCount = NEOPIXELS_PIXELS;
   byte brightness = 255;
   int interval = 25;
   int critical = 50;

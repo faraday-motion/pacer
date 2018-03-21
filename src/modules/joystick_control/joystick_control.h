@@ -13,23 +13,11 @@ private:
   IFMV * mFMV = nullptr;
   Int_sensor_value * mSensorX = nullptr;
   Int_sensor_value * mSensorY = nullptr;
-  int mDeadbandY = 50;
-  int mNeutralY = 512;
-  int mLimitYMin = 0;
-  int mLimitYMax = 1023;
-  int mDeadbandX = 50;
-  int mNeutralX = 512;
-  int mLimitXMin = 0;
-  int mLimitXMax = 1023;
-  bool mInvertY = false;
-  bool mInvertX = false;
   byte mForward = 0;
   byte mBack = 0;
   byte mLeft = 0;
   byte mRight = 0;
   Joystick_control_config * mCfg = nullptr;
-  String mSensorNameX = "";
-  String mSensorNameY = "";
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
@@ -53,13 +41,6 @@ public:
 
   void setConfig()
   {
-    mDeadbandY = mCfg -> deadbandY;
-    mNeutralY = mCfg -> neutralY;
-    mLimitYMin = mCfg -> limitYMin;
-    mLimitYMax = mCfg -> limitYMax;
-    mInvertY = mCfg -> invertY;
-    mSensorNameX = mCfg -> sensorNameX;
-    mSensorNameY = mCfg -> sensorNameY;
     setClientTimeout("Joystick_control", 10000);
     setEnabled(mCfg -> enabled);
   }

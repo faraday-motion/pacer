@@ -14,13 +14,8 @@ class Pwm_steering : public virtual Power_module
 private:
   IFMV * mFMV;
   SimpleTimer mSimpleTimer;
-  Pwm_steering_config* mCfg = nullptr;
+  Pwm_steering_config * mCfg = nullptr;
   std::vector<Pwm_steering_wheel_decorator*> wheelDecorators;
-  //All pin numbers are allowed,but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
-  byte mServoPins[4] = {0, 0, 0, 0};
-  byte mMinAngle = 0;
-  byte mMaxAngle = 0;
-  byte mNeutral = 0;
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
@@ -44,10 +39,6 @@ public:
   {
     mSimpleTimer.setName("Pwm_steering");
     mSimpleTimer.setInterval(25, 50);
-    Tools::copyArray(mCfg -> servoPins, mServoPins, 4);
-    mMinAngle = mCfg -> minAngle;
-    mMaxAngle = mCfg -> maxAngle;
-    mNeutral =  mCfg -> neutral;
     setEnabled(mCfg -> enabled);
   }
 

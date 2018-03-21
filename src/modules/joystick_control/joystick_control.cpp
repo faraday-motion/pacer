@@ -19,23 +19,23 @@ void Joystick_control::loop()
   {
     Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
     if (mSensorY == nullptr)
-      mSensorY = mFMV -> sensors().getIntSensor(mSensorNameY);
+      mSensorY = mFMV -> sensors().getIntSensor(mCfg -> sensorNameY);
     if (mSensorY != nullptr && mSensorY -> valueChanged())
     {
-      int valueY = constrain(mSensorY -> getValue(), mLimitYMin, mLimitYMax);
-      if (valueY > mNeutralY + mDeadbandY)
+      int valueY = constrain(mSensorY -> getValue(), mCfg -> limitYMin, mCfg -> limitYMax);
+      if (valueY > mCfg -> neutralY + mCfg -> deadbandY)
       {
         //Accelerate
         mBack = 0;
-        mForward = map(valueY, mNeutralY + mDeadbandY, mLimitYMax, 0, 100);
+        mForward = map(valueY, mCfg -> neutralY + mCfg -> deadbandY, mCfg -> limitYMax, 0, 100);
         mOutputControl.setPower(mForward);
         setHasClient(true);
       }
-      else if (valueY < mNeutralY - mDeadbandY)
+      else if (valueY < mCfg -> neutralY - mCfg -> deadbandY)
       {
         //Brake
         mForward = 0;
-        mBack = map(valueY, mNeutralY - mDeadbandY, mLimitYMin, 0, 100);
+        mBack = map(valueY, mCfg -> neutralY - mCfg -> deadbandY, mCfg -> limitYMin, 0, 100);
         mOutputControl.setBrake(mBack);
         setHasClient(true);
       }
@@ -49,23 +49,23 @@ void Joystick_control::loop()
     }
 
     if (mSensorX == nullptr)
-      mSensorX = mFMV -> sensors().getIntSensor(mSensorNameX);
+      mSensorX = mFMV -> sensors().getIntSensor(mCfg -> sensorNameX);
     if (mSensorX != nullptr && mSensorX -> valueChanged())
     {
-      int valueX = constrain(mSensorX -> getValue(), mLimitXMin, mLimitXMax);
-      if (valueX > mNeutralX + mDeadbandX)
+      int valueX = constrain(mSensorX -> getValue(), mCfg -> limitXMin, mCfg -> limitXMax);
+      if (valueX > mCfg -> neutralX + mCfg -> deadbandX)
       {
         //Right
         mLeft = 0;
-        mRight = map(valueX, mNeutralX + mDeadbandX, mLimitXMax, 0, 100);
+        mRight = map(valueX, mCfg -> neutralX + mCfg -> deadbandX, mCfg -> limitXMax, 0, 100);
         mOutputControl.setRight(mRight);
         setHasClient(true);
       }
-      else if (valueX < mNeutralX - mDeadbandX)
+      else if (valueX < mCfg -> neutralX - mCfg -> deadbandX)
       {
         //Left
         mRight = 0;
-        mLeft = map(valueX, mNeutralX - mDeadbandX, mLimitXMin, 0, 100);
+        mLeft = map(valueX, mCfg -> neutralX - mCfg -> deadbandX, mCfg -> limitXMin, 0, 100);
         mOutputControl.setLeft(mLeft);
         setHasClient(true);
       }

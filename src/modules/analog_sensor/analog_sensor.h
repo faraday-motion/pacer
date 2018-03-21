@@ -14,8 +14,6 @@ class Analog_sensor : public virtual Modulebase
 {
 private:
   IFMV * mFMV = nullptr;
-  byte mPin = -1;
-  String mSensorName = "";
   Analog_sensor_config * mCfg = nullptr;
   SimpleTimer mSimpleTimer;
 protected:
@@ -35,10 +33,8 @@ public:
 
     void setConfig()
     {
-      mPin = mCfg -> pin;
       mSimpleTimer.setName("Analog_sensor");
       mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
-      mSensorName = mCfg -> sensorName;
       setEnabled(mCfg -> enabled);
     }
 

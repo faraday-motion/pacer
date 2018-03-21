@@ -34,8 +34,7 @@ void Websocket_drivelog::getWebsocketConnection()
   //Find the websocket connection module
   if (pIConnection == nullptr)
   {
-      IModule * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
-//    Modulebase * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
+    IModule * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
     if (mb != nullptr)
     {
       Connection_module * conn = static_cast<Connection_module*>(mb);

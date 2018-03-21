@@ -12,10 +12,7 @@
 class Boolean_sensor : public virtual Modulebase {
 private:
   IFMV * mFMV = nullptr;
-  byte mPin = 0;
-  bool mInvert = false;
   Boolean_sensor_config * mCfg = nullptr;
-  String mSensorName = "";
   SimpleTimer mSimpleTimer;
 protected:
   void onEvent(byte eventId, bool always = false)
@@ -35,11 +32,8 @@ public:
 
     void setConfig()
     {
-      mPin = mCfg -> pin;
-      mInvert = mCfg -> invert;
       mSimpleTimer.setName("Boolean_sensor");
       mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
-      mSensorName = mCfg -> sensorName;
       setEnabled(mCfg -> enabled);
     }
 

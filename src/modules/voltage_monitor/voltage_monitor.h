@@ -13,10 +13,7 @@ class Voltage_monitor : public Modulebase
 private:
   IFMV * mFMV;
   Float_sensor_value * mSensor;
-  float mMinVoltage = 0;
-  float mMaxVoltage = 1023;
   Voltage_monitor_config* mCfg = nullptr;
-  String mSensorName = "";
 protected:
   void onEvent(byte eventId, bool always = false)
   {
@@ -39,23 +36,12 @@ public:
 
   void setConfig()
   {
-    setMinVoltage(mCfg -> minVoltage);
-    setMaxVoltage(mCfg -> maxVoltage);
-    mSensorName = mCfg -> sensorName;
     setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
-
-  void setMaxVoltage(float max) {
-    mMaxVoltage = max;
-  }
-
-  void setMinVoltage(float min) {
-    mMinVoltage = min;
-  }
 
   String getModuleName()
   {

@@ -18,15 +18,15 @@ void Voltage_monitor::loop()
   {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       if (mSensor == nullptr)
-        mSensor = mFMV -> sensors().getFloatSensor(mSensorName);
+        mSensor = mFMV -> sensors().getFloatSensor(mCfg -> sensorName);
       if (mSensor != nullptr && mSensor -> valueChanged())
       {
         float val = mSensor -> getValue();
-        if (val > mMaxVoltage)
+        if (val > mCfg -> maxVoltage)
         {
             onEvent(Events::WARNING_VOLTAGE_HIGH);
         }
-        else if (val < mMinVoltage)
+        else if (val < mCfg -> minVoltage)
         {
             onEvent(Events::WARNING_VOLTAGE_LOW);
         }

@@ -5,7 +5,7 @@ void Boolean_sensor::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    pinMode(mPin, INPUT_PULLDOWN);
+    pinMode(mCfg -> pin, INPUT_PULLDOWN);
     readBooleanPin();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
@@ -31,8 +31,8 @@ void Boolean_sensor::command(byte command)
 
 void Boolean_sensor::readBooleanPin()
 {
-  if (!mInvert)
-    mFMV -> sensors().setBoolSensor(mSensorName, !Tools::digitalReadMultiple(mPin, 3));
+  if (!mCfg -> invert)
+    mFMV -> sensors().setBoolSensor(mCfg -> sensorName, !Tools::digitalReadMultiple(mCfg -> pin, 3));
   else
-    mFMV -> sensors().setBoolSensor(mSensorName, Tools::digitalReadMultiple(mPin, 3));
+    mFMV -> sensors().setBoolSensor(mCfg -> sensorName, Tools::digitalReadMultiple(mCfg -> pin, 3));
 }

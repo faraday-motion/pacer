@@ -12,7 +12,6 @@ class Spiffs_drivelog : public virtual Modulebase
   private:
     IFMV * mFMV;
     void writeSensorValues();
-    String mDriveLog = "";
     SimpleTimer mSimpleTimer;
     Spiffs_storage mSpiffs_storage;
     Spiffs_drivelog_config * mCfg = nullptr;
@@ -35,7 +34,6 @@ class Spiffs_drivelog : public virtual Modulebase
     {
       mSimpleTimer.setName("Spiffs_drivelog");
       mSimpleTimer.setInterval(mCfg -> interval, mCfg -> critical);
-      mDriveLog = mCfg -> driveLog;
       setEnabled(mCfg -> enabled);
     }
 

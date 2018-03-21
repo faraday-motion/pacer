@@ -9,8 +9,8 @@
 class Serial_control : public virtual Control_module
 {
 private:
-  IFMV *mFMV;
-  Serial_control_config* mCfg = nullptr;
+  IFMV * mFMV;
+  Serial_control_config * mCfg = nullptr;
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)

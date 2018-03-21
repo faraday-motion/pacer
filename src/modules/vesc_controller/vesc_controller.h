@@ -28,13 +28,9 @@ private:
   void getValues();
   void createTimerTask();
   byte mDriveMode = 0;
-  byte mMaxPowerCurrent = 0;
-  byte mMaxBrakeCurrent = 0;
-  int mMaxRpm = 0;
   byte mVescArrayIndex = 0;
   std::vector<Vesc_controller_wheel_decorator*> wheelDecorators;
   mc_values mMotorValues;
-  bool mVescDefaultSerial;
   void setValues(mc_values * val);
   void print(char *str);
   void setFirmware(int major, int minor);
@@ -77,10 +73,6 @@ public:
   {
     mSimpleTimer.setName("Vesc_controller");
     mSimpleTimer.setInterval(25, 50);
-    mVescDefaultSerial = mCfg -> defaultSerial;
-    mMaxPowerCurrent = mCfg -> maxPowerCurrent;
-    mMaxBrakeCurrent = mCfg -> maxBrakeCurrent;
-    mMaxRpm = mCfg -> maxRpm;
     setEnabled(mCfg -> enabled);
   }
 

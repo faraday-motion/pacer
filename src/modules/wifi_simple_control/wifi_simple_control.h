@@ -11,10 +11,10 @@
 class Wifi_simple_control : public virtual Control_module
 {
 private:
-  IFMV *mFMV;
+  IFMV * mFMV;
   byte mForward = 0;
   byte mBack = 0;
-  Wifi_simple_control_config* mCfg = nullptr;
+  Wifi_simple_control_config * mCfg = nullptr;
   WiFiServer * pServer;
   WiFiClient mClient;
   SimpleTimer mSimpleTimerConnection;

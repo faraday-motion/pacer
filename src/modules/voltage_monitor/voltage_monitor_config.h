@@ -14,7 +14,6 @@ public:
 
   void getModuleConfiguration(JsonObject &root)
   {
-    root["sensorId"] = sensorId;
     root["minVoltage"] = minVoltage;
     root["maxVoltage"] = maxVoltage;
     root["sensorName"] = sensorName;
@@ -22,13 +21,11 @@ public:
 
   void setModuleConfiguration(JsonObject &root)
   {
-    sensorId = byte(root["sensorId"]);
     minVoltage = byte(root["minVoltage"]);
     maxVoltage = int(root["maxVoltage"]);
     sensorName = root["sensorName"].as<String>();
   }
 
-  byte sensorId = 0;
   int minVoltage = 0;
   int maxVoltage = 1023;
   String sensorName = "";

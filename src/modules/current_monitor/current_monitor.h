@@ -12,10 +12,7 @@ class Current_monitor : public Modulebase
 private:
   IFMV * mFMV = nullptr;
   Float_sensor_value * mSensor;
-  float mMinCurrent = 0;
-  float mMaxCurrent = 1023;
   Current_monitor_config * mCfg = nullptr;
-  String mSensorName = "";
 protected:
   void onEvent(byte eventId, bool always = false)
   {
@@ -38,23 +35,12 @@ public:
 
   void setConfig()
   {
-    setMinCurrent(mCfg -> minCurrent);
-    setMaxCurrent(mCfg -> maxCurrent);
-    mSensorName = mCfg -> sensorName;
     setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
-
-  void setMinCurrent(float min) {
-    mMinCurrent = min;
-  }
-
-  void setMaxCurrent(float max) {
-    mMaxCurrent = max;
-  }
 
   String getModuleName()
   {

@@ -13,12 +13,7 @@ class Control_priority : public virtual Modulebase
 private:
   IFMV * mFMV = nullptr;
   SimpleTimer mSimpleTimer;
-  Control_priority_config* mCfg = nullptr;
-  int mPriority1 = -1;
-  int mPriority2 = -1;
-  int mPriority3 = -1;
-  int mPriority4 = -1;
-  int mPriority5 = -1;
+  Control_priority_config * mCfg = nullptr;
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
@@ -51,11 +46,6 @@ public:
   {
     mSimpleTimer.setName("Control_priority");
     mSimpleTimer.setInterval(mCfg -> interval);
-    mPriority1 = mCfg -> priority1;
-    mPriority2 = mCfg -> priority2;
-    mPriority3 = mCfg -> priority3;
-    mPriority4 = mCfg -> priority4;
-    mPriority5 = mCfg -> priority5;
     setEnabled(mCfg -> enabled);
   }
 

@@ -12,13 +12,11 @@
 class Websocket_connection : public virtual Connection_module
 {
 private:
-  IFMV *mFMV;
+  IFMV * mFMV;
   SimpleTimer mSimpleTimer;
   Websocket_connection_config* mCfg = nullptr;
-  WebSocketsServer* mWebSocketsServer = nullptr;
+  WebSocketsServer * mWebSocketsServer = nullptr;
   std::vector<uint8_t> pClients;
-  int mPort = 0;
-  byte mClientMax = 0;
   void onWsEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
 protected:
   void onDisable();
@@ -40,7 +38,7 @@ public:
 
   void addClient(uint8_t clientId)
   {
-    if (pClients.size() < mClientMax)
+    if (pClients.size() < mCfg -> clientMax)
       pClients.push_back(clientId);
   }
 
@@ -63,8 +61,6 @@ public:
   {
     mSimpleTimer.setName("Websocket_control");
     mSimpleTimer.setInterval(10);
-    mPort = mCfg -> port;
-    mClientMax = mCfg -> clientMax;
     setEnabled(mCfg -> enabled);
   }
 

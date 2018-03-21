@@ -11,10 +11,7 @@ class Temperature_monitor : public virtual Modulebase
 private:
   IFMV * mFMV;
   Float_sensor_value * mSensor;
-  float mMinTemperature = 0;
-  float mMaxTemperature = 1023;
   Temperature_monitor_config * mCfg = nullptr;
-  String mSensorName = "";
 protected:
   void onEvent(byte eventId, bool always = false)
   {
@@ -37,23 +34,12 @@ public:
 
   void setConfig()
   {
-    setMinTemperature(mCfg -> minTemperature);
-    setMaxTemperature(mCfg -> maxTemperature);
-    mSensorName = mCfg -> sensorName;
     setEnabled(mCfg -> enabled);
   }
 
   void setup();
   void loop();
   void command(byte command);
-
-  void setMinTemperature(float min) {
-    mMinTemperature = min;
-  }
-
-  void setMaxTemperature(float max) {
-    mMaxTemperature = max;
-  }
 
   String getModuleName()
   {

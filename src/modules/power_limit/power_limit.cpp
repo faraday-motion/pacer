@@ -18,8 +18,8 @@ void Power_limit::loop()
   if (enabled())
   {
     Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-    if (mSensor == nullptr && mDeadSensorName != "")
-      mSensor = mFMV -> sensors().getBoolSensor(mDeadSensorName);
+    if (mSensor == nullptr && mCfg -> deadSensorName != "")
+      mSensor = mFMV -> sensors().getBoolSensor(mCfg -> deadSensorName);
 
     bool isDead = mIsVehicleDead;
     if (mSensor != nullptr)
@@ -59,7 +59,7 @@ void Power_limit::loop()
       if (mb != nullptr )
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Power_limit::Modulation_module"));
-        Modulation_module* ic = static_cast<Modulation_module*>(mb);
+        Modulation_module * ic = static_cast<Modulation_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)
         {

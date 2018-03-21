@@ -21,16 +21,15 @@ void Pwm_steering::setup() {
       if (wheelArray[i] -> canSteer())
       {
         //All pin numbers are allowed,but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
-        pinMode(mServoPins[wheelDecorators.size()], OUTPUT);
+        pinMode(mCfg -> servoPins[wheelDecorators.size()], OUTPUT);
         Servo * mServo = new Servo();
-        mServo -> attach(mServoPins[wheelDecorators.size()]);
+        mServo -> attach(mCfg -> servoPins[wheelDecorators.size()]);
         wheelDecorators.push_back(new Pwm_steering_wheel_decorator(wheelArray[i], mServo));
       }
     }
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
-
 
 void Pwm_steering::loop()
 {
@@ -42,9 +41,8 @@ void Pwm_steering::loop()
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-        Limit_module* ic = static_cast<Limit_module*>(mb);
+        Limit_module * ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
-
         //Logger::Instance().write(LogLevel::DEBUG, "Pwm_steering::Turning " + String(mInputControl.getLeft()) + " " + String(mInputControl.getRight()));
         for (int i=0; i<wheelDecorators.size(); i++)
         {

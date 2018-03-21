@@ -14,7 +14,6 @@ public:
 
   void getModuleConfiguration(JsonObject &root)
   {
-    root["sensorId"] = sensorId;
     root["minTemperature"] = minTemperature;
     root["maxTemperature"] = maxTemperature;
     root["sensorName"] = sensorName;
@@ -22,13 +21,11 @@ public:
 
   void setModuleConfiguration(JsonObject &root)
   {
-    sensorId = byte(root["sensorId"]);
     minTemperature = int(root["minTemperature"]);
     maxTemperature = int(root["maxTemperature"]);
     sensorName = root["sensorName"].as<String>();
   }
 
-  byte sensorId = 0;
   int minTemperature = 0;
   int maxTemperature = 1023;
   String sensorName = "";

@@ -31,10 +31,10 @@ void Vesc_controller::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    Logger::Instance().write(LogLevel::INFO, FPSTR("DefaultSerial: "), String(mVescDefaultSerial));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("DefaultSerial: "), String(mCfg -> defaultSerial));
     //Set default mode
     mDriveMode = Commands::CURRENT_MODE;
-    if (mVescDefaultSerial)
+    if (mCfg -> defaultSerial)
     {
       Configurator::Instance().initializeSerial();
       pVescInterface = new Vesc_interface(&Serial, this);
@@ -81,7 +81,7 @@ void Vesc_controller::loop()
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-        Limit_module* ic = static_cast<Limit_module*>(mb);
+        Limit_module * ic = static_cast<Limit_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         getValues();
 
@@ -350,14 +350,14 @@ void Vesc_controller::setCurrent()
   {
     if (wheelDecorators[i] -> getWheelControl().getPower() > 0)
     {
-      float powerCurrent = Tools::mapFloat(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0.0, float(mMaxPowerCurrent));
+      float powerCurrent = Tools::mapFloat(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0.0, float(mCfg -> maxPowerCurrent));
       Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::setCurrentPower: "), String(powerCurrent));
       pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
       pVescInterface -> set_current(powerCurrent);
     }
     else if (wheelDecorators[i] -> getWheelControl().getBrake() > 0)
     {
-      float brakeCurrent = Tools::mapFloat(wheelDecorators[i] -> getWheelControl().getBrake(), 0, 100, 0.0, float(mMaxBrakeCurrent));
+      float brakeCurrent = Tools::mapFloat(wheelDecorators[i] -> getWheelControl().getBrake(), 0, 100, 0.0, float(mCfg -> maxBrakeCurrent));
       Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::setCurrentBrake: "), String(brakeCurrent));
       pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
       pVescInterface -> set_current_brake(brakeCurrent);
@@ -376,7 +376,7 @@ void Vesc_controller::setRpm()
   Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::setRpm "));
   for (int i=0; i<wheelDecorators.size(); i++)
   {
-      int rpm = map(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0, mMaxRpm);
+      int rpm = map(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0, mCfg -> maxRpm);
       pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
       pVescInterface -> set_rpm(rpm);
   }

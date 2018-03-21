@@ -10,7 +10,7 @@ private:
   SimpleTimer mSimpleTimer;
   bool mIsDirty = false;
 protected:
-  IFMV *mFMV;
+  IFMV * mFMV;
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {

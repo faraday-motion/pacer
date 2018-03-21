@@ -6,7 +6,7 @@
 class Bt_connection : public virtual Modulebase
 {
 private:
-  IFMV *mFMV;
+  IFMV * mFMV;
   void onDisable();
 protected:
   void onEvent(byte eventId, bool always = false)

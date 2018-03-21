@@ -62,9 +62,9 @@ byte Exponential_power_modulation::calculateOutput(byte previousPower, byte powe
     //Smooth the input
     float targetAlpha = float(power);
     if (power > previousPower)
-      targetAlpha = (mSmoothAlphaPositive * (float)power) + ((1.0 - mSmoothAlphaPositive) * (float)previousPower);
+      targetAlpha = (mCfg -> smoothAlphaPositive * (float)power) + ((1.0 - mCfg -> smoothAlphaPositive) * (float)previousPower);
     else if (power < previousPower)
-      targetAlpha = (mSmoothAlphaNegative * (float)power) + ((1.0 - mSmoothAlphaNegative) * (float)previousPower);
+      targetAlpha = (mCfg -> smoothAlphaNegative * (float)power) + ((1.0 - mCfg -> smoothAlphaNegative) * (float)previousPower);
     //If the value is close to target, set it to target
     if ((float(power) - targetAlpha) < 1.0)
       targetAlpha = power;

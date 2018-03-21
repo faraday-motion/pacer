@@ -39,7 +39,7 @@ void FMV::setup() {
     getFactoryInstances(Configurator::Instance().configs().all());
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Clearing Configurations"));
     //TODO need to rewrite modules to use the config values at runtime, and then remove the clear
-    Configurator::Instance().configs().clear();
+    //Configurator::Instance().configs().clear();
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring EventRules"));
     setEventRules(new Custom_eventrules());
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));

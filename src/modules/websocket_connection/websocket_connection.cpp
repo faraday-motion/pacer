@@ -27,8 +27,8 @@ void Websocket_connection::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     //onEvent(Events::CONFIGURE, true);
-    mWebSocketsServer = new WebSocketsServer(mPort);
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Websocket on port: "), String(mPort));
+    mWebSocketsServer = new WebSocketsServer(mCfg -> port);
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Websocket on port: "), String(mCfg -> port));
     mWebSocketsServer -> begin();
     mWebSocketsServer -> onEvent(std::bind(&Websocket_connection::onWsEvent, this, _1, _2, _3, _4));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());

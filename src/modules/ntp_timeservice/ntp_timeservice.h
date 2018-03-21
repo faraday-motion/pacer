@@ -12,11 +12,8 @@ class Ntp_timeservice : public virtual Modulebase
 {
 private:
   IFMV * mFMV = nullptr;
-  String mTimeServer = "";
-  String mTimeZone = "";
-  String mDateTimeFormat = "";
   struct tm mTimeInfo;
-  Ntp_timeservice_config* mCfg = nullptr;
+  Ntp_timeservice_config * mCfg = nullptr;
   void getTime();
   void updateTime();
   SimpleTimer mSimpleTimer;
@@ -46,9 +43,6 @@ public:
 
   void setConfig()
   {
-    mTimeServer = mCfg -> timeServer;
-    mTimeZone = mCfg -> timeZone;
-    mDateTimeFormat = mCfg -> dateTimeFormat;
     mSimpleTimer.setInterval(1000);
     setEnabled(mCfg -> enabled);
   }

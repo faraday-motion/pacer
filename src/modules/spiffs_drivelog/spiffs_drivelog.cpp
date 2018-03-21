@@ -38,7 +38,7 @@ void Spiffs_drivelog::writeSensorValues()
   }
   sv += ";\n";
   //TODO Add MAX SIZE
-  mSpiffs_storage.append(mDriveLog, sv, 700000);
+  mSpiffs_storage.append(mCfg -> driveLog, sv, 700000);
 }
 
 void Spiffs_drivelog::command(byte command)
@@ -49,7 +49,7 @@ void Spiffs_drivelog::command(byte command)
     Commands comm = static_cast<Commands>(command);
     if (comm == Commands::CLEAR_LOG)
     {
-      mSpiffs_storage.remove(mDriveLog);
+      mSpiffs_storage.remove(mCfg -> driveLog);
     }
   }
 }

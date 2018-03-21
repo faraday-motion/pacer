@@ -9,8 +9,8 @@
 class Serial_log : public virtual Log_module
 {
 private:
-    Serial_log_config* mCfg = nullptr;
-    IFMV * mFMV = nullptr;
+  Serial_log_config * mCfg = nullptr;
+  IFMV * mFMV = nullptr;
 protected:
   void onEvent(byte eventId, bool always = false)
   {

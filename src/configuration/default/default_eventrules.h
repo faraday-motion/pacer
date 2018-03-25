@@ -28,10 +28,16 @@ public:
       //Enable wifi for wifi simple control
       if (eventId == Control_module::Events::CONFIGURE)
       {
+        //mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+      }
+    }
+    if (sender -> module() == Modules::WIFI_CONNECTION)
+    {
+      if (eventId == Wifi_connection::Events::CONFIGURE)
+      {
         mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
-
 /*
     if (sender -> module() == Modules::WIFI_CONNECTION)
     {
@@ -49,6 +55,7 @@ public:
       if (eventId == Wifi_connection::Events::WIFI_STA_STARTED)
       {
         mFMV -> modules().commandByType(Modules::NTP_TIMESERVICE, (byte)Ntp_timeservice::Commands::GET_TIME);
+        mFMV -> modules().commandByType(Modules::MQTT_CONNECTION, (byte)Mqtt_connection::Commands::CONNECT);
       }
     }
 
@@ -79,7 +86,7 @@ public:
         mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_ENABLED);
         mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::VEHICLE_ALIVE);
         //Handle sta connection
-        mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        //mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
 
@@ -146,6 +153,15 @@ public:
       {
         mFMV -> modules().commandByType(Modules::POWER_LIMIT, (byte)Power_limit::Commands::DRIVE_MODE_100);
       }
+      else if (eventId == Control_module::Events::LED_ENABLED)
+      {
+        mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_ENABLED);
+      }
+      else if (eventId == Control_module::Events::LED_DISABLED)
+      {
+        mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_DISABLED);
+      }
+
     }
   }
 };

@@ -35,8 +35,10 @@ public:
   static const byte ARDUINO_OTA_CONFIG = 28;
   static const byte WEBSOCKET_CONNECTION_CONFIG = 29;
   static const byte WEBSOCKET_DRIVELOG_CONFIG = 30;
-  static const byte MQTT_CLIENT_CONFIG = 31;
+  static const byte MQTT_CONNECTION_CONFIG = 31;
   static const byte ESP32_DIGITAL_LED_CONFIG = 32;
+  static const byte MQTT_CONTROL_CONFIG = 33;
+
 };
 
 #endif

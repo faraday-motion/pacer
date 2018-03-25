@@ -34,6 +34,10 @@ public:
     TURN_RIGHT
   };
 
+  enum Events : byte {
+    CONFIGURE
+  };
+  
   void setConfig()
   {
     mSimpleTimer.setName("Neopixels");

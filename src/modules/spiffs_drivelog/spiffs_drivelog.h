@@ -41,6 +41,10 @@ class Spiffs_drivelog : public virtual Modulebase
       CLEAR_LOG
     };
 
+    enum Events : byte {
+      CONFIGURE
+    };
+
     void setup();
     void loop();
     void command(byte command);

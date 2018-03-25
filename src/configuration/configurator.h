@@ -19,6 +19,7 @@ private:
   bool mIsSpiffInitialized = false;
   Configlist mConfigs;
   struct tm mTimeInfo;
+  std::vector<byte> commands;
 protected:
   Configurator(){}; // Constructor is protected
   Configurator(Configurator const&){};// copy constructor is protected
@@ -31,7 +32,36 @@ public:
       // dereferencing the variable here, saves the caller from having to use
       // the arrow operator, and removes temptation to try and delete the
       // returned instance.
-      return *instance; // always returns the same instance
+      return * instance; // always returns the same instance
+  }
+
+  std::vector<byte> enabledCommands()
+  {
+    return commands;
+  }
+
+  void addCommand(byte command)
+  {
+    for (byte i=0; i<commands.size(); i++)
+    {
+        if (commands[i] == command)
+        {
+          return;
+        }
+    }
+    commands.push_back(command);
+  }
+
+  bool commandEnabled(byte command)
+  {
+    for (byte i=0; i<commands.size(); i++)
+    {
+        if (commands[i] == command)
+        {
+          return true;
+        }
+    }
+    return false;
   }
 
   tm* getTimeInfo()
@@ -44,7 +74,7 @@ public:
     return mConfigs.add(config, save);
   }
 
-  Configbase* createConfig(byte id, int configuration)
+  Configbase * createConfig(byte id, int configuration)
   {
     return mConfigs.create(id, configuration);
   }

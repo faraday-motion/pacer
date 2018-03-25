@@ -9,6 +9,7 @@ void Control_priority::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Control_priority::Priority1: "), String(mCfg -> priority1));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Control_priority::Priority2: "), String(mCfg -> priority2));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Control_priority::Priority3: "), String(mCfg -> priority3));

@@ -15,7 +15,7 @@ protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {
-    Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent eventId: ") + String(eventId));
+    //Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent eventId: ") + String(eventId));
     if (always || isActive())
     {
       Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent moduleEvent eventId: ") + String(eventId));

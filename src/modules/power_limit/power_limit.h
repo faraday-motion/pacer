@@ -46,6 +46,7 @@ public:
   };
 
   enum Events : byte {
+    CONFIGURE,
     LIMIT_DEAD,
     LIMIT_DEAD_PAUSE,
     LIMIT_ALIVE,
@@ -63,7 +64,7 @@ public:
     mSimpleTimer.setName(FPSTR("Power_limit"));
     mSimpleTimer.setInterval(15, 30);
     mPauseSimpleTimer.setName(FPSTR("Power_limit"));
-    mPauseSimpleTimer.setInterval(60*1000);
+    mPauseSimpleTimer.setInterval(30*1000);
     setEnabled(mCfg -> enabled);
   }
 

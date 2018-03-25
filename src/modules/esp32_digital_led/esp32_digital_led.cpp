@@ -12,6 +12,7 @@ void Esp32_digital_led::setup()
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     gpioSetup(mCfg -> pin, OUTPUT, LOW);
     static strand_t STRANDS[] = {{.rmtChannel = 2, .gpioNum = mCfg -> pin, .ledType = LED_WS2812B_V3, .brightLimit = 32, .numPixels =  mCfg -> pixelCount, .pixels = nullptr, ._stateVars = nullptr}};
     if (digitalLeds_initStrands(STRANDS, 1) == -1)
@@ -28,10 +29,10 @@ void Esp32_digital_led::loop()
     if (mSimpleTimer.check())
     {
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
-      if (mIsVehicleDead)
-        dead();
-      else if (mLightsEnabled == false)
+      if (mLightsEnabled == false)
         reset();
+      else if (mIsVehicleDead)
+        dead();
       else
       {
         handlePower();

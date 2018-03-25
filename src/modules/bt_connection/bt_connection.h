@@ -24,6 +24,10 @@ public:
     CONNECTION_BL_ON
   };
 
+  enum Events : byte {
+    CONFIGURE
+  };
+
   void setConfig()
   {
     //setEnabled(mCfg -> enabled);

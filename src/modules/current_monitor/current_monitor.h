@@ -29,6 +29,7 @@ public:
   }
 
   enum Events : byte {
+    CONFIGURE,
     WARNING_HIGH_CURRENT
   };
 

@@ -38,14 +38,18 @@ class Websocket_drivelog : public virtual Modulebase
       setEnabled(mCfg -> enabled);
     }
 
-  void setup();
-  void loop();
-  void command(byte command);
+    enum Events : byte {
+      CONFIGURE
+    };
+    
+    void setup();
+    void loop();
+    void command(byte command);
 
-  String getModuleName()
-  {
-    return FPSTR("WEBSOCKET_DRIVELOG");
-  }
+    String getModuleName()
+    {
+      return FPSTR("WEBSOCKET_DRIVELOG");
+    }
 };
 
 #endif

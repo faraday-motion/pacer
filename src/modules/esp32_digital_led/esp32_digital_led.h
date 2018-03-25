@@ -34,6 +34,10 @@ public:
     LED_DISABLED
   };
 
+  enum Events : byte {
+    CONFIGURE
+  };
+
   void setConfig()
   {
     mSimpleTimer.setName("Esp32_digital_led");

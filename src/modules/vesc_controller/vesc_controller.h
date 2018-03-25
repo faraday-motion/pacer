@@ -66,7 +66,7 @@ public:
   };
 
   enum Events : byte {
-
+    CONFIGURE
   };
 
   void setConfig()

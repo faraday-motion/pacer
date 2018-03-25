@@ -7,6 +7,7 @@ void Temperature_monitor::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     mIsSetup = true;
   }

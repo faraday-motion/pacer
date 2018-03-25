@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <Arduino.h>
+#include "../configuration/default/configuration.h"
 #include "../interfaces/interfaces.hpp"
 #include "../enums/enums.hpp"
 #include "./logitem.h"
@@ -15,7 +16,7 @@ public:
   static Logger &Instance()
   {
       // This line only runs once, thus creating the only instance in existence
-      static Logger *instance = new Logger;
+      static Logger * instance = new Logger;
       // dereferencing the variable here, saves the caller from having to use
       // the arrow operator, and removes temptation to try and delete the
       // returned instance.
@@ -24,7 +25,7 @@ public:
 
  // Add the location to log messages.
  // @param Target, the log Target.
- void addLog(ILog* target)
+ void addLog(ILog * target)
  {
    if (target != nullptr)
      loggerVector.push_back(target);

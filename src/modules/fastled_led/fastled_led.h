@@ -38,6 +38,10 @@ public:
     TURN_RIGHT
   };
 
+  enum Events : byte {
+    CONFIGURE,
+  };
+
   void setup();
   void loop();
   void command(byte command);

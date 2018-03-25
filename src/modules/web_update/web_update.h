@@ -38,6 +38,10 @@ public:
     setConfig();
   }
 
+  enum Events : byte {
+    CONFIGURE
+  };
+  
   void setConfig()
   {
     mSimpleTimer.setName("Web_update");

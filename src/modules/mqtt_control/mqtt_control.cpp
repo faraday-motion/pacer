@@ -1,6 +1,6 @@
 
 #include <Arduino.h>
-#include "./websocket_control.h"
+#include "./mqtt_control.h"
 #include "../../configuration/default/configuration.h"
 #include "../../configuration/configurator.h"
 #include "../../enums/enums.hpp"
@@ -10,7 +10,7 @@ using namespace std;
 using namespace std::placeholders;
 
 //Websocket control gives a reset when combined with the new led driver
-void Websocket_control::setup() {
+void Mqtt_control::setup() {
   if (mIsSetup == false)
   {
     mIsSetup = true;
@@ -22,12 +22,12 @@ void Websocket_control::setup() {
   }
 }
 
-void Websocket_control::addReciever()
+void Mqtt_control::addReciever()
 {
   //Find the websocket connection module
   if (pIConnection == nullptr)
   {
-    IModule * mb = mFMV -> modules().getByType(Modules::WEBSOCKET_CONNECTION);
+    IModule * mb = mFMV -> modules().getByType(Modules::MQTT_CONNECTION);
     if (mb != nullptr)
     {
       Connection_module * conn = static_cast<Connection_module*>(mb);
@@ -41,7 +41,7 @@ void Websocket_control::addReciever()
   }
 }
 
-void Websocket_control::loop()
+void Mqtt_control::loop()
 {
   if (enabled())
   {
@@ -53,12 +53,12 @@ void Websocket_control::loop()
   }
 }
 
-void Websocket_control::command(byte command)
+void Mqtt_control::command(byte command)
 {
 
 }
 
-void Websocket_control::onDisable()
+void Mqtt_control::onDisable()
 {
    mOutputControl.reset();
    onEvent(Events::CONTROL_NONE);

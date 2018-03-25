@@ -6,6 +6,7 @@ void Analog_sensor::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     pinMode(mCfg -> pin, INPUT);
     readAnalogPin();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());

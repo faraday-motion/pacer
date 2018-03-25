@@ -66,12 +66,17 @@ public:
       mIsSetup = true;
       Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
       Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+      onEvent(Events::CONFIGURE);
       getWebsocketConnection();
       Logger::Instance().addLog(this);
       Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
     }
   }
 
+  enum Events : byte {
+    CONFIGURE
+  };
+  
   void loop()
   {
   }

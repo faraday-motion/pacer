@@ -30,8 +30,9 @@ public:
   }
 
   enum Events : byte {
-      WARNING_VOLTAGE_HIGH = 1,
-      WARNING_VOLTAGE_LOW = 2
+    CONFIGURE,
+    WARNING_VOLTAGE_HIGH = 1,
+    WARNING_VOLTAGE_LOW = 2
   };
 
   void setConfig()

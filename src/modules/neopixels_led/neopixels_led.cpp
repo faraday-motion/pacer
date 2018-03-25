@@ -11,6 +11,7 @@ void Neopixels_led::setup()
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     pinMode(mCfg -> pin, OUTPUT);
     mNeopixels = new Adafruit_NeoPixel(mCfg -> pixelCount, mCfg -> pin, NEO_GRB + NEO_KHZ800);
     mNeopixels -> setBrightness(mCfg -> brightness);

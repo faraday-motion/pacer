@@ -11,11 +11,13 @@ SimpleBLE ble;
 void Bt_connection::setup() {
   if (mIsSetup == false)
   {
-      Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Bt_connection"));
+      mIsSetup = true;
+      Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
+      Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+      onEvent(Events::CONFIGURE);
       btStop();
       ble.begin("ESP32 SimpleBLE");
-      Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up Bt_connection"));
-      mIsSetup = true;
+      Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
 

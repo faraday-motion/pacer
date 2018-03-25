@@ -20,17 +20,17 @@ private:
   SimpleTimer mSimpleTimerConnection;
   SimpleTimer mSimpleTimerInput;
   void readInput();
-  void processInput(byte input);
+  void processPowerNeutralBrake(byte input);
   void handleClientConnections();
 protected:
   void onEnable();
   void onDisable();
   void onEvent(byte eventId, bool always = false)
   {
-    Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent eventId: ") + String(eventId));
+    //Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent eventId: ") + String(eventId));
     if (always || isActive())
     {
-      Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent moduleEvent eventId: ") + String(eventId));
+      //Logger::Instance().write(LogLevel::INFO, getModuleName(), FPSTR(" onEvent moduleEvent eventId: ") + String(eventId));
       mFMV -> moduleEvent(this, eventId);
     }
   }

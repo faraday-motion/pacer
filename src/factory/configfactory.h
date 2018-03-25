@@ -144,10 +144,15 @@ public:
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
         cfg = new Websocket_drivelog_config(id);
         break;
-      case Configurations::MQTT_CLIENT_CONFIG :
-        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance MQTT_CLIENT_CONFIG"));
+      case Configurations::MQTT_CONNECTION_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance MQTT_CONNECTION_CONFIG"));
         Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-        cfg = new Mqtt_client_config(id);
+        cfg = new Mqtt_connection_config(id);
+        break;
+      case Configurations::MQTT_CONTROL_CONFIG :
+        Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance MQTT_CONTROL_CONFIG"));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+        cfg = new Mqtt_control_config(id);
         break;
       case Configurations::ESP32_DIGITAL_LED_CONFIG :
         Logger::Instance().write(LogLevel::INFO, FPSTR("getConfigInstance ESP32_DIGITAL_LED_CONFIG"));

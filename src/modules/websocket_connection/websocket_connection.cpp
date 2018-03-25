@@ -26,7 +26,7 @@ void Websocket_connection::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    //onEvent(Events::CONFIGURE, true);
+    onEvent(Events::CONFIGURE);
     mWebSocketsServer = new WebSocketsServer(mCfg -> port);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Websocket on port: "), String(mCfg -> port));
     mWebSocketsServer -> begin();
@@ -107,8 +107,6 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Packet recievers:"), String(i));
           recievers()[i] -> recieve(command, value);
         }
-
-
         String response = "";
         if (id > 0)
           response = "{\"response\":\"ok\", \"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\"}";

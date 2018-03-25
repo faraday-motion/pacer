@@ -69,9 +69,7 @@ void Wifi_simple_control::readInput()
        yield();
        if (Tools::validateChecksum(m, packetCount))
        {
-          yield();
-          processInput(m[4]);
-          yield();
+          processPowerNeutralBrake(m[4]);
        }
        else
        {
@@ -82,7 +80,7 @@ void Wifi_simple_control::readInput()
    }
 }
 
-void Wifi_simple_control::processInput(byte input)
+void Wifi_simple_control::processPowerNeutralBrake(byte input)
 {
   Logger::Instance().write(LogLevel::DEBUG, FPSTR("Wifi_simple_control:processInput "), String(input));
   byte defaultInputNeutral = 50;

@@ -38,6 +38,10 @@ public:
       setEnabled(mCfg -> enabled);
     }
 
+    enum Events : byte {
+      CONFIGURE
+    };
+
     void setup();
     void loop();
     int value();

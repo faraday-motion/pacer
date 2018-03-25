@@ -13,6 +13,7 @@ void Pwm_controller::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     //Configure the servos's
     std::vector<IWheel*> wheelArray = mFMV -> getWheelValues();
     for (int i=0; i<wheelArray.size(); i++)

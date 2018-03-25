@@ -47,6 +47,8 @@ void Wifi_connection::loop()
   }
 }
 
+
+
 void Wifi_connection::setWifiOff()
 {
   Logger::Instance().write(LogLevel::INFO, FPSTR("WifiOff"));
@@ -75,16 +77,20 @@ void Wifi_connection::setWifiStation()
   //delay(250);
   //WiFi.onEvent(onWiFiEvent);
   WiFi.mode(WIFI_STA);
-  delay(50);
   WiFi.begin(mCfg -> ssid.c_str(), mCfg -> password.c_str());
 
-  delay(50);
-  while (WiFi.status() != WL_CONNECTED) {
-       delay(500);
-       Serial.print(".");
-   }
-   onEvent(Events::WIFI_STA_STARTED);
-  Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection IP address: "), Tools::ipAddressToString(WiFi.localIP()));
+  byte retries = 10;
+  while (WiFi.status() != WL_CONNECTED && retries > 0) {
+    delay(500);
+    retries --;
+  }
+  if(WiFi.status() == WL_CONNECTED)
+  {
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Wifi_connection IP address: "), Tools::ipAddressToString(WiFi.localIP()));
+    onEvent(Events::WIFI_STA_STARTED);
+  }
+  else
+    Logger::Instance().write(LogLevel::INFO, FPSTR("NO Wifi_connection"));
 }
 
 /*

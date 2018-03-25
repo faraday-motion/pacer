@@ -68,6 +68,7 @@ public:
   };
 
   enum Events : byte {
+    CONFIGURE
   };
 
   void setup();

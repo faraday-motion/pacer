@@ -9,6 +9,7 @@ void Arduino_ota::setup() {
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up Arduino_ota"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     // Port defaults to 3232
     if (mCfg -> port != 0)
       ArduinoOTA.setPort(mCfg -> port);

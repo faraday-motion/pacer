@@ -1,5 +1,5 @@
-#ifndef MQTT_CLIENT_CONFIG_H
-#define MQTT_CLIENT_CONFIG_H
+#ifndef MQTT_CONNECTION_CONFIG_H
+#define MQTT_CONNECTION_CONFIG_H
 #include <memory>
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -7,9 +7,9 @@
 #include "../../configuration/default/default_pins.h"
 #include "../../configuration/base/configbase.h"
 
-class Mqtt_client_config : public Configbase{
+class Mqtt_connection_config : public Configbase{
 public:
-  Mqtt_client_config(byte id) : Configbase(id, Configurations::MQTT_CLIENT_CONFIG) {
+  Mqtt_connection_config(byte id) : Configbase(id, Configurations::MQTT_CONNECTION_CONFIG) {
   }
 
   void getModuleConfiguration(JsonObject &root)

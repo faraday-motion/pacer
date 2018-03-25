@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "../base/base.hpp"
-#include "../../configuration/configurator.h"
+//#include "../../configuration/configurator.h"
 #include "./exponential_power_modulation_config.h"
 #include "../../utility/simpletimer.h"
 #include "../../interfaces/interfaces.hpp"
@@ -30,9 +30,12 @@ public:
       mCfg = static_cast<Exponential_power_modulation_config*>(Configurator::Instance().createConfig(id, Configurations::EXPONENTIAL_POWER_MODULATION_CONFIG));
     else
       mCfg = cfg;
-
     setConfig();
   }
+
+  enum Events : byte {
+    CONFIGURE,
+  };
 
   void setConfig()
   {

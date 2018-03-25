@@ -31,13 +31,15 @@ public:
   static const byte ARDUINO_OTA = 24;
   static const byte WEBSOCKET_CONNECTION = 25;
   static const byte WEBSOCKET_DRIVELOG = 26;
-  static const byte MQTT_CLIENT = 27;
+  static const byte MQTT_CONNECTION = 27;
   static const byte ESP32_DIGITAL_LED = 28;
   static const byte ANALOG_SENSOR = 29;
   static const byte BOOLEAN_SENSOR = 30;
   static const byte SERIAL_LOG = 31;
   static const byte SPIFFS_LOG = 32;
   static const byte WEBSOCKET_SERVER_LOG = 33;
+  static const byte MQTT_CONTROL = 34;
+
 
 };
 

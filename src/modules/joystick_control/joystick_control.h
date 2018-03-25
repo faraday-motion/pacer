@@ -39,6 +39,10 @@ public:
     setConfig();
   }
 
+  enum Events : byte {
+    CONFIGURE,
+  };
+
   void setConfig()
   {
     setClientTimeout("Joystick_control", 10000);

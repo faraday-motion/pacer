@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <vector>
+#include <Preferences.h>
 #include "./utility/simpletimer.h"
 #include "./macros.h"
 #include "./log/logger.h"
@@ -27,6 +28,9 @@ private:
   Spiffs_config * pSpiffs_config;
   Spiffs_storage * pSpiffs_storage;
   SimpleTimer * pSimpleTimerPingPong = new SimpleTimer(1000);
+  Preferences preferences;
+  void incrementRestarts();
+  void addEnabledCommands();
 public:
   FMV() {
 

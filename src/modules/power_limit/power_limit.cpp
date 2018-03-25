@@ -9,6 +9,7 @@ void Power_limit::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
@@ -58,7 +59,7 @@ void Power_limit::loop()
       IModule * mb = mFMV -> modules().getEnabledByRole(Roles::MODULATION_MODULE);
       if (mb != nullptr )
       {
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Power_limit::Modulation_module"));
+        Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::Modulation_module"));
         Modulation_module * ic = static_cast<Modulation_module*>(mb);
         mInputControl = Vehiclecontrol(ic -> getOutputControl());
         if (mInputControl.getPower() > 0)
@@ -91,6 +92,8 @@ void Power_limit::loop()
           mOutputControl.setRight(map(mInputControl.getRight(), 0, mInputControl.getRightMax(), 0, mOutputControl.getRightMax()));
         else
           mOutputControl.resetDirection();
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Power_limit::accel: "), String(mOutputControl.getPower()));
+        Logger::Instance().write(LogLevel::INFO, FPSTR("Power_limit::brake: "), String(mOutputControl.getBrake()));
       }
     }
     mFMV -> sensors().setByteSensor("accel", mOutputControl.getPower());

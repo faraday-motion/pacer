@@ -4,6 +4,7 @@
 #include "../../configuration/default/configuration.h"
 #include "../../interfaces/interfaces.hpp"
 #include "../../enums/enums.hpp"
+#include "../../configuration/configurator.h"
 
 class Modulebase : public IModule  {
 private:

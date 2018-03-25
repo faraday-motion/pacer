@@ -35,6 +35,7 @@ public:
   };
 
   enum Events : byte {
+    CONFIGURE,
     ACTIVE_PRIORITY1,
     ACTIVE_PRIORITY2,
     ACTIVE_PRIORITY3,

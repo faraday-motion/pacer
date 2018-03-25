@@ -50,6 +50,7 @@ void Web_update::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     Configurator::Instance().initializeSpiff();
     mWebserver = new ESP32WebServer(80);
     /*return index page which is stored in serverIndex */

@@ -1,5 +1,6 @@
 #ifndef EXTERNALCOMMANDS_H
 #define EXTERNALCOMMANDS_H
+
 #include "../configuration/default/configuration.h"
 
 #include "./default/default_externalcommands.h"

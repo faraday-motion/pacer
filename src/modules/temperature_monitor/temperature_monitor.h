@@ -28,6 +28,7 @@ public:
   }
 
   enum Events : byte {
+    CONFIGURE,
     WARNING_LOW_TEMPERATURE,
     WARNING_HIGH_TEMPERATURE
   };

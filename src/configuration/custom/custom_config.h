@@ -11,6 +11,15 @@ public:
 
   }
 
+/*
+  virtual void addCommands()
+  {
+    commands.push_back(ExternalCommands::DRIVE_POWER);
+    commands.push_back(ExternalCommands::DRIVE_BRAKE);
+    commands.push_back(ExternalCommands::TURN_LEFT);
+    commands.push_back(ExternalCommands::TURN_RIGHT);
+  }
+  */
 
   void addConfigs2()
   {

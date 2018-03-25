@@ -13,14 +13,16 @@ void Fastled_led::setup()
   if (mIsSetup == false)
   {
     mIsSetup = true;
-    Logger::Instance().write(LogLevel::INFO, "Setting up Fastled");
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     pinMode(PIN_FASTLED, OUTPUT);
     // set master brightness control
     FastLED.addLeds<NEOPIXEL, PIN_FASTLED>(leds, FASTLED_PIXELS);
     FastLED.setBrightness(100);
     reset();
     neutral();
-    Logger::Instance().write(LogLevel::INFO, "Finished setting up Fastled");
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
 

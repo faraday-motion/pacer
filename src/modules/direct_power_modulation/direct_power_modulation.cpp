@@ -1,3 +1,4 @@
+/*
 #include "./direct_power_modulation.h"
 #include "../base/base.hpp"
 #include <Arduino.h>
@@ -10,6 +11,7 @@ void Direct_power_modulation::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
 }
@@ -65,3 +67,4 @@ void Direct_power_modulation::onDisable()
   mInputControl.reset();
   mOutputControl.reset();
 }
+*/

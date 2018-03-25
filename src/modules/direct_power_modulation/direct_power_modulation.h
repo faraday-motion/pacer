@@ -1,3 +1,4 @@
+/*
 #ifndef DIRECT_POWER_MODULATION_H
 #define DIRECT_POWER_MODULATION_H
 
@@ -26,6 +27,10 @@ public:
     mSimpleTimer.setInterval(25, 50);
   }
 
+  enum Events : byte {
+    CONFIGURE,
+  };
+
   void setup();
   void loop();
   void command(byte command);
@@ -37,3 +42,4 @@ public:
 };
 
 #endif
+*/

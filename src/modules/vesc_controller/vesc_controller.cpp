@@ -31,6 +31,7 @@ void Vesc_controller::setup() {
     mIsSetup = true;
     Logger::Instance().write(LogLevel::INFO, FPSTR("Setting up "), getModuleName());
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("DefaultSerial: "), String(mCfg -> defaultSerial));
     //Set default mode
     mDriveMode = Commands::CURRENT_MODE;

@@ -23,6 +23,7 @@ private:
   bool handleFileStream(String path);
   SimpleTimer mSimpleTimer;
   Web_update_config * mCfg = nullptr;
+  Spiffs_storage mSpiffs_storage;
 protected:
   void onEvent(byte eventId, bool always = false)
   {
@@ -41,11 +42,11 @@ public:
   enum Events : byte {
     CONFIGURE
   };
-  
+
   void setConfig()
   {
     mSimpleTimer.setName("Web_update");
-    mSimpleTimer.setInterval(25, 50);
+    mSimpleTimer.setInterval(5, 50);
     setEnabled(mCfg -> enabled);
   }
 

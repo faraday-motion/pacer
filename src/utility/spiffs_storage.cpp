@@ -71,6 +71,7 @@ bool Spiffs_storage::read(String path, File &file){
       Logger::Instance().write(LogLevel::WARNING, FPSTR("Failed to open file for reading: "), path);
       return false;
     }
+    Logger::Instance().write(LogLevel::DEBUG, FPSTR("Sucessfully read file: "), path);
     return true;
 }
 

@@ -9,15 +9,30 @@
 #include "../base/connection_module.h"
 #include "../../interfaces/interfaces.hpp"
 
+typedef struct {
+  uint32_t lastContact;
+  bool pinged;
+  bool connected;
+} WebsocketClientPingStatus;
+
 class Websocket_connection : public virtual Connection_module
 {
 private:
   IFMV * mFMV;
   SimpleTimer mSimpleTimer;
-  Websocket_connection_config* mCfg = nullptr;
+  SimpleTimer mPingpongSimpleTimer;
+  Websocket_connection_config * mCfg = nullptr;
   WebSocketsServer * mWebSocketsServer = nullptr;
-  std::vector<uint8_t> pClients;
   void onWsEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
+  void sendInternal(String message);
+  WebsocketClientPingStatus mClientStatus[WEBSOCKETS_SERVER_CLIENT_MAX];
+  void checkClients();
+  void pingClient(int num);
+  void evictClient(int num);
+  void clientConnected(int num);
+  void clientDisconnected(int num);
+  void clientContact(int num);
+  bool handleMaxClients(int num);
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)
@@ -36,31 +51,11 @@ public:
 
   void send(String message);
 
-  void addClient(uint8_t clientId)
-  {
-    if (pClients.size() < mCfg -> clientMax)
-      pClients.push_back(clientId);
-  }
-
-  void removeClient(uint8_t clientId)
-  {
-    int toDelete = -1;
-    bool deleted = false;
-    for (int i=0; i<pClients.size(); i++)
-    {
-      if (pClients[i] == clientId)
-      {
-        toDelete = i;
-        break;
-      }
-    }
-    pClients.erase(pClients.begin() + toDelete);
-  }
-
   void setConfig()
   {
-    mSimpleTimer.setName("Websocket_control");
-    mSimpleTimer.setInterval(10);
+    mSimpleTimer.setName("Websocket_connection");
+    mSimpleTimer.setInterval(5, 50);
+    mPingpongSimpleTimer.setInterval(500);
     setEnabled(mCfg -> enabled);
   }
 

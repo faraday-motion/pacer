@@ -97,6 +97,7 @@ void Mqtt_connection::reconnect() {
     if (pMqttClient -> connect(clientId.c_str())) {
       Logger::Instance().write(LogLevel::DEBUG, FPSTR("Mqtt_client::connected"));
       pMqttClient -> publish("outpacer", "Connected!");
+      //TODO need to place this in the mqtt control module
       pMqttClient -> subscribe("inpacer/commands/drive_power");
       pMqttClient -> subscribe("inpacer/commands/drive_brake");
       pMqttClient -> subscribe("inpacer/commands/turn_left");

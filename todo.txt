@@ -1,7 +1,6 @@
--Add ping pong to websockets
--Figure better solution for storing restarts preferences 
+-Figure better solution for storing restarts preferences
 -Turn serial into a *_connection
 -Make eventrules configurable
 -Make configurations configurable
 -Make commands configurable
--Convert String to string
+-Refactoring: Convert String to string

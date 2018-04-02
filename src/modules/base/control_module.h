@@ -133,7 +133,6 @@ public:
 
   void setActive(bool active)
   {
-    //Logger::Instance().write(LogLevel::DEBUG, "setActive.reset()");
     mOutputControl.reset();
     mIsActive = active;
   }

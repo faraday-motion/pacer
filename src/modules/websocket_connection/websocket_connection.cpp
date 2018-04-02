@@ -11,7 +11,6 @@
 using namespace std;
 using namespace std::placeholders;
 
-//TODO Needs to be merged with the previous fix from Cemal https://github.com/faraday-motion/pacer/commit/4f79a2408992c2b82881a983fc810ae0f4b92f1e
 //https://jwt.io/#libraries
 //https://devcenter.heroku.com/articles/websocket-security
 //http://simplyautomationized.blogspot.de/2015/09/5-ways-to-secure-websocket-rpi.html
@@ -44,18 +43,29 @@ void Websocket_connection::loop()
       Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
       mWebSocketsServer -> loop();
     }
+    if (mPingpongSimpleTimer.check())
+      checkClients();
   }
 }
 
 void Websocket_connection::send(String message)
 {
+  sendInternal(message);
+}
+
+void Websocket_connection::sendInternal(String message)
+{
   if (enabled())
   {
     //Not allowed to add any log writes here as it creates a recursive loop.
-    message = "{\"response\":\"ok\"" + message + "}";
-    for (uint8_t i = 0; i < pClients.size(); i++) {
-      if (mWebSocketsServer != nullptr)
-        mWebSocketsServer -> sendTXT(pClients[i], message);
+    message = "{\"msg\":\"ok\"," + message + "}";
+    for (uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX  ; i++)
+    {
+      if (mClientStatus[i].connected)
+      {
+        if (mWebSocketsServer != nullptr)
+          mWebSocketsServer -> sendTXT(i, message);
+      }
     }
   }
 }
@@ -65,35 +75,38 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
   //num is clientid
   switch (type) {
     case WStype_DISCONNECTED:
-        removeClient(num);
+        clientDisconnected(num);
       break;
     case WStype_CONNECTED:
       {
+        if (!handleMaxClients(num))
+          break;
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("New Websocket Client Connectd with IP = "), Tools::ipAddressToString(mWebSocketsServer -> remoteIP(num)));
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Assigned Client ID = "), String(num));
-        addClient(num);
+        clientConnected(num);
 
-        Logger::Instance().write(LogLevel::DEBUG, FPSTR("Connected Clients: "));
-        for (uint8_t i = 0; i < pClients.size(); i++) {
-          IPAddress clientIp = mWebSocketsServer -> remoteIP(i);
-          Logger::Instance().write(LogLevel::DEBUG, FPSTR("Client ID: "), String(i));
-          Logger::Instance().write(LogLevel::DEBUG, FPSTR("Client IP: "), Tools::ipAddressToString(clientIp));
-        }
-        String response = FPSTR("{\"response\":\"ok\"}");
+        String response = FPSTR("{\"msg\":\"ok\"}");
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket resonse: "), response);
         mWebSocketsServer -> sendTXT(num, response);
       }
       break;
     case WStype_TEXT:
       {
+        clientContact(num);
         String message = (char *)payload;
         StaticJsonBuffer<1200> jsonBuffer;
         JsonObject& json = jsonBuffer.parse((char *)payload);
 
         if (!json.success()){
           Logger::Instance().write(LogLevel::ERROR, FPSTR("Failed to parse json websocket message."));
-          //TODO Return error message
-          break;
+          mWebSocketsServer -> sendTXT(num, "{\"msg\":\"error\"}");
+          return;
+        }
+        String ping = json["ping"].as<String>();
+        if (ping == "pong")
+        {
+          Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Pong Packet Received"));
+          return;
         }
         byte id = json["id"];
         byte command = json["command"];
@@ -109,9 +122,9 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
         }
         String response = "";
         if (id > 0)
-          response = "{\"response\":\"ok\", \"id\":\"" + String(id) + "\", \"command\":\"" + String(command) + "\"}";
+          response = "{\"msg\":\"ok\",\"id\":\"" + String(id) + "\",\"command\":\"" + String(command) + "\"}";
         else
-          response = "{\"response\":\"ok\", \"command\":\"" + String(command) + "\"}";
+          response = "{\"msg\":\"ok\",\"command\":\"" + String(command) + "\"}";
         mWebSocketsServer -> sendTXT(num, response);
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket resonse: "), response);
       }
@@ -124,6 +137,64 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
 void Websocket_connection::command(byte command)
 {
 
+}
+
+void Websocket_connection::checkClients()
+{
+  uint32_t now = millis();
+  uint32_t deltaTime;
+  for (uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX  ; i++)
+  {
+    if (mClientStatus[i].connected)
+    {
+      deltaTime = now - mClientStatus[i].lastContact;
+      if (deltaTime > WEBSOCKET_PING_TIMEOUT && !mClientStatus[i].pinged)
+        pingClient(i);
+      else if (deltaTime > WEBSOCKET_EVICT_TIMEOUT)
+        evictClient(i);
+    }
+  }
+}
+
+void Websocket_connection::pingClient(int num)
+{
+  mWebSocketsServer -> sendTXT(num, "{\"msg\":\"" + String(WEBSOCKET_PING_PAYLOAD) + "\"}");
+  mClientStatus[num].pinged = true;
+}
+
+void Websocket_connection::evictClient(int num)
+{
+  mWebSocketsServer -> disconnect(num);
+  clientDisconnected(num);
+}
+
+void Websocket_connection::clientConnected(int num)
+{
+  mClientStatus[num].connected = true;
+  mClientStatus[num].pinged = false;
+  mClientStatus[num].lastContact = millis();
+}
+
+void Websocket_connection::clientDisconnected(int num)
+{
+  mClientStatus[num].connected = false;
+  mClientStatus[num].pinged = false;
+}
+
+void Websocket_connection::clientContact(int num)
+{
+  mClientStatus[num].lastContact = millis();
+  mClientStatus[num].pinged = false;
+}
+
+bool Websocket_connection::handleMaxClients(int num)
+{
+  if (num == WEBSOCKETS_SERVER_CLIENT_MAX-1)
+  {
+    evictClient(num);
+    return false;
+  }
+  return true;
 }
 
 void Websocket_connection::onDisable()

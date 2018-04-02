@@ -25,7 +25,7 @@ public:
 
       //0
       Serial_log_config * cfg0 = new Serial_log_config(id++);
-      cfg0 -> logLevel = LogLevel::INFO;
+      cfg0 -> logLevel = LogLevel::WARNING;
       cfg0 -> enabled = true;
       Configurator::Instance().addConfig(cfg0);
 
@@ -98,7 +98,7 @@ public:
       Configurator::Instance().addConfig(cfg3);
 */
       //10
-      Analog_sensor_config* cfg8 = new Analog_sensor_config(id++);
+      Analog_sensor_config * cfg8 = new Analog_sensor_config(id++);
       cfg8 -> pin = PIN_JOYSTICK_CONTROL_Y;
       cfg8 -> interval = 25;
       cfg8 -> critical = 50;
@@ -106,25 +106,26 @@ public:
       Configurator::Instance().addConfig(cfg8);
 
       //11
-      Force_control_config* cfg9 = new Force_control_config(id++);
+      Force_control_config * cfg9 = new Force_control_config(id++);
       cfg9 -> sensorName = "joy_y";
       cfg9 -> enabled = true;
       Configurator::Instance().addConfig(cfg9);
 
       //12
-      Exponential_power_modulation_config* cfg10 = new Exponential_power_modulation_config(id++);
+      Exponential_power_modulation_config * cfg10 = new Exponential_power_modulation_config(id++);
       cfg10 -> enabled = true;
       Configurator::Instance().addConfig(cfg10);
 
       //13
-      Power_limit_config* cfg11 = new Power_limit_config(id++);
+      Power_limit_config * cfg11 = new Power_limit_config(id++);
       cfg11 -> enabled = true;
       cfg11 -> deadSensorName = "dead";
       Configurator::Instance().addConfig(cfg11);
 
       //14
+
       Serial_control_config * cfg12 = new Serial_control_config(id++);
-      cfg12 -> enabled = true;
+      cfg12 -> enabled = false;
       Configurator::Instance().addConfig(cfg12);
 
       //16
@@ -136,12 +137,11 @@ public:
       Pwm_controller_config * cfg17 = new Pwm_controller_config(id++);
       cfg17 -> enabled = true;
       Configurator::Instance().addConfig(cfg17);
-/*
+
       //18
-      Web_update_config* cfg18 = new Web_update_config(id++);
+      Web_update_config * cfg18 = new Web_update_config(id++);
       cfg18 -> enabled = true;
       Configurator::Instance().addConfig(cfg18);
-*/
 
       //19
       Websocket_connection_config * cfg25 = new Websocket_connection_config(id++);
@@ -157,8 +157,6 @@ public:
       Websocket_drivelog_config * cfg26 = new Websocket_drivelog_config(id++);
       cfg26 -> enabled = true;
       Configurator::Instance().addConfig(cfg26);
-
-
 
       //22
       Websocket_server_log_config * cfg21 = new Websocket_server_log_config(id++);

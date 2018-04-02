@@ -9,7 +9,6 @@
 using namespace std;
 using namespace std::placeholders;
 
-//Websocket control gives a reset when combined with the new led driver
 void Mqtt_control::setup() {
   if (mIsSetup == false)
   {

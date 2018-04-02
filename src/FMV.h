@@ -54,12 +54,6 @@ public:
     return * mEventRules;
   }
 
-  void setEventRules(Default_eventrulesbase * rules)
-  {
-    mEventRules = rules;
-    mEventRules -> setFMV(this);
-  }
-
   ISensorList &sensors()
   {
     return * mSensors;

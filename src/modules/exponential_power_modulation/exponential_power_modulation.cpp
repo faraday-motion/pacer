@@ -58,6 +58,7 @@ void Exponential_power_modulation::loop()
   }
 }
 
+//Need to rework this method as its not returning the full value
 byte Exponential_power_modulation::calculateOutput(byte previousPower, byte power, byte maxPower)
 {
     //Smooth the input

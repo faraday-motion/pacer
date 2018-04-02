@@ -32,7 +32,7 @@ void FMV::setup() {
 
     //Delete the SPIFFS file configs if there are problems with the old configuration
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring Modules"));
-    Configurator::Instance().configs().load(new Custom_config(), true);
+    Configurator::Instance().configs().load(new Custom_config(), false);
     addEnabledCommands();
     //Normal loading of saved configurations from spiffs
     //Configurator::Instance().configs().load(new Custom_config());
@@ -40,7 +40,7 @@ void FMV::setup() {
     //Configurator::Instance().configs().swap(0, 1, true);
     getFactoryInstances(Configurator::Instance().configs().all());
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring EventRules"));
-    setEventRules(new Custom_eventrules());
+    mEventRules = new Custom_eventrules(this);
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));
     modules().setup();
     //No need for buffering anymore
@@ -62,7 +62,7 @@ void FMV::incrementRestarts()
   counter++;
   preferences.putUInt("restarts", counter);
   preferences.end();
-  sensors().setIntSensor("RST", counter);
+  sensors().setIntSensor("rst", counter);
   Logger::Instance().write(LogLevel::INFO, FPSTR("Restarts: "), String(counter));
   Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Preferences"));
 }

@@ -11,11 +11,7 @@ class Default_eventrules : public Default_eventrulesbase{
 protected:
   IFMV * mFMV = nullptr;
 public:
-  Default_eventrules() : Default_eventrulesbase() {
-  }
-
-  void setFMV(IFMV * fmv)
-  {
+  Default_eventrules(IFMV * fmv) : Default_eventrulesbase() {
     mFMV = fmv;
   }
 
@@ -28,14 +24,14 @@ public:
       //Enable wifi for wifi simple control
       if (eventId == Control_module::Events::CONFIGURE)
       {
-        //mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
     if (sender -> module() == Modules::WIFI_CONNECTION)
     {
       if (eventId == Wifi_connection::Events::CONFIGURE)
       {
-        mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
+        //mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
       }
     }
 /*
@@ -128,6 +124,14 @@ public:
       {
         mFMV -> modules().commandByType(Modules::NEOPIXELS_LED, (byte)Neopixels_led::Commands::TURN_RIGHT);
         mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::TURN_RIGHT);
+      }
+      else if (eventId == Control_module::Events::LED_ENABLED)
+      {
+        mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_ENABLED);
+      }
+      else if (eventId == Control_module::Events::LED_DISABLED)
+      {
+        mFMV -> modules().commandByType(Modules::ESP32_DIGITAL_LED, (byte)Esp32_digital_led::Commands::LED_DISABLED);
       }
       else if (eventId == Control_module::Events::DRIVE_MODE_0)
       {

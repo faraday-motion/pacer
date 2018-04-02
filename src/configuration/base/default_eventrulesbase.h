@@ -11,7 +11,6 @@ public:
   }
 
   virtual void moduleEvent(IModule * sender, byte eventId);
-  virtual void setFMV(IFMV * fmv);
 };
 
 #endif

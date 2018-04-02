@@ -156,15 +156,11 @@ void Esp32_digital_led::command(byte command)
     }
     else if (!mIsVehicleDead && comm == Commands::TURN_LEFT)
     {
-      mTurnTimer.reset();
-      mBlinkOn = true;
       mLeft = true;
       mRight = false;
     }
     else if (!mIsVehicleDead && comm == Commands::TURN_RIGHT)
     {
-      mTurnTimer.reset();
-      mBlinkOn = true;
       mLeft = false;
       mRight = true;
     }

@@ -7,7 +7,7 @@
 #include "./web_update.h"
 #include "../../configuration/default/configuration.h"
 
-const char* serverIndex PROGMEM = "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>"
+const char* serverIndex PROGMEM = "<script async src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>"
 "<form method='POST' action='#' enctype='multipart/form-data' id='upload_form'>"
     "<input type='file' name='update'>"
     "<input type='submit' value='Update'>"
@@ -53,12 +53,11 @@ void Web_update::setup() {
     onEvent(Events::CONFIGURE);
     Configurator::Instance().initializeSpiff();
     mWebserver = new ESP32WebServer(80);
-    /*return index page which is stored in serverIndex */
-    mWebserver -> on("/", HTTP_GET, [this](){
+
+    mWebserver -> on("/firmware", HTTP_GET, [this](){
       this -> mWebserver -> sendHeader("Connection", "close");
       this -> mWebserver -> send(200, "text/html", serverIndex);
     });
-    /*handling uploading firmware file */
     mWebserver -> on("/update", HTTP_POST, [this](){
       mWebserver -> sendHeader("Connection", "close");
       mWebserver -> send(200, "text/plain", (Update.hasError())?"FAIL":"OK");
@@ -71,7 +70,6 @@ void Web_update::setup() {
           Update.printError(Serial);
         }
       } else if(upload.status == UPLOAD_FILE_WRITE){
-        /* flashing firmware to ESP*/
         if(Update.write(upload.buf, upload.currentSize) != upload.currentSize){
           Update.printError(Serial);
         }
@@ -83,6 +81,7 @@ void Web_update::setup() {
         }
       }
     });
+
     mWebserver -> begin();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());
   }
@@ -113,8 +112,12 @@ void Web_update::setRoutes()
   mWebserver->on("/", HTTP_GET, [this]() {
     handleFileStream("/");
   });
+
   mWebserver->on("/index.html", HTTP_GET, [this]() {
     handleFileStream("/index.html");
+  });
+  mWebserver->on("/drive.html", HTTP_GET, [this]() {
+    handleFileStream("/drive.html");
   });
   mWebserver->on("/console.html", HTTP_GET, [this]() {
     handleFileStream("/console.html");
@@ -122,6 +125,9 @@ void Web_update::setRoutes()
   //Handle Assets
   mWebserver->on("/style.css", HTTP_GET, [this]() {
     handleFileStream("/style.css");
+  });
+  mWebserver->on("/drive.js", HTTP_GET, [this]() {
+    handleFileStream("/drive.js");
   });
   mWebserver->on("/websocket.js", HTTP_GET, [this]() {
     handleFileStream("/websocket.js");
@@ -138,28 +144,42 @@ void Web_update::setRoutes()
   */
 }
 
-// Streaming files to the webserver clients.
+//Handle filestream is not working in the webserver library for the esp32, so we need to wait for an update a quick investigation did not turn out anything
 bool Web_update::handleFileStream(String path)
 {
-  //Log::Logger()->write(Log::Level::DEBUG, "Webserver trying to stream file.");
-  path = "/web" + path;
-  if(path.endsWith("/")) path += "index.html";
+  Logger::Instance().write(LogLevel::INFO, FPSTR("handleFileStream: "), path);
+//  path = "/web" + path;
+//  if(path.endsWith("/"))
+//    path += "index.html";
+  Logger::Instance().write(LogLevel::INFO, FPSTR("handleFileStream: pathupdated: "), path);
   String contentType = getContentType(path);
+  Logger::Instance().write(LogLevel::INFO, FPSTR("contentType: "), contentType);
   // TODO:: Convert files to .gz;
-  String pathWithGz = path + ".gz";
+  //String pathWithGz = path + ".gz";
+
+  File file;
+  Logger::Instance().write(LogLevel::INFO, FPSTR("mSpiffs_storage.read: "), path);
+  mSpiffs_storage.read(path, file);
+  Logger::Instance().write(LogLevel::INFO, FPSTR("mWebserver->streamFile: "), path);
+  size_t sent = mWebserver -> streamFile(file, contentType);
+  Logger::Instance().write(LogLevel::INFO, FPSTR("file.close: "), path);
+  file.close();
 //  SPIFFS.begin();
   //Log::Logger()->write(Log::Level::DEBUG, "Looking for file '" + path + "'");
+  /*
   if (SPIFFS.exists(path) || SPIFFS.exists(pathWithGz)) {
     if(SPIFFS.exists(pathWithGz))
       path += ".gz";
     File file = SPIFFS.open(path, "r");
     size_t sent = mWebserver->streamFile(file, contentType);
     file.close();
+    */
+    Logger::Instance().write(LogLevel::INFO, FPSTR("handleFileStream: succesfully"));
     //Log::Logger()->write(Log::Level::DEBUG,"Webserver served file succesfully.");
 //    SPIFFS.end();
     return true;
-  }
-//  Log::Logger()->write(Log::Level::DEBUG,"Webserver failed to stream file.");
+  //}
+  Logger::Instance().write(LogLevel::INFO, "Webserver failed to stream file.");
   return false;
 }
 
@@ -169,6 +189,7 @@ String Web_update::getContentType(String filename) {
   if(mWebserver->hasArg("download")) return "application/octet-stream";
   else if(filename.endsWith(".htm")) return "text/html";
   else if(filename.endsWith(".html")) return "text/html";
+  else if(filename.endsWith(".json")) return "text/html";
   else if(filename.endsWith(".css")) return "text/css";
   else if(filename.endsWith(".js")) return "application/javascript";
   else if(filename.endsWith(".png")) return "image/png";

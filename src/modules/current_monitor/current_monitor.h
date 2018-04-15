@@ -22,7 +22,7 @@ public:
   Current_monitor(byte id, IFMV * fmv, Current_monitor_config * cfg = nullptr) : Modulebase(id, Modules::CURRENT_MONITOR)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Current_monitor_config*>(Configurator::Instance().createConfig(id, Configurations::CURRENT_MONITOR_CONFIG));
+      mCfg = static_cast<Current_monitor_config*>(Configurator::Instance().getConfig(id, Configurations::CURRENT_MONITOR_CONFIG));
     else
       mCfg = cfg;
     setConfig();

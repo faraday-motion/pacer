@@ -24,7 +24,7 @@ class Spiffs_drivelog : public virtual Modulebase
     Spiffs_drivelog(byte id, IFMV * fmv, Spiffs_drivelog_config * cfg = nullptr) : Modulebase(id, Modules::SPIFFS_DRIVELOG)  {
       mFMV = fmv;
       if (cfg == nullptr)
-        mCfg = static_cast<Spiffs_drivelog_config*>(Configurator::Instance().createConfig(id, Configurations::SPIFFS_DRIVELOG_CONFIG));
+        mCfg = static_cast<Spiffs_drivelog_config*>(Configurator::Instance().getConfig(id, Configurations::SPIFFS_DRIVELOG_CONFIG));
       else
         mCfg = cfg;
       setConfig();

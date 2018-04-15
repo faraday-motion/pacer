@@ -14,7 +14,7 @@ public:
   Esp32_digital_led(byte id, IFMV * fmv, Esp32_digital_led_config * cfg = nullptr) : Modulebase(id, Modules::ESP32_DIGITAL_LED)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Esp32_digital_led_config*>(Configurator::Instance().createConfig(id, Configurations::ESP32_DIGITAL_LED_CONFIG));
+      mCfg = static_cast<Esp32_digital_led_config*>(Configurator::Instance().getConfig(id, Configurations::ESP32_DIGITAL_LED_CONFIG));
     else
       mCfg = cfg;
     setConfig();

@@ -52,8 +52,8 @@ public:
   byte pin = PIN_NEOPIXELS;
   byte pixelCount = NEOPIXELS_PIXELS;
   byte brightness = 255;
-  int interval = 25;
-  int critical = 50;
+  int interval = 50;
+  int critical = 100;
   byte backLedStartIndex = 0;
   byte backLedEndIndex = 2;
   byte leftLedStartIndex = 3;

@@ -3,9 +3,12 @@ var websocketModule = (function (parameters) {
   parameters = parameters || {};
   var host = (parameters.host === undefined ? "ws://10.10.100.254:81" : parameters.host);
   var connectTimeout = (parameters.connectTimeout === undefined ? 3000 : parameters.connectTimeout);;
+  var disconnectTimeout = (parameters.disconnectTimeout === undefined ? 3000 : parameters.disconnectTimeout);;
 
   var isConnected = false;
-  var socket;
+  var socket = null;
+  var autoDisconnect;
+  var id = 0;
 
   function connect(connectCallback, messageRecieved){
     function triggerCallback()
@@ -16,7 +19,11 @@ var websocketModule = (function (parameters) {
 
     try{
       if (socket)
+      {
+        allowSend = true;
         socket.close();
+        socket = null;
+      }
       socket = new WebSocket(host);
           console.log('WebSocket Socket Status: ' + socket.readyState);
 
@@ -27,23 +34,27 @@ var websocketModule = (function (parameters) {
           }
 
           socket.onmessage = function(msg){
-            isConnected = true;
+            if (autoDisconnect)
+              clearTimeout(autoDisconnect);
+
+            autoDisconnect = setTimeout(function(){
+              if (isConnected)
+              {
+                isConnected = false;
+                triggerCallback();
+              }
+            }, disconnectTimeout);
+
             if (msg.data.length) {
               var obj = JSON.parse(msg.data);
               if (obj.msg == "ping")
-                sendRaw("{\"ping\":\"pong\"}");              }
+                sendRaw("{\"ping\":\"pong\"}");
               else
                 messageRecieved(obj);
               console.log("Response::", msg.data);
             } else {
               console.log("Response is empty.");
             }
-          }
-
-          socket.onerror = function(){
-            isConnected = false;
-            console.log('onerror Socket Status: ' + socket.readyState + ' (Closed)');
-            triggerCallback();
           }
 
           socket.onclose = function(){
@@ -58,14 +69,10 @@ var websocketModule = (function (parameters) {
       }
       catch(exception){
         isConnected = false;
+        socket = null;
         triggerCallback();
         console.log('exception: ' + exception);
       }
-  }
-
-  function send(command, value)
-  {
-    sendRaw("{\"command\":" + JSON.parse(command) + ",\"value\":" + JSON.parse(value) + "}");
   }
 
   function sendRaw(msg)
@@ -73,7 +80,6 @@ var websocketModule = (function (parameters) {
     if (socket && socket.readyState == 1)
       socket.send(msg);
   }
-
 
   function initialize(connectCallback, messageRecieved)
   {
@@ -94,6 +100,6 @@ var websocketModule = (function (parameters) {
     // public
     initialize : initialize,
     connected : connected,
-    send : send
+    sendRaw : sendRaw
   };
 }());

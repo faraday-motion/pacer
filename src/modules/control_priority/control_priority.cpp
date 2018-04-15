@@ -33,8 +33,8 @@ void Control_priority::loop()
       if (activeControl != nullptr)
       {
         activeId = activeControl -> id();
-        mFMV -> sensors().setIntSensor("active", activeId);
       }
+      mFMV -> sensors().setIntSensor("active", activeId);
 
       Control_module * priority1 = nullptr;
       Control_module * priority2 = nullptr;
@@ -80,6 +80,8 @@ void Control_priority::loop()
         if (mCfg -> priority1 != activeId)
         {
           mFMV -> modules().setActiveController(mCfg -> priority1);
+          if (activeId == -1)
+            onEvent(Events::ACTIVE);
           onEvent(Events::ACTIVE_PRIORITY1);
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("setActiveController: "), String(mCfg -> priority1));
         }
@@ -90,6 +92,8 @@ void Control_priority::loop()
         if (mCfg -> priority2 != activeId)
         {
           mFMV -> modules().setActiveController(mCfg -> priority2);
+          if (activeId == -1)
+            onEvent(Events::ACTIVE);
           onEvent(Events::ACTIVE_PRIORITY2);
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("setActiveController: "), String(mCfg -> priority2));
         }
@@ -100,6 +104,8 @@ void Control_priority::loop()
         if (mCfg -> priority3 != activeId)
         {
           mFMV -> modules().setActiveController(mCfg -> priority3);
+          if (activeId == -1)
+            onEvent(Events::ACTIVE);
           onEvent(Events::ACTIVE_PRIORITY3);
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("setActiveController: "), String(mCfg -> priority3));
         }
@@ -110,6 +116,8 @@ void Control_priority::loop()
         if (mCfg -> priority4 != activeId)
         {
           mFMV -> modules().setActiveController(mCfg -> priority4);
+          if (activeId == -1)
+            onEvent(Events::ACTIVE);
           onEvent(Events::ACTIVE_PRIORITY4);
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("setActiveController: "), String(mCfg -> priority4));
         }
@@ -120,10 +128,17 @@ void Control_priority::loop()
         if (mCfg -> priority5 != activeId)
         {
           mFMV -> modules().setActiveController(mCfg -> priority5);
+          if (activeId == -1)
+            onEvent(Events::ACTIVE);
           onEvent(Events::ACTIVE_PRIORITY5);
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("setActiveController: "), String(mCfg -> priority5));
         }
         return;
+      }
+      else if (activeId == -1)
+      {
+        mFMV -> modules().deactivateControllers();
+        onEvent(Events::INACTIVE);
       }
     }
   }

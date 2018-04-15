@@ -69,12 +69,12 @@ public:
     return &mTimeInfo;
   }
 
-  bool addConfig(Configbase* config, bool save = false)
+  bool addConfig(Configbase * config, bool save = false)
   {
     return mConfigs.add(config, save);
   }
 
-  Configbase * createConfig(byte id, int configuration)
+  Configbase * getConfig(byte id, int configuration)
   {
     return mConfigs.create(id, configuration);
   }

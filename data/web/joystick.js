@@ -2,6 +2,12 @@ var joystickModule = (function () {
   // private
   var joypower;
   var joydirection;
+  var isEnabled = false;
+
+  function setEnabled(enabled)
+  {
+    isEnabled = enabled;
+  }
 
   function limit(val)
   {
@@ -14,7 +20,9 @@ var joystickModule = (function () {
 
   function power()
   {
-    var power = joypower.GetY();
+    if (!isEnabled)
+      return 0;
+    var power = parseInt(joypower.GetY());
     if (power > 0)
      return limit(power);
     return 0;
@@ -22,7 +30,9 @@ var joystickModule = (function () {
 
   function brake()
   {
-    var brake = joypower.GetY();
+    if (!isEnabled)
+      return 0;
+    var brake = parseInt(joypower.GetY());
     if (brake < 0)
      return limit(-brake);
     return 0;
@@ -30,7 +40,9 @@ var joystickModule = (function () {
 
   function left()
   {
-    var left = joydirection.GetX();
+    if (!isEnabled)
+      return 0;
+    var left = parseInt(joypower.GetX());
     if (left < 0)
      return limit(-left);
     return 0;
@@ -38,10 +50,17 @@ var joystickModule = (function () {
 
   function right()
   {
-    var right = joydirection.GetX();
+    if (!isEnabled)
+      return 0;
+    var right = parseInt(joypower.GetX());
     if (right > 0)
      return limit(right);
     return 0;
+  }
+
+  function regionId()
+  {
+    return "region_joystick";
   }
 
   (function initialize() {
@@ -51,8 +70,8 @@ var joystickModule = (function () {
     parameters.internalStrokeColor = "#222222";
     parameters.externalLineWidth = 2;
     parameters.externalStrokeColor = "#CCCCCC";
-    joypower = new JoyStick('joypower', parameters);
-    joydirection = new JoyStick('joydirection', parameters);
+    parameters.title = "joyjoystick";
+    joypower = new JoyStick('joyjoystick', parameters);
   })();
 
   return {
@@ -60,6 +79,8 @@ var joystickModule = (function () {
     power : power,
     brake : brake,
     left : left,
-    right : right
+    right : right,
+    regionId : regionId,
+    setEnabled : setEnabled
   };
 }());

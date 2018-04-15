@@ -33,7 +33,7 @@ public:
   Web_update(byte id, IFMV * fmv, Web_update_config * cfg = nullptr) : Modulebase(id, Modules::WEB_UPDATE)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Web_update_config*>(Configurator::Instance().createConfig(id, Configurations::WEB_UPDATE_CONFIG));
+      mCfg = static_cast<Web_update_config*>(Configurator::Instance().getConfig(id, Configurations::WEB_UPDATE_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -46,7 +46,7 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName("Web_update");
-    mSimpleTimer.setInterval(5, 50);
+    mSimpleTimer.setInterval(20, 50);
     setEnabled(mCfg -> enabled);
   }
 

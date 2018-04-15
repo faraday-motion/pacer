@@ -9,7 +9,9 @@ class Custom_eventrules : public Default_eventrules{
 private:
 public:
   Custom_eventrules(IFMV * fmv) : Default_eventrules(fmv) {
+    
   }
+
   /*
   void moduleEvent(Modulebase* sender, byte eventId)
   {

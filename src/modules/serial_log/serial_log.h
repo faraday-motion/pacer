@@ -21,7 +21,7 @@ public:
       mFMV = fmv;
       Configurator::Instance().initializeSerial();
       if (mfg == nullptr)
-        mCfg = static_cast<Serial_log_config*>(Configurator::Instance().createConfig(id, Configurations::SERIAL_LOG_CONFIG));
+        mCfg = static_cast<Serial_log_config*>(Configurator::Instance().getConfig(id, Configurations::SERIAL_LOG_CONFIG));
       else
         mCfg = mfg;
       setConfig();
@@ -30,7 +30,7 @@ public:
     enum Events : byte {
       CONFIGURE
     };
-    
+
     void setConfig()
     {
       setLevel(mCfg -> logLevel);

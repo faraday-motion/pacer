@@ -27,7 +27,7 @@ public:
   Exponential_power_modulation(byte id, IFMV * fmv, Exponential_power_modulation_config * cfg = nullptr) : Modulation_module(id, Modules::EXPONENTIAL_POWER_MODULATION)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Exponential_power_modulation_config*>(Configurator::Instance().createConfig(id, Configurations::EXPONENTIAL_POWER_MODULATION_CONFIG));
+      mCfg = static_cast<Exponential_power_modulation_config*>(Configurator::Instance().getConfig(id, Configurations::EXPONENTIAL_POWER_MODULATION_CONFIG));
     else
       mCfg = cfg;
     setConfig();

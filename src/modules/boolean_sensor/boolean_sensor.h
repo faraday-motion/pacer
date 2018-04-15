@@ -24,7 +24,7 @@ public:
     {
       mFMV = fmv;
       if(cfg == nullptr)
-        mCfg = static_cast<Boolean_sensor_config*>(Configurator::Instance().createConfig(id, Configurations::BOOLEAN_SENSOR_CONFIG));
+        mCfg = static_cast<Boolean_sensor_config*>(Configurator::Instance().getConfig(id, Configurations::BOOLEAN_SENSOR_CONFIG));
       else
         mCfg = cfg;
       setConfig();

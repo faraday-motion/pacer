@@ -4,13 +4,18 @@ var consoleModule = (function () {
   var rows = [];
   var timerContent = null;
   var isPaused = false;
+  var isEnabled = false;
+
+  function setEnabled(enabled)
+  {
+    isEnabled = enabled;
+  }
 
   function console(message) {
-    // Handle char and char array responses.
     while (rows.length > iMaxRows)
       rows.shift();
     if (isPaused == false)
-      rows.push(JSON.stringify(message, undefined, 2) + "<br>");
+      rows.push(JSON.stringify(message) + "<br>");
     if (timerContent == null)
       timerContent = setInterval(setContent, 200);
   }
@@ -36,6 +41,11 @@ var consoleModule = (function () {
     $("#consolemessage").html("---------------------------------- empty ----------------------------------");
   }
 
+  function regionId()
+  {
+    return "region_console";
+  }
+
   (function initialize() {
     $("#btnconsolesend").click(function(){
       var command = $("#selconsolecommand").val();
@@ -53,6 +63,8 @@ var consoleModule = (function () {
 
   return {
     // public
-    console : console
+    console : console,
+    regionId : regionId,
+    setEnabled : setEnabled
   };
 }());

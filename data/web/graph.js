@@ -1,5 +1,13 @@
 var graphModule = (function () {
   // private
+  var sensors = null;
+  var isEnabled = false;
+
+  function setEnabled(enabled)
+  {
+    isEnabled = enabled;
+  }
+
   function setupPowerGraph()
   {
     var smoothiePower = new SmoothieChart();
@@ -12,7 +20,6 @@ var graphModule = (function () {
     var line4 = new TimeSeries();
 
     setInterval(function() {
-      var sensors = pacerModule.getSensors();
       if (sensors)
       {
         line1.append(new Date().getTime(), sensors.accel);
@@ -40,7 +47,6 @@ var graphModule = (function () {
     var line4 = new TimeSeries();
 
     setInterval(function() {
-      var sensors = pacerModule.getSensors();
       if (sensors)
       {
         line1.append(new Date().getTime(), sensors.vesc_0_v_in);
@@ -67,7 +73,6 @@ var graphModule = (function () {
     var line3 = new TimeSeries();
 
     setInterval(function() {
-      var sensors = pacerModule.getSensors();
       if (sensors)
       {
         line1.append(new Date().getTime(), sensors.vesc_0_a_charged);
@@ -81,6 +86,16 @@ var graphModule = (function () {
     smoothieCharge.addTimeSeries(line3, { strokeStyle:'rgb(255, 255, 0)', lineWidth:3 });
   }
 
+  function regionId()
+  {
+    return "region_data";
+  }
+
+  function setSensors(sensorValues)
+  {
+    sensors = sensorValues;
+  }
+
   (function initialize() {
 
     $(document).ready(function(){
@@ -92,5 +107,8 @@ var graphModule = (function () {
 
   return {
     // public
+    regionId : regionId,
+    setSensors : setSensors,
+    setEnabled : setEnabled
   };
 }());

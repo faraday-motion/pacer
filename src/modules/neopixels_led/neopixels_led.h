@@ -16,7 +16,7 @@ public:
   Neopixels_led(byte id, IFMV * fmv, Neopixels_led_config * cfg = nullptr) : Modulebase(id, Modules::NEOPIXELS_LED)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Neopixels_led_config*>(Configurator::Instance().createConfig(id, Configurations::NEOPIXELS_LED_CONFIG));
+      mCfg = static_cast<Neopixels_led_config*>(Configurator::Instance().getConfig(id, Configurations::NEOPIXELS_LED_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -37,7 +37,7 @@ public:
   enum Events : byte {
     CONFIGURE
   };
-  
+
   void setConfig()
   {
     mSimpleTimer.setName("Neopixels");

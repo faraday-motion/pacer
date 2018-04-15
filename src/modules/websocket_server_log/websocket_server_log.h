@@ -37,7 +37,7 @@ public:
   Websocket_server_log(byte id, IFMV * fmv = nullptr, Websocket_server_log_config * mfg = nullptr) : Log_module(id, Modules::WEBSOCKET_SERVER_LOG){
     mFMV = fmv;
     if (mfg == nullptr)
-      mCfg = static_cast<Websocket_server_log_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_SERVER_LOG_CONFIG));
+      mCfg = static_cast<Websocket_server_log_config*>(Configurator::Instance().getConfig(id, Configurations::WEBSOCKET_SERVER_LOG_CONFIG));
     else
       mCfg = mfg;
     setConfig();
@@ -53,7 +53,7 @@ public:
   {
     if (enabled() && level >= getLevel())
     {
-      message = ", \"content\":\"" + message + "\"";
+      message = "\"log\":\"" + message + "\"";
       if (pIConnection != nullptr)
         pIConnection -> send(message);
     }
@@ -76,7 +76,7 @@ public:
   enum Events : byte {
     CONFIGURE
   };
-  
+
   void loop()
   {
   }

@@ -14,7 +14,7 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -26,7 +26,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 /**
  * @desc Principal object that draw a joystick, you only need to initialize the object and suggest the HTML container
  * @costructor
@@ -51,7 +51,7 @@ var JoyStick = (function(container, parameters) {
 		internalStrokeColor = (undefined === parameters.internalStrokeColor ? '#003300' : parameters.internalStrokeColor),
 		externalLineWidth = (undefined === parameters.externalLineWidth ? 2 : parameters.externalLineWidth),
 		externalStrokeColor = (undefined === parameters.externalStrokeColor ? '#008000' : parameters.externalStrokeColor);
-	
+
 	// Create Canvas element and add it in the Container object
 	var objContainer = document.getElementById(container);
 	var canvas = document.createElement('canvas');
@@ -62,7 +62,7 @@ var JoyStick = (function(container, parameters) {
 	canvas.height = height;
 	objContainer.appendChild(canvas);
 	var context=canvas.getContext('2d');
-	
+
 	var pressed = 0; // Bool - 1=Yes - 0=No
 	var circumference = 2 * Math.PI;
 	var internalRadius = (canvas.width-((50*2)+10))/2;
@@ -77,7 +77,7 @@ var JoyStick = (function(container, parameters) {
 	// Used to save current position of stick
 	var movedX=centerX;
 	var movedY=centerY;
-		
+
 	// Check if the device support the touch or not
 	var touchable = 'createTouch' in document;
 	if(touchable)
@@ -132,11 +132,11 @@ var JoyStick = (function(container, parameters) {
 		context.strokeStyle = internalStrokeColor;
 		context.stroke();
 	}
-	
+
 	/**
 	 * @desc Events for manage touch
 	 */
-	function onTouchStart(event) 
+	function onTouchStart(event)
 	{
 		pressed=1;
 	}
@@ -156,8 +156,8 @@ var JoyStick = (function(container, parameters) {
 			drawExternal();
 			drawInternal();
 		}
-	} 
-	function onTouchEnd(event) 
+	}
+	function onTouchEnd(event)
 	{
 		pressed=0;
 		// Reset position store variable
@@ -173,11 +173,11 @@ var JoyStick = (function(container, parameters) {
 	/**
 	 * @desc Events for manage mouse
 	 */
-	function onMouseDown(event) 
+	function onMouseDown(event)
 	{
 		pressed=1;
 	}
-	function onMouseMove(event) 
+	function onMouseMove(event)
 	{
 		if(pressed==1)
 		{
@@ -193,7 +193,7 @@ var JoyStick = (function(container, parameters) {
 			drawInternal();
 		}
 	}
-	function onMouseUp(event) 
+	function onMouseUp(event)
 	{
 		pressed=0;
 		// Reset position store variable
@@ -211,22 +211,22 @@ var JoyStick = (function(container, parameters) {
 	 *****************************************************/
 	/**
 	 * @desc The width of canvas
-	 * @return Number of pixel width 
+	 * @return Number of pixel width
 	 */
-	this.GetWidth = function () 
+	this.GetWidth = function ()
 	{
 		return canvas.width;
 	};
-	
+
 	/**
 	 * @desc The height of canvas
 	 * @return Number of pixel height
 	 */
-	this.GetHeight = function () 
+	this.GetHeight = function ()
 	{
 		return canvas.height;
 	};
-	
+
 	/**
 	 * @desc The X position of the cursor relative to the canvas that contains it and to its dimensions
 	 * @return Number that indicate relative position
@@ -235,7 +235,7 @@ var JoyStick = (function(container, parameters) {
 	{
 		return movedX;
 	};
-	
+
 	/**
 	 * @desc The Y position of the cursor relative to the canvas that contains it and to its dimensions
 	 * @return Number that indicate relative position
@@ -244,7 +244,7 @@ var JoyStick = (function(container, parameters) {
 	{
 		return movedY;
 	};
-	
+
 	/**
 	 * @desc Normalizzed value of X move of stick
 	 * @return Integer from -100 to +100
@@ -262,7 +262,7 @@ var JoyStick = (function(container, parameters) {
 	{
 		return ((100*((movedY - centerY)/maxMoveStick))*-1).toFixed();
 	};
-	
+
 	/**
 	 * @desc Get the direction of the cursor as a string that indicates the cardinal points where this is oriented
 	 * @return String of cardinal point N, NE, E, SE, S, SW, W, NW and C when it is placed in the center
@@ -272,7 +272,7 @@ var JoyStick = (function(container, parameters) {
 		var result = "";
 		var orizontal = movedX - centerX;
 		var vertical = movedY - centerY;
-		
+
 		if(vertical>=directionVerticalLimitNeg && vertical<=directionVerticalLimitPos)
 		{
 			result = "C";
@@ -285,11 +285,11 @@ var JoyStick = (function(container, parameters) {
 		{
 			result = "S";
 		}
-		
+
 		if(orizontal<directionHorizontalLimitNeg)
 		{
 			if(result=="C")
-			{ 
+			{
 				result = "W";
 			}
 			else
@@ -300,7 +300,7 @@ var JoyStick = (function(container, parameters) {
 		if(orizontal>directionHorizontalLimitPos)
 		{
 			if(result=="C")
-			{ 
+			{
 				result = "W";
 			}
 			else
@@ -308,7 +308,7 @@ var JoyStick = (function(container, parameters) {
 				result += "E";
 			}
 		}
-		
+
 		return result;
 	};
 });

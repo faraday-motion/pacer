@@ -8,6 +8,7 @@
 #include "./configuration/default/configuration.h"
 #include "./configuration/configurator.h"
 #include "./configuration/custom/custom_config.h"
+#include "./configuration/custom/custom_safe_config.h"
 #include "./configuration/custom/custom_eventrules.h"
 
 #include "./factory/modulefactory.h"
@@ -24,47 +25,78 @@ void FMV::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Running Core: "), String(xPortGetCoreID()));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
 
-    incrementRestarts();
+    incrementResetStats();
+    if (mSafeMode)
+      Logger::Instance().write(LogLevel::INFO, FPSTR("************* Running in SAFE MODE"));
 
     Configurator::Instance().initializeAnalog();
     Configurator::Instance().initializeSerial();
     Configurator::Instance().initializeSpiff();
 
     //Delete the SPIFFS file configs if there are problems with the old configuration
+    Configurator::Instance().configs().clear(true);
+
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring Modules"));
-    Configurator::Instance().configs().load(new Custom_config(), false);
+    if (mSafeMode)
+      Configurator::Instance().configs().load(new Custom_safe_config(), true);
+    else
+      Configurator::Instance().configs().load(new Custom_config(), false);
+
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Enabling Commands"));
     addEnabledCommands();
-    //Normal loading of saved configurations from spiffs
-    //Configurator::Instance().configs().load(new Custom_config());
+
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Creating Module Instances"));
-    //Configurator::Instance().configs().swap(0, 1, true);
     getFactoryInstances(Configurator::Instance().configs().all());
-    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring EventRules"));
-    mEventRules = new Custom_eventrules(this);
+
+    if (!mSafeMode)
+    {
+      Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring EventRules"));
+      mEventRules = new Custom_eventrules(this);
+    }
+
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));
     modules().setup();
     //No need for buffering anymore
     Logger::Instance().setBufferSize(0);
     modules().listEnabled();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    //Should probably be done after a time delay of 30, once all has been looping a few times...
+    successfullStart();
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Faraday Motion Pacer v"), String(mVersion));
     mIsSetup = true;
   }
 }
 
-void FMV::incrementRestarts()
+void FMV::incrementResetStats()
 {
   Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Preferences"));
   preferences.begin("pacer", false);
   //preferences.clear();
   //preferences.remove("restarts");
-  unsigned int counter = preferences.getUInt("restarts", 0);
-  counter++;
-  preferences.putUInt("restarts", counter);
+  unsigned int restartCounter = preferences.getUInt("restarts", 0);
+  restartCounter++;
+  preferences.putUInt("restarts", restartCounter);
+
+  unsigned int failedstartCounter = preferences.getUInt("failedstart", 0);
+  if (failedstartCounter > 3)
+    mSafeMode = true;
+  failedstartCounter++;
+  preferences.putUInt("failedstart", failedstartCounter);
+
   preferences.end();
-  sensors().setIntSensor("rst", counter);
-  Logger::Instance().write(LogLevel::INFO, FPSTR("Restarts: "), String(counter));
+  sensors().setIntSensor("rst", restartCounter);
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Restarts: "), String(restartCounter));
   Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Preferences"));
+}
+
+void FMV::successfullStart()
+{
+  preferences.begin("pacer", false);
+  unsigned int failedstartCounter = preferences.getUInt("failedstart", 0);
+  failedstartCounter = 0;
+  preferences.putUInt("failedstart", failedstartCounter);
+  preferences.end();
+  sensors().setIntSensor("fst", failedstartCounter);
 }
 
 void FMV::addEnabledCommands()
@@ -98,7 +130,8 @@ void FMV::loop()
 void FMV::moduleEvent(IModule * sender, byte eventId)
 {
   Logger::Instance().write(LogLevel::DEBUG, FPSTR("FMV::moduleEvent Module: "), String(sender -> module()) + "eventId: " + String(eventId));
-  mEventRules -> moduleEvent(sender, eventId);
+  if (mEventRules != nullptr)
+    mEventRules -> moduleEvent(sender, eventId);
 }
 
 void FMV::getFactoryInstances(std::vector<Configbase*> mConfigArray)

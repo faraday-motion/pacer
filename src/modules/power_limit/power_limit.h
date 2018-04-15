@@ -30,7 +30,7 @@ public:
   Power_limit(byte id, IFMV * fmv, Power_limit_config * cfg = nullptr) : Limit_module(id, Modules::POWER_LIMIT)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Power_limit_config*>(Configurator::Instance().createConfig(id, Configurations::POWER_LIMIT_CONFIG));
+      mCfg = static_cast<Power_limit_config*>(Configurator::Instance().getConfig(id, Configurations::POWER_LIMIT_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -62,7 +62,7 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName(FPSTR("Power_limit"));
-    mSimpleTimer.setInterval(15, 30);
+    mSimpleTimer.setInterval(50, 60);
     mPauseSimpleTimer.setName(FPSTR("Power_limit"));
     mPauseSimpleTimer.setInterval(30*1000);
     setEnabled(mCfg -> enabled);

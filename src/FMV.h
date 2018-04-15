@@ -22,6 +22,7 @@ private:
   const String mVersion = "1.0";
   std::vector<IWheel*> wheelArray;
   bool mIsSetup = false;
+  bool mSafeMode = false;
   IModuleList * mModules = new ModuleList();
   ISensorList * mSensors = new SensorList();
   Default_eventrulesbase * mEventRules = nullptr;
@@ -29,7 +30,8 @@ private:
   Spiffs_storage * pSpiffs_storage;
   SimpleTimer * pSimpleTimerPingPong = new SimpleTimer(1000);
   Preferences preferences;
-  void incrementRestarts();
+  void incrementResetStats();
+  void successfullStart();
   void addEnabledCommands();
 public:
   FMV() {

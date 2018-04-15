@@ -1,36 +1,48 @@
+
+//https://blog.phonegap.com/cordova-screen-orientation-plugin-fabeba30a4c4
+
 var pacerModule = (function () {
   // private
   var enabled = false;
   var ledEnabled = false;
-  var currentCommand = null;
-  var triState = 0;
   var sensors = null;
   var activeController = null;
+  var tabModules = [tiltModule, joystickModule, nippleModule, pressureModule, graphModule, consoleModule];
+  var activeTab = 2;
+  var messageId = 0;
+  var currentCommand = null;
 
   function setEnabled() {
     if (websocketModule.connected())
     {
       enabled = true;
-      $("#btnenable").css("background-color", "green");
-      $("#btnenable").text("Enabled!");
+      if (activeController)
+        activeController.setEnabled(enabled);
+      $("#btnenable").removeClass("btn-secondary").removeClass("btn-dark").addClass("btn-light");
+      $("#btnenable").text("Enabled");
     }
   }
 
   function setDisabled() {
-      enabled = false;
-      $("#btnenable").css("background-color", "red");
-      $("#btnenable").text("Disabled!");
+    enabled = false;
+    if (activeController)
+      activeController.setEnabled(enabled);
+    if (websocketModule.connected())
+    {
+      $("#btnenable").removeClass("btn-secondary").removeClass("btn-light").addClass("btn-dark");
+      $("#btnenable").text("Disabled");
+    }
+    else
+    {
+      $("#btnenable").removeClass("btn-dark").removeClass("btn-light").addClass("btn-secondary");
+      $("#btnenable").text("Connecting...");
+    }
   }
 
   function toggleEnabled()
   {
-    if (websocketModule.connected())
-    {
-      if (!enabled)
-        setEnabled();
-      else
-        setDisabled();
-    }
+    if (!enabled)
+      setEnabled();
     else
       setDisabled();
   }
@@ -42,13 +54,33 @@ var pacerModule = (function () {
       if (ledEnabled)
       {
         commandsModule.ledOff();
-        $("#btnled").css("background-color", "red");
+        $("#btnled").removeClass("btn-success").addClass("btn-danger");
       }
       else
       {
         commandsModule.ledOn();
-        $("#btnled").css("background-color", "green");
+        $("#btnled").removeClass("btn-danger").addClass("btn-success");
       }
+    }
+  }
+
+  function getControllerInput()
+  {
+    if (enabled && activeController)
+    {
+        if (activeController.brake() > 0)
+          commandsModule.brake(activeController.brake());
+        else if (activeController.power() > 0)
+          commandsModule.power(activeController.power());
+        else
+          commandsModule.powerNeutral();
+
+        if (activeController.left() > 0)
+          commandsModule.left(activeController.left());
+        else if (activeController.right() > 0)
+          commandsModule.right(activeController.right());
+        else
+          commandsModule.directionNeutral();
     }
   }
 
@@ -56,56 +88,34 @@ var pacerModule = (function () {
   {
     if (websocketModule.connected())
     {
-      if (enabled)
-      {
-        if (triState == 0)
-        {
-          if (activeController)
-          {
-            console.log("brake:" + activeController.brake());
-            console.log("power:" + activeController.power());
-            if (activeController.brake() > 0)
-              commandsModule.brake(activeController.brake());
-            else if (activeController.power() > 0)
-              commandsModule.power(activeController.power());
-            else
-              commandsModule.powerNeutral();
-          }
-        }
-        else if (triState == 1)
-        {
-          if (activeController)
-          {
-            console.log("left:" + activeController.left());
-            console.log("right:" + activeController.right());
-            if (activeController.left() > 0)
-              commandsModule.left(activeController.left());
-            else if (activeController.right() > 0)
-              commandsModule.right(activeController.right());
-            else
-              commandsModule.directionNeutral();
-          }
-        }
-      }
-      else
-      {
-        if (activeController)
-        {
-          if (triState == 0)
-            commandsModule.powerNeutral();
-          else if (triState == 1)
-            commandsModule.directionNeutral();
-        }
-      }
-
-      triState ++;
-      if (triState == 3)
-        triState = 0;
-
       if (currentCommand == null)
+      {
         currentCommand = commandsModule.getNext();
-      if (currentCommand)
-        websocketModule.send(currentCommand.command, currentCommand.value);
+        if (currentCommand != null)
+        {
+          currentCommand.id = messageId;
+          websocketModule.sendRaw("{\"id\":" + JSON.parse(currentCommand.id) + ",\"command\":" + JSON.parse(currentCommand.command) + ",\"value\":" + JSON.parse(currentCommand.value) + "}");
+        }
+      }
+    }
+  }
+
+  function messageRecieved(msg)
+  {
+    if (msg)
+    {
+      if (currentCommand && msg.id && msg.id == currentCommand.id)
+      {
+        messageId ++;
+        currentCommand = null;
+      }
+      consoleModule.console(msg);
+      if (msg.sensors)
+        sensors = msg.sensors;
+      if (msg.command == 14)
+        ledEnabled = true;
+      if (msg.command == 15)
+        ledEnabled = false;
     }
   }
 
@@ -114,34 +124,14 @@ var pacerModule = (function () {
     if (connected)
     {
       commandsModule.clear();
-      $("#lblstate").text("Connected");
+      $("#btnenable").removeClass("btn-secondary").addClass("btn-dark");
+      $("#btnenable").text("Disabled");
     }
     else
     {
-      $("#lblstate").text("Disconnected");
+      $("#btnenable").removeClass("btn-secondary").addClass("btn-secondary");
+      $("#btnenable").text("Connecting...");
       setDisabled();
-    }
-  }
-
-//TODO if we havent gotten any response for a short time, consider the connection as being closed.
-  function messageRecieved(msg)
-  {
-    if (msg)
-    {
-      consoleModule.console(msg);
-      if (msg.sensors)
-      {
-        sensors = msg.sensors;
-      }
-      if (msg.command && currentCommand)
-      {
-        if (msg.command == currentCommand.command)
-          currentCommand = null;
-        if (msg.command == 14)
-          ledEnabled = true;
-        if (msg.command == 15)
-          ledEnabled = false;
-      }
     }
   }
 
@@ -149,11 +139,8 @@ var pacerModule = (function () {
   {
     if (sensors)
     {
-      var s = "";
-      $.each(sensors, function(key, value) {
-        s += key + ": " + value + "<br>";
-      });
-      $("#lblsensors").html(s);
+      graphModule.setSensors(sensors);
+      $("#lblsensors").html(JSON.stringify(sensors, undefined, 4));
     }
   }
 
@@ -168,9 +155,33 @@ var pacerModule = (function () {
     activeController = controller;
   }
 
+  function showActiveTab()
+  {
+    for (i = 0; i < tabModules.length; i++) {
+      if (tabModules[i])
+      {
+        if (activeTab == i)
+        {
+          $("#" + tabModules[i].regionId()).show();
+          setController(tabModules[i]);
+        }
+        else
+        {
+          $("#" + tabModules[i].regionId()).hide();
+          tabModules[i].setEnabled(false);
+        }
+      }
+    };
+  }
+
   (function initialize() {
-    //activeController = joystickModule;
-    //activeController = tiltModule;
+    showActiveTab();
+
+    setInterval(
+      function(){
+        getControllerInput();
+    }, 50);
+
     setInterval(
       function(){
         send();
@@ -182,14 +193,29 @@ var pacerModule = (function () {
     }, 100);
 
     $(document).ready(function(){
-      $("#btnenable").css("background-color", "red");
-      $("#btnled").css("background-color", "green");
+      $(".ui-loader").hide();
+      $("#btnled").removeClass("btn-danger").addClass("btn-danger");
 
-      $("#btnenable").click(function(){
+      $("#btnenable").click(function(evt){
           toggleEnabled();
       });
       $("#btnled").click(function(){
           toggleLedEnabled();
+      });
+
+      $("body").on("swiperight", function(){
+        if (!enabled && activeTab > 0)
+        {
+          activeTab--;
+          showActiveTab();
+        }
+      });
+      $("body").on("swipeleft", function(){
+        if (!enabled && activeTab < tabModules.length -1)
+        {
+          activeTab++;
+          showActiveTab();
+        }
       });
     });
   })();

@@ -43,7 +43,7 @@ public:
   Websocket_connection(byte id, IFMV * fmv, Websocket_connection_config * cfg = nullptr) : Connection_module(id, Modules::WEBSOCKET_CONNECTION)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Websocket_connection_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_CONNECTION_CONFIG));
+      mCfg = static_cast<Websocket_connection_config*>(Configurator::Instance().getConfig(id, Configurations::WEBSOCKET_CONNECTION_CONFIG));
     else
       mCfg = cfg;
     setConfig();

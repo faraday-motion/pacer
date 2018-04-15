@@ -1,8 +1,7 @@
 var commandsModule = (function () {
   // private
   var queue = [];
-  var currentCommand = null;
-  var iMaxRows = 3;
+  var queueMax = 10;
 
   var MODULE_ON = 0;
   var MODULE_OFF = 1;
@@ -23,10 +22,23 @@ var commandsModule = (function () {
 
   function addCommand(cmd, val)
   {
-    while (queue.length > iMaxRows)
+    while (queue.length > queueMax)
       queue.shift();
-    var obj = {command:cmd, value:val};
-    queue.push(obj);
+    //If we get a new value on the same command before its being sent, overwrite instead of add
+    var hasValue = false;
+    for (i = 0; i < queue.length; i++) {
+      if (queue[i].command == cmd)
+      {
+        hasValue = true;
+        queue[i].value = val;
+        break;
+      }
+    };
+    if (hasValue == false)
+    {
+      var obj = {command:cmd, value:val};
+      queue.push(obj);
+    }
   }
 
   function getNext()

@@ -28,7 +28,7 @@ public:
   Wifi_connection(byte id, IFMV * fmv, Wifi_connection_config * cfg = nullptr) : Modulebase(id, Modules::WIFI_CONNECTION)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Wifi_connection_config*>(Configurator::Instance().createConfig(id, Configurations::WIFI_CONNECTION_CONFIG));
+      mCfg = static_cast<Wifi_connection_config*>(Configurator::Instance().getConfig(id, Configurations::WIFI_CONNECTION_CONFIG));
     else
       mCfg = cfg;
     setConfig();

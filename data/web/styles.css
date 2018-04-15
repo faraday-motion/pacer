@@ -1,0 +1,34 @@
+.btn
+{
+    cursor: pointer;
+}
+
+.btnenable
+{
+    height: 300px;
+}
+
+.fullwidth
+{
+    width: 100%;
+}
+
+.fullheight
+{
+    height: 100%;
+}
+
+.hidden
+{
+    display: "none"
+}
+
+.accel
+{
+    height: 200px;
+}
+
+.brake
+{
+    height: 200px;
+}

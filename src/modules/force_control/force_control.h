@@ -29,7 +29,7 @@ public:
   Force_control(byte id, IFMV * fmv, Force_control_config* cfg = nullptr) : Control_module(id, Modules::FORCE_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Force_control_config*>(Configurator::Instance().createConfig(id, Configurations::FORCE_CONTROL_CONFIG));
+      mCfg = static_cast<Force_control_config*>(Configurator::Instance().getConfig(id, Configurations::FORCE_CONTROL_CONFIG));
     else
       mCfg = cfg;
     setConfig();

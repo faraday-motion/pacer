@@ -1,6 +1,15 @@
--Figure better solution for storing restarts preferences
 -Turn serial into a *_connection
 -Make eventrules configurable
 -Make configurations configurable
 -Make commands configurable
 -Refactoring: Convert String to string
+-Store sensor info in web browser localstorage until being synced with servers
+-Optimize drivelog performance on spiffs, maybe convert to task
+-Make advanced tcp/udp communication/control app
+-Implement websocket client (and a server online)
+-Refactoring sensor_value into template
+-Retrieve geo pos from phone
+-Set/retrieve actual time from webapp
+-Make control app for pressure sensing
+-Update documentation
+-Implement can support http://www.iotsharing.com/2017/09/how-to-use-arduino-esp32-can-interface.html

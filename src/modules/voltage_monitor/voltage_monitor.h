@@ -23,7 +23,7 @@ public:
   Voltage_monitor(byte id, IFMV * fmv, Voltage_monitor_config * cfg = nullptr) : Modulebase(id, Modules::VOLTAGE_MONITOR)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Voltage_monitor_config*>(Configurator::Instance().createConfig(id, Configurations::VOLTAGE_MONITOR_CONFIG));
+      mCfg = static_cast<Voltage_monitor_config*>(Configurator::Instance().getConfig(id, Configurations::VOLTAGE_MONITOR_CONFIG));
     else
       mCfg = cfg;
     setConfig();

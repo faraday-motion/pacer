@@ -78,7 +78,6 @@ void Vesc_controller::loop()
     {
 
       IModule * mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
-//      Modulebase * mb = mFMV -> modules().getEnabledByRole(Roles::LIMIT_MODULE);
       if (mb != nullptr)
       {
         Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));

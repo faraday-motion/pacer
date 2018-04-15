@@ -26,7 +26,7 @@ public:
   Pwm_steering(byte id, IFMV * fmv, Pwm_steering_config * cfg = nullptr) : Power_module(id, Modules::PWM_STEERING)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Pwm_steering_config*>(Configurator::Instance().createConfig(id, Configurations::PWM_STEERING_CONFIG));
+      mCfg = static_cast<Pwm_steering_config*>(Configurator::Instance().getConfig(id, Configurations::PWM_STEERING_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -39,7 +39,7 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName("Pwm_steering");
-    mSimpleTimer.setInterval(25, 50);
+    mSimpleTimer.setInterval(50, 100);
     setEnabled(mCfg -> enabled);
   }
 

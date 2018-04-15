@@ -21,7 +21,7 @@ public:
   Temperature_monitor(byte id, IFMV * fmv, Temperature_monitor_config * cfg = nullptr) : Modulebase(id, Modules::TEMPERATURE_MONITOR)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Temperature_monitor_config*>(Configurator::Instance().createConfig(id, Configurations::TEMPERATURE_MONITOR_CONFIG));
+      mCfg = static_cast<Temperature_monitor_config*>(Configurator::Instance().getConfig(id, Configurations::TEMPERATURE_MONITOR_CONFIG));
     else
       mCfg = cfg;
     setConfig();

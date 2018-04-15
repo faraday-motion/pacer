@@ -17,7 +17,7 @@ private:
 public:
   Wheel(byte id) {
     mId = id;
-    mCfg = static_cast<Wheel_config*>(Configurator::Instance().createConfig(id, Configurations::WHEEL_CONFIG));
+    mCfg = static_cast<Wheel_config*>(Configurator::Instance().getConfig(id, Configurations::WHEEL_CONFIG));
     mIndex = mCfg -> index;
     mIsElectric = mCfg -> isElectric;
     mCanSteer = mCfg -> canSteer;

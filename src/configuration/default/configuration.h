@@ -16,7 +16,7 @@
 #define SMOOTH_ALPHA_NEGATIVE         0.5
 #define WIFI_CONNECTION_HOST          "fmwebupdate"
 #define WIFI_CONNECTION_SSID          "c12345"
-#define WIFI_CONNECTION_PASSWORD      "c12345"
+#define WIFI_CONNECTION_PASSWORD      "12345678"
 #define WIFI_CONNECTION_AP_SSID       "FARADAY009"
 #define WIFI_CONNECTION_AP_PASSWORD   "faraday009"
 #define WIFI_CONNECTION_AP_CHANNEL    11
@@ -28,7 +28,7 @@
 #define LOGGER_LOG_BUFFER             100
 #define WEBSOCKET_PORT                81
 #define WEBSOCKET_PING_TIMEOUT        1000
-#define WEBSOCKET_EVICT_TIMEOUT       5000
+#define WEBSOCKET_EVICT_TIMEOUT       3000
 #define WEBSOCKET_PING_PAYLOAD        "ping"
 #define ARDUINO_OTA_PORT              3232
 #define ARDUINO_OTA_HOSTNAME          "myesp32"

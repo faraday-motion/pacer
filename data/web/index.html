@@ -1,153 +1,186 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Faraday Motion Web App v. 1.0</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="container content-box">
-      <div class="row">
-        <span>Menu:</span>
-        <a href="drive.html">Drive</a>
-        <a href="index.html">Setup</a>
-        <a href="#" onclick="$('#region_console').toggle();">Console</a>
-      </div>
-   </div>
-
-    <div class="container content-box" >
-      <div id="region_controls" class="">
-        <div class="row">
-          <div class="col-100">
-            <label id="lblstate">Initializing...</label>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+      <form>
+        <div id="region_controls">
+            <div class="row">
+                <div class="col">
+                    <div class="btn-group fullwidth" role="group" aria-label="">
+                      <button type="button" class="btn btn-block btn-secondary" id="btnenable">Connecting...</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                  &nbsp;
+                </div>
+            </div>
           </div>
-        </div>
-
-        <div class="row">
-          <div class="col-100">
-            <button class="btn" id="btnenable">Disabled!</button>
-            <button class="btn" id="btnled">LED</button>
+            <div id="region_console">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Console</h5>
+                        <div class="row">
+                            <div class="col">
+                              <p class="strong">Functionality</p>
+                              <div class="btn-group fullwidth" role="group" aria-label="">
+                                <button type="button" class="btn" id="btnled">LED</button>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p class="strong">Command</p>
+                                <select name="" id="selconsolecommand">
+                                    <option value="0">MODULE_ON </option>
+                                    <option value="1">MODULE_OFF </option>
+                                    <option value="2">DISABLE_CONTROLLERS</option>
+                                    <option value="3">ENABLE_CONTROLLER</option>
+                                    <option value="4">DRIVE_POWER</option>
+                                    <option value="5">DRIVE_BRAKE </option>
+                                    <option value="6">TURN_LEFT</option>
+                                    <option value="7">TURN_RIGHT</option>
+                                    <option value="8">DRIVE_MODE_0</option>
+                                    <option value="9">DRIVE_MODE_20</option>
+                                    <option value="10">DRIVE_MODE_40</option>
+                                    <option value="11">DRIVE_MODE_60</option>
+                                    <option value="12">DRIVE_MODE_80</option>
+                                    <option value="13">DRIVE_MODE_100</option>
+                                </select>
+                                <p class="strong">Value</p>
+                                <textarea id="txtconsolevalue" style="width:100%" rows="5"></textarea>
+                                <div class="btn-group" role="group" aria-label="">
+                                    <button type="button" id="btnconsolesend" onClick="event.preventDefault();" class="btn btn-secondary">Send Command</button>
+                                    <button type="button" id="btnconsolepause" onClick="event.preventDefault();" class="btn btn-secondary">Pause</button>
+                                    <button type="button" id="btnconsoleclear" onClick="event.preventDefault();" class="btn btn-secondary">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <pre id="consolemessage">---------------------------------- empty ----------------------------------</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="region_tilt">
+                <div class="card">
+                    <button type="button" class="btn btn-danger btn-lg btn-block btnenable" id="btnenabletilt">OFF</button>
+                    <div class="card-body">
+                        <h5 class="card-title">Tilt: <label id="lblangle1">0</label></h5>
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div id="region_joystick">
+                <div class="row">
+                    <div class="col">
+                        <div id="joyjoystick" style="width:200px;height:200px;margin-bottom:20px;"></div>
+                    </div>
+                  </div>
+            </div>
+            <div id="region_nipple">
+                <div class="row">
+                    <div class="col" id="nipplejoystick" style="height:200px;">
+                    </div>
+                  </div>
+            </div>
+            <div id="region_pressure">
+                <div class="row">
+                    <div class="col">
+                      <button type="button" class="btn btn-success btn-lg btn-block accel" id="btnpressureaccel">Accelerate</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                      <button type="button" class="btn btn-danger btn-lg btn-block brake" id="btnpressurebrake">Brake</button>
+                    </div>
+                </div>
+            </div>
+            <div id="region_data">
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="canpower" width="350" height="100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="canperformance" width="350" height="100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="cancharge" width="350" height="100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                              <div class="card fullheight">
+                                  <div class="card-body">
+                                      <h5 class="card-title">Sensors</h5>
+                                      <p class="card-text"><pre id="lblsensors"></pre></p>
+                                  </div>
+                              </div>
+                            </div>
+                        </div>
+                </div>
+              </form>
           </div>
-        </div>
-      </div>
-
-      <div id="region_console" class="">
-        <div class="row">
-          <div class="col-50">
-              <div class="form-group">
-                <p class="strong">Command</p>
-                <select name="" id="selconsolecommand">
-                  <option value="0">MODULE_ON </option>
-                  <option value="1">MODULE_OFF </option>
-                  <option value="2">DISABLE_CONTROLLERS</option>
-                  <option value="3">ENABLE_CONTROLLER</option>
-                  <option value="4">DRIVE_POWER</option>
-                  <option value="5">DRIVE_BRAKE </option>
-                  <option value="6">TURN_LEFT</option>
-                  <option value="7">TURN_RIGHT</option>
-                  <option value="8">DRIVE_MODE_0</option>
-                  <option value="9">DRIVE_MODE_20</option>
-                  <option value="10">DRIVE_MODE_40</option>
-                  <option value="11">DRIVE_MODE_60</option>
-                  <option value="12">DRIVE_MODE_80</option>
-                  <option value="13">DRIVE_MODE_100</option>
-                </select>
-
-                <p class="strong">Value</p>
-                <textarea id="txtconsolevalue" style="width:100%" rows="5"></textarea>
-
-                <button id="btnconsolesend" onClick="event.preventDefault();" class="btn btn-default">Send Command</button>
-                <button id="btnconsolepause" onClick="event.preventDefault();" class="btn btn-default">Pause</button>
-                <button id="btnconsoleclear" onClick="event.preventDefault();" class="btn btn-default">Clear</button>
-              </div>
-          </div>
-          <div class="col-50">
-            <pre style="margin:0 auto;">
-    Available Commands:
-    MODULE_ON,
-    MODULE_OFF,
-    DRIVE_MODE_20,
-    DRIVE_MODE_40,
-    DRIVE_MODE_60,
-    DRIVE_MODE_80,
-    DRIVE_MODE_100,
-    DISABLE_CONTROLLERS,
-    ENABLE_CONTROLLER,
-    DRIVE_DIRECTION_FORWARD,
-    DRIVE_DIRECTION_BACKWARD,
-    DRIVE_POWER,
-    DRIVE_BRAKE,
-    TURN_LEFT,
-    TURN_RIGHT
-            </pre>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-100">
-             <pre id="consolemessage">---------------------------------- empty ----------------------------------</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="region_tilt" class="">
-        <div class="row">
-          <div class="col-100">
-            <div class="btnbig" touchstart="setEnabled()" touchend="setDisabled()" touchcancel="setDisabled()" onmousedown="" onmouseup="setDisabled()" id="btnenable">Disabled!</div>
-            <!--
-            <button class="btnbig" onmousedown="setEnabled()" onmouseup="setDisabled()" id="btnenable" >Disabled!</button>
-          -->
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-100">
-            Tilt: <label id="lblangle1">0</label><br>
-            Values1: <label id="lblangle2">0</label><br>
-            Values2: <label id="lblangle3">0</label><br>
-            Values3: <label id="lblangle4">0</label><br>
-          </div>
-        </div>
-      </div>
-
-      <div id="region_joystick">
-        <div class="row">
-          <div class="col-50">
-            <div id="joypower" style="width:200px;height:200px;margin-bottom:20px;"></div>
-          </div>
-          <div class="col-50">
-            <div id="joydirection" style="width:200px;height:200px;margin-bottom:20px;"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="container" id="region_data">
-        <div class="row">
-          <div class="col-50">
-            <canvas id="canpower" width="400" height="100"></canvas>
-            <canvas id="canperformance" width="400" height="100"></canvas>
-            <canvas id="cancharge" width="400" height="100"></canvas>
-          </div>
-          <div class="col-50">
-            <label id="lblsensors"></label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="jquery-3.3.1.min.js"></script>
-    <script src="smoothie.js"></script>
-    <script src="joy.js"></script>
-    <script src="commands.js"></script>
-    <script src="console.js"></script>
-    <script src="websocket.js"></script>
-    <script src="joystick.js"></script>
-    <script src="tilt.js"></script>
-    <script src="pacer.js"></script>
-    <script src="graph.js"></script>
-    <script type="text/javascript">
+            <script src="jquery/jquery-3.3.1.min.js"></script>
+            <script src="jquery/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+            <script src="dependencies/smoothie.js"></script>
+            <script src="dependencies/joy.js"></script>
+            <script src="dependencies/nipplejs.min.js"></script>
+            <script src="dependencies/pressure.min.js"></script>
+            <script src="commands.js"></script>
+            <script src="console.js"></script>
+            <script src="websocket.js"></script>
+            <script src="joystick.js"></script>
+            <script src="nipple.js"></script>
+            <script src="pressure.js"></script>
+            <script src="tilt.js"></script>
+            <script src="graph.js"></script>
+            <script src="pacer.js"></script>
+            <script type="text/javascript">
       websocketModule.initialize(pacerModule.connectChange, pacerModule.messageRecieved);
-    </script>
-  </body>
+
+      Storage.prototype.setObject = function(key, value) {
+          this.setItem(key, JSON.stringify(value));
+      }
+
+      Storage.prototype.getObject = function(key) {
+          var value = this.getItem(key);
+          return value && JSON.parse(value);
+      }
+
+  /*
+      var obj = {};
+      obj.ok = "YEAH";
+      localStorage.setObject("sune", obj);
+      console.log(localStorage.getObject("sune"));
+
+      var testObject = { 'one': 1, 'two': 2, 'three': 3 };
+      // Put the object into storage
+      localStorage.setItem('testObject', testObject);
+
+      // Retrieve the object from storage
+      var retrievedObject = localStorage.getItem('testObject');
+
+      console.log('typeof retrievedObject: ' + typeof retrievedObject);
+      console.log('Value of retrievedObject: ' + retrievedObject);
+      */
+            </script>
+</body>
 </html>

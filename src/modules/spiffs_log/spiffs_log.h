@@ -25,7 +25,7 @@ public:
       mFMV = fmv;
       Configurator::Instance().initializeSpiff();
       if (mfg == nullptr)
-        mCfg = static_cast<Spiffs_log_config*>(Configurator::Instance().createConfig(id, Configurations::SPIFFS_LOG_CONFIG));
+        mCfg = static_cast<Spiffs_log_config*>(Configurator::Instance().getConfig(id, Configurations::SPIFFS_LOG_CONFIG));
       else
         mCfg = mfg;
       setConfig();

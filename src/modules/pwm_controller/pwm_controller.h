@@ -28,7 +28,7 @@ public:
   Pwm_controller(byte id, IFMV * fmv, Pwm_controller_config * cfg = nullptr) : Power_module(id, Modules::PWM_CONTROLLER)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Pwm_controller_config*>(Configurator::Instance().createConfig(id, Configurations::PWM_CONTROLLER_CONFIG));
+      mCfg = static_cast<Pwm_controller_config*>(Configurator::Instance().getConfig(id, Configurations::PWM_CONTROLLER_CONFIG));
     else
       mCfg = cfg;
     setConfig();

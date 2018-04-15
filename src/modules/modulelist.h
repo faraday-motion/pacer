@@ -130,7 +130,6 @@ public:
       {
         Modulebase * mb = static_cast<Modulebase*>(moduleArray[i]);
         Control_module * cm = static_cast<Control_module*>(mb);
-        //IControlModule * icm = static_cast<IControlModule*>(cc);
         if (cm -> isActive())
           return cm;
       }
@@ -151,7 +150,6 @@ public:
       if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == (byte)Roles::CONTROL_MODULE)
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("DEACTIVATING MODULE: "), String(moduleArray[i] -> id()));
-//        IControlModule * cm = static_cast<IControlModule*>(moduleArray[i]);
         Modulebase * mb = static_cast<Modulebase*>(moduleArray[i]);
         Control_module * cm = static_cast<Control_module*>(mb);
         if (cm != nullptr)
@@ -167,7 +165,6 @@ public:
       if (moduleArray[i] -> enabled() && moduleArray[i] -> role() == (byte)Roles::CONTROL_MODULE && moduleArray[i] -> id() == id)
       {
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("ACTIVATING MODULE: "), String(moduleArray[i] -> id()));
-//        IControlModule * cm = static_cast<IControlModule*>(moduleArray[i]);
         Modulebase * mb = static_cast<Modulebase*>(moduleArray[i]);
         Control_module * cm = static_cast<Control_module*>(mb);
         if (cm != nullptr)

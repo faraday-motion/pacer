@@ -27,7 +27,7 @@ public:
   Mqtt_connection(byte id, IFMV * fmv, Mqtt_connection_config * cfg = nullptr) : Connection_module(id, Modules::MQTT_CONNECTION)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Mqtt_connection_config*>(Configurator::Instance().createConfig(id, Configurations::MQTT_CONNECTION_CONFIG));
+      mCfg = static_cast<Mqtt_connection_config*>(Configurator::Instance().getConfig(id, Configurations::MQTT_CONNECTION_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -50,7 +50,7 @@ public:
   void loop();
   void command(byte command);
   void send(String message);
-  
+
   String getModuleName()
   {
     return FPSTR("MQTT_CONNECTION");

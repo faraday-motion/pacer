@@ -33,7 +33,7 @@ public:
   Joystick_control(byte id, IFMV * fmv, Joystick_control_config * cfg = nullptr) : Control_module(id, Modules::JOYSTICK_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Joystick_control_config*>(Configurator::Instance().createConfig(id, Configurations::JOYSTICK_CONTROL_CONFIG));
+      mCfg = static_cast<Joystick_control_config*>(Configurator::Instance().getConfig(id, Configurations::JOYSTICK_CONTROL_CONFIG));
     else
       mCfg = cfg;
     setConfig();

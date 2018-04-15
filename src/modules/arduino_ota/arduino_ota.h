@@ -23,7 +23,7 @@ public:
   Arduino_ota(byte id, IFMV * fmv, Arduino_ota_config * cfg = nullptr) : Modulebase(id, Modules::ARDUINO_OTA)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Arduino_ota_config*>(Configurator::Instance().createConfig(id, Configurations::ARDUINO_OTA_CONFIG));
+      mCfg = static_cast<Arduino_ota_config*>(Configurator::Instance().getConfig(id, Configurations::ARDUINO_OTA_CONFIG));
     else
       mCfg = cfg;
     setConfig();

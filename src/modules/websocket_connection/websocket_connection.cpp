@@ -108,7 +108,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Pong Packet Received"));
           return;
         }
-        byte id = json["id"];
+        int id = json["id"];
         byte command = json["command"];
         byte value = json["value"];
 
@@ -121,7 +121,7 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
           recievers()[i] -> recieve(command, value);
         }
         String response = "";
-        if (id > 0)
+        if (id > -1)
           response = "{\"msg\":\"ok\",\"id\":\"" + String(id) + "\",\"command\":\"" + String(command) + "\"}";
         else
           response = "{\"msg\":\"ok\",\"command\":\"" + String(command) + "\"}";
@@ -148,10 +148,13 @@ void Websocket_connection::checkClients()
     if (mClientStatus[i].connected)
     {
       deltaTime = now - mClientStatus[i].lastContact;
-      if (deltaTime > WEBSOCKET_PING_TIMEOUT && !mClientStatus[i].pinged)
-        pingClient(i);
-      else if (deltaTime > WEBSOCKET_EVICT_TIMEOUT)
-        evictClient(i);
+      if (deltaTime > WEBSOCKET_PING_TIMEOUT)
+      {
+        if (!mClientStatus[i].pinged)
+         pingClient(i);
+       else
+         evictClient(i);
+      }
     }
   }
 }
@@ -175,16 +178,15 @@ void Websocket_connection::clientConnected(int num)
   mClientStatus[num].lastContact = millis();
 }
 
-void Websocket_connection::clientDisconnected(int num)
-{
-  mClientStatus[num].connected = false;
-  mClientStatus[num].pinged = false;
-}
-
 void Websocket_connection::clientContact(int num)
 {
   mClientStatus[num].lastContact = millis();
   mClientStatus[num].pinged = false;
+}
+
+void Websocket_connection::clientDisconnected(int num)
+{
+  mClientStatus[num].connected = false;
 }
 
 bool Websocket_connection::handleMaxClients(int num)

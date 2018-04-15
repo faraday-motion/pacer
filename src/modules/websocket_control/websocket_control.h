@@ -33,7 +33,7 @@ public:
   Websocket_control(byte id, IFMV * fmv, Websocket_control_config * cfg = nullptr) : Control_module(id, Modules::WEBSOCKET_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Websocket_control_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_CONTROL_CONFIG));
+      mCfg = static_cast<Websocket_control_config*>(Configurator::Instance().getConfig(id, Configurations::WEBSOCKET_CONTROL_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -42,7 +42,7 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName("Websocket_control");
-    mSimpleTimer.setInterval(10);
+    mSimpleTimer.setInterval(5, 50);
     setClientTimeout("Websocket_control", 10000);
     setEnabled(mCfg -> enabled);
   }

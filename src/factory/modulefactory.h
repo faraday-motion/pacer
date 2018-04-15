@@ -12,7 +12,6 @@
 
 #include "../log/logger.h"
 
-
 class Modulefactory{
 
 private:

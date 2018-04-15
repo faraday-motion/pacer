@@ -25,7 +25,7 @@ class Websocket_drivelog : public virtual Modulebase
     Websocket_drivelog(byte id, IFMV * fmv, Websocket_drivelog_config * cfg = nullptr) : Modulebase(id, Modules::WEBSOCKET_DRIVELOG)  {
       mFMV = fmv;
       if (cfg == nullptr)
-        mCfg = static_cast<Websocket_drivelog_config*>(Configurator::Instance().createConfig(id, Configurations::WEBSOCKET_DRIVELOG_CONFIG));
+        mCfg = static_cast<Websocket_drivelog_config*>(Configurator::Instance().getConfig(id, Configurations::WEBSOCKET_DRIVELOG_CONFIG));
       else
         mCfg = cfg;
       setConfig();
@@ -41,7 +41,7 @@ class Websocket_drivelog : public virtual Modulebase
     enum Events : byte {
       CONFIGURE
     };
-    
+
     void setup();
     void loop();
     void command(byte command);

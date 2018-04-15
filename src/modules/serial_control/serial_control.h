@@ -26,7 +26,7 @@ public:
   Serial_control(byte id, IFMV * fmv, Serial_control_config * cfg = nullptr) : Control_module(id, Modules::SERIAL_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Serial_control_config*>(Configurator::Instance().createConfig(id, Configurations::SERIAL_CONTROL_CONFIG));
+      mCfg = static_cast<Serial_control_config*>(Configurator::Instance().getConfig(id, Configurations::SERIAL_CONTROL_CONFIG));
     else
       mCfg = cfg;
     setConfig();

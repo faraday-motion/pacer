@@ -24,7 +24,7 @@ public:
   Control_priority(byte id, IFMV * fmv, Control_priority_config * cfg = nullptr) : Modulebase(id, Modules::CONTROL_PRIORITY)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Control_priority_config*>(Configurator::Instance().createConfig(id, Configurations::CONTROL_PRIORITY_CONFIG));
+      mCfg = static_cast<Control_priority_config*>(Configurator::Instance().getConfig(id, Configurations::CONTROL_PRIORITY_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -36,6 +36,8 @@ public:
 
   enum Events : byte {
     CONFIGURE,
+    ACTIVE,
+    INACTIVE,
     ACTIVE_PRIORITY1,
     ACTIVE_PRIORITY2,
     ACTIVE_PRIORITY3,

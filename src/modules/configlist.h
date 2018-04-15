@@ -53,43 +53,49 @@ public:
     return mConfigArray;
   }
 
-  bool load(Default_configbase * default_config = nullptr, bool deleteOldConfig = false)
+  void load(Default_configbase * default_config = nullptr, bool safeMode = false)
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Configlist::load"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
-    if (deleteOldConfig)
-      clear(true);
 
     std::vector <String> files;
     pIConfigstore -> list(files);
-    if (files.size() == 0 && default_config != nullptr) {
+    bool emptyConfig = files.size() == 0;
+    if (default_config != nullptr && safeMode) {
+      //Get configs for safemode
       default_config -> addConfigs();
-      if (deleteOldConfig)
-        save();
-      return true;
+      return;
     }
-    std::sort(files.begin(), files.end());
-    byte id = 0;
-    int configuration = 0;
-    for (int i = 0; i < files.size(); i++) {
-      //id and configuration are passed by reference
-      //Load the shared id and configuration part of the config file
-      pIConfigstore -> load(files[i], id, configuration);
-      //Get the instance
-      Configbase* config = Configfactory::getConfigInstance(id, configuration);
-      //Populate the values
-      pIConfigstore -> load(config);
-      mConfigArray.push_back(config);
-    //else
-      //mSpiffs_storage.read(files[i], new Logger_writer());
+    else if (default_config != nullptr && emptyConfig) {
+      //Get configs when the spiffs contain no configs
+      default_config -> addConfigs();
+      save();
+      return;
     }
-    return true;
+    else
+    {
+      //Use the configs stored on spiffs
+      std::sort(files.begin(), files.end());
+      byte id = 0;
+      int configuration = 0;
+      for (int i = 0; i < files.size(); i++) {
+        //id and configuration are passed by reference
+        //Load the shared id and configuration part of the config file
+        pIConfigstore -> load(files[i], id, configuration);
+        //Get the instance
+        Configbase * config = Configfactory::getConfigInstance(id, configuration);
+        //Populate the values
+        pIConfigstore -> load(config);
+        mConfigArray.push_back(config);
+      }
+    }
   }
 
   bool add(Configbase * config, bool store = false)
   {
     if (config != nullptr)
     {
+      //While we find configs with a given id, add id ++ until not found
       while (get(config -> getId()) != nullptr)
         config -> setId(config -> getId()+1);
       mConfigArray.push_back(config);
@@ -100,6 +106,7 @@ public:
     return false;
   }
 
+/*
   bool add(int configuration, bool store = false)
   {
     Configbase * config = create(configuration);
@@ -107,6 +114,7 @@ public:
       pIConfigstore -> save(config);
     return true;
   }
+*/
 
   Configbase * create(byte id, int configuration)
   {
@@ -119,15 +127,18 @@ public:
     return baseCfg;
   }
 
+/*
   Configbase * create(int configuration)
   {
     byte id = 0;
     Configbase * config = Configfactory::getConfigInstance(id, configuration);
+    //While we find configs with a given id, add id ++ until not found
     while (get(config -> getId()) != nullptr)
       config -> setId(config -> getId()+1);
     mConfigArray.push_back(config);
     return config;
   }
+*/
 
   bool remove(byte id, bool save = false)
   {

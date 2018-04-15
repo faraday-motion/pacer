@@ -32,8 +32,8 @@ public:
 
   float smoothAlphaPositive = SMOOTH_ALPHA_POSITIVE;
   float smoothAlphaNegative = SMOOTH_ALPHA_NEGATIVE;
-  int interval = 15;
-  int critical = 30;
+  int interval = 50;
+  int critical = 60;
 };
 
 #endif

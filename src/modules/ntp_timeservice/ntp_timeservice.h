@@ -27,7 +27,7 @@ public:
   Ntp_timeservice(byte id, IFMV * fmv, Ntp_timeservice_config * cfg = nullptr) : Modulebase(id, Modules::NTP_TIMESERVICE)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Ntp_timeservice_config*>(Configurator::Instance().createConfig(id, Configurations::NTP_TIMESERVICE_CONFIG));
+      mCfg = static_cast<Ntp_timeservice_config*>(Configurator::Instance().getConfig(id, Configurations::NTP_TIMESERVICE_CONFIG));
     else
       mCfg = cfg;
     setConfig();

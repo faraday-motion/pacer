@@ -16,6 +16,7 @@ class IModuleList : public virtual ILoopable
       virtual void listEnabled() = 0;
       virtual IControlModule * getActiveControl() = 0;
       virtual void setActiveController(byte id) = 0;
+      virtual void deactivateControllers() = 0;
       virtual IModule * getEnabledByRole(Roles role) = 0;
 };
 #endif

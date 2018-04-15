@@ -54,7 +54,7 @@ public:
   Vesc_controller(byte id, IFMV * fmv, Vesc_controller_config * cfg = nullptr) : Power_module(id, Modules::VESC_CONTROLLER) {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Vesc_controller_config*>(Configurator::Instance().createConfig(id, Configurations::VESC_CONTROLLER_CONFIG));
+      mCfg = static_cast<Vesc_controller_config*>(Configurator::Instance().getConfig(id, Configurations::VESC_CONTROLLER_CONFIG));
     else
       mCfg = cfg;
     setConfig();
@@ -72,7 +72,7 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName("Vesc_controller");
-    mSimpleTimer.setInterval(25, 50);
+    mSimpleTimer.setInterval(50, 100);
     setEnabled(mCfg -> enabled);
   }
 

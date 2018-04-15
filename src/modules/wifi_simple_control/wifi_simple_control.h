@@ -38,7 +38,7 @@ public:
   Wifi_simple_control(byte id, IFMV * fmv, Wifi_simple_control_config * cfg = nullptr) : Control_module(id, Modules::WIFI_SIMPLE_CONTROL)  {
     mFMV = fmv;
     if (cfg == nullptr)
-      mCfg = static_cast<Wifi_simple_control_config*>(Configurator::Instance().createConfig(id, Configurations::WIFI_SIMPLE_CONTROL_CONFIG));
+      mCfg = static_cast<Wifi_simple_control_config*>(Configurator::Instance().getConfig(id, Configurations::WIFI_SIMPLE_CONTROL_CONFIG));
     else
       mCfg = cfg;
     setConfig();

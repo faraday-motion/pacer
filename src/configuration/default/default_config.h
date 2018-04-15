@@ -64,7 +64,7 @@ public:
       cfg6 -> isInverse = false;
       Configurator::Instance().addConfig(cfg6);
 
-      //4
+      //7
       Wheel_config * cfg7 = new Wheel_config(id++);
       cfg7 -> index = 3;
       cfg7 -> isElectric = false;
@@ -72,18 +72,18 @@ public:
       cfg7 -> isInverse = false;
       Configurator::Instance().addConfig(cfg7);
 
-      //5
+      //13
       //If the wifi is configured late it gives crashes for some reason
       Wifi_connection_config* cfg13 = new Wifi_connection_config(id++);
       cfg13 -> enabled = true;
       Configurator::Instance().addConfig(cfg13);
 
-      //6
+      //14
       Wifi_simple_control_config* cfg14 = new Wifi_simple_control_config(id++);
       cfg14 -> enabled = true;
       Configurator::Instance().addConfig(cfg14);
 
-      //7
+      //1
       Boolean_sensor_config * cfg1 = new Boolean_sensor_config(id++);
       cfg1 -> pin = PIN_DEAD_MAN_SWITCH;
       cfg1 -> interval = 100;
@@ -92,38 +92,32 @@ public:
       cfg1 -> sensorName = "dead";
       Configurator::Instance().addConfig(cfg1);
 
-/*
-      //9
-      Neopixels_config* cfg3 = new Neopixels_config(id++);
-      Configurator::Instance().addConfig(cfg3);
-*/
-      //10
+      //8
       Analog_sensor_config * cfg8 = new Analog_sensor_config(id++);
       cfg8 -> pin = PIN_JOYSTICK_CONTROL_Y;
-      cfg8 -> interval = 25;
-      cfg8 -> critical = 50;
+      cfg8 -> interval = 50;
+      cfg8 -> critical = 100;
       cfg8 -> sensorName = "joy_y";
       Configurator::Instance().addConfig(cfg8);
 
-      //11
+      //9
       Force_control_config * cfg9 = new Force_control_config(id++);
       cfg9 -> sensorName = "joy_y";
-      cfg9 -> enabled = true;
+      cfg9 -> enabled = false;
       Configurator::Instance().addConfig(cfg9);
 
-      //12
+      //10
       Exponential_power_modulation_config * cfg10 = new Exponential_power_modulation_config(id++);
       cfg10 -> enabled = true;
       Configurator::Instance().addConfig(cfg10);
 
-      //13
+      //11
       Power_limit_config * cfg11 = new Power_limit_config(id++);
       cfg11 -> enabled = true;
       cfg11 -> deadSensorName = "dead";
       Configurator::Instance().addConfig(cfg11);
 
-      //14
-
+      //12
       Serial_control_config * cfg12 = new Serial_control_config(id++);
       cfg12 -> enabled = false;
       Configurator::Instance().addConfig(cfg12);
@@ -140,7 +134,7 @@ public:
 
       //18
       Web_update_config * cfg18 = new Web_update_config(id++);
-      cfg18 -> enabled = true;
+      cfg18 -> enabled = false;
       Configurator::Instance().addConfig(cfg18);
 
       //19
@@ -155,7 +149,7 @@ public:
       Configurator::Instance().addConfig(cfg19);
 
       Websocket_drivelog_config * cfg26 = new Websocket_drivelog_config(id++);
-      cfg26 -> enabled = true;
+      cfg26 -> enabled = false;
       Configurator::Instance().addConfig(cfg26);
 
       //22
@@ -166,7 +160,7 @@ public:
 
       //23
       Ntp_timeservice_config * cfg22 = new Ntp_timeservice_config(id++);
-      cfg22 -> enabled = true;
+      cfg22 -> enabled = false;
       Configurator::Instance().addConfig(cfg22);
 
 /*
@@ -180,11 +174,11 @@ public:
       Configurator::Instance().addConfig(cfg27);
 
       Mqtt_connection_config * cfg28 = new Mqtt_connection_config(id++);
-      cfg28 -> enabled = true;
+      cfg28 -> enabled = false;
       Configurator::Instance().addConfig(cfg28);
 
       Mqtt_control_config * cfg29 = new Mqtt_control_config(id++);
-      cfg29 -> enabled = true;
+      cfg29 -> enabled = false;
       Configurator::Instance().addConfig(cfg29);
 
       //21

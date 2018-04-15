@@ -52,46 +52,61 @@ protected:
 
   void recieve(byte command, byte value)
   {
-    Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::recieve Command: "), String(command) + " Value: " + String(value));
     if (Modulebase::enabled())
     {
       if (Configurator::Instance().commandEnabled(command))
       {
+        bool hasChange = false;
         if (command == ExternalCommands::DRIVE_POWER)
         {
-          Logger::Instance().write(LogLevel::INFO, FPSTR("Control_module::setPower:"), String(value));
+          hasChange == mOutputControl.getPower() != value;
           mOutputControl.setPower(value);
-          if (value != 0)
-            onEvent(Events::DRIVE_POWER);
-          else
-            onEvent(Events::DRIVE_NEUTRAL);
+          if (hasChange)
+          {
+            if (value != 0)
+              onEvent(Events::DRIVE_POWER);
+            else
+              onEvent(Events::DRIVE_NEUTRAL);
+          }
           setHasClient(true);
         }
         else if (command == ExternalCommands::DRIVE_BRAKE)
         {
+          hasChange == mOutputControl.getBrake() != value;
           mOutputControl.setBrake(value);
-          if (value != 0)
-            onEvent(Events::DRIVE_BRAKE);
-          else
-            onEvent(Events::DRIVE_NEUTRAL);
+          if (hasChange)
+          {
+            if (value != 0)
+              onEvent(Events::DRIVE_BRAKE);
+            else
+              onEvent(Events::DRIVE_NEUTRAL);
+          }
           setHasClient(true);
         }
         else if (command == ExternalCommands::TURN_LEFT)
         {
+          hasChange == mOutputControl.getLeft() != value;
           mOutputControl.setLeft(value);
-          if (value != 0)
-            onEvent(Events::TURN_LEFT);
-          else
-            onEvent(Events::TURN_NEUTRAL);
+          if (hasChange)
+          {
+            if (value != 0)
+              onEvent(Events::TURN_LEFT);
+            else
+              onEvent(Events::TURN_NEUTRAL);
+          }
           setHasClient(true);
         }
         else if (command == ExternalCommands::TURN_RIGHT)
         {
+          hasChange == mOutputControl.getRight() != value;
           mOutputControl.setRight(value);
-          if (value != 0)
-            onEvent(Events::TURN_RIGHT);
-          else
-            onEvent(Events::TURN_NEUTRAL);
+          if (hasChange)
+          {
+            if (value != 0)
+              onEvent(Events::TURN_RIGHT);
+            else
+              onEvent(Events::TURN_NEUTRAL);
+          }
           setHasClient(true);
         }
         else if (command == ExternalCommands::LED_ENABLED)

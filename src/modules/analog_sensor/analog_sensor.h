@@ -25,7 +25,7 @@ public:
     Analog_sensor(byte id, IFMV * fmv, Analog_sensor_config * cfg = nullptr) : Modulebase(id, Modules::ANALOG_SENSOR){
       mFMV = fmv;
       if(cfg == nullptr)
-        mCfg = static_cast<Analog_sensor_config*>(Configurator::Instance().createConfig(id, Configurations::ANALOG_SENSOR_CONFIG));
+        mCfg = static_cast<Analog_sensor_config*>(Configurator::Instance().getConfig(id, Configurations::ANALOG_SENSOR_CONFIG));
       else
         mCfg = cfg;
       setConfig();

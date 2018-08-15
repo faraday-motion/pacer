@@ -40,9 +40,13 @@ void Exponential_power_modulation::loop()
           mOutputControl.resetPower();
 
         if (mInputControl.getLeft() > 0)
+        {
           mOutputControl.setLeft(mInputControl.getLeft());
+        }
         else if (mInputControl.getRight() > 0)
+        {
           mOutputControl.setRight(mInputControl.getRight());
+        }
         else
           mOutputControl.resetDirection();
 

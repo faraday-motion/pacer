@@ -38,8 +38,8 @@ public:
   //All pin numbers are allowed,but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
   byte servoPins[4] = {12, 14, 27, 26};
   byte minAngle = 0;
-  byte maxAngle = 180;
   byte neutral = 90;
+  byte maxAngle = 180;
 };
 
 #endif

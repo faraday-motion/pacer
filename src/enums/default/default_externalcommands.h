@@ -21,6 +21,7 @@
 #define EXTERNALCOMMAND_DRIVE_MODE_100 "drive_mode_100"
 #define EXTERNALCOMMAND_LED_ENABLED "led_enabled"
 #define EXTERNALCOMMAND_LED_DISABLED "led_disabled"
+#define EXTERNALCOMMAND_GET_CONFIG "get_config"
 
 class Default_externalCommands {
 public:
@@ -40,6 +41,7 @@ public:
   static const byte DRIVE_MODE_100 = 13;
   static const byte LED_ENABLED = 14;
   static const byte LED_DISABLED = 15;
+  static const byte GET_CONFIG = 16;
 
   static byte get(String command)
   {
@@ -75,6 +77,8 @@ public:
       return LED_ENABLED;
     else if (command == EXTERNALCOMMAND_LED_DISABLED)
       return LED_DISABLED;
+    else if (command == EXTERNALCOMMAND_GET_CONFIG)
+      return GET_CONFIG;
   }
 
   static String get(byte command)
@@ -111,8 +115,10 @@ public:
       return EXTERNALCOMMAND_LED_ENABLED;
     else if (command == LED_DISABLED)
       return EXTERNALCOMMAND_LED_DISABLED;
+    else if (command == GET_CONFIG)
+      return EXTERNALCOMMAND_GET_CONFIG;
     else
-      return "unknown";  
+      return "unknown";
   }
 private:
 };

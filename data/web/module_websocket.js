@@ -9,6 +9,30 @@ var websocketModule = (function (parameters) {
   var socket = null;
   var autoDisconnect;
   var id = 0;
+  var lastMillis = 0;
+
+  function getMillisDiff()
+  {
+    var d = new Date();
+    var t = d.getTime();
+    if (lastMillis == 0)
+      lastMillis = t;
+    var ret = t - lastMillis;
+    lastMillis = t;
+    return ret;
+  }
+
+  function getCurrentTime() {
+    var d = new Date();
+    var yyyy = d.getFullYear();
+    var mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
+    var dd  = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+    var hh = d.getHours() < 10 ? "0" + d.getHours() : d.getHours();
+    var min = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
+    var ss = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
+    return "".concat(hh).concat(min).concat(ss);
+  //  return "".concat(yyyy).concat(mm).concat(dd).concat(hh).concat(min).concat(ss);
+  }
 
   function connect(connectCallback, messageRecieved){
     function triggerCallback()
@@ -51,9 +75,9 @@ var websocketModule = (function (parameters) {
                 sendRaw("{\"ping\":\"pong\"}");
               else
                 messageRecieved(obj);
-              console.log("Response::", msg.data);
+              console.log(getCurrentTime() + " " + getMillisDiff() + " Response::", msg.data);
             } else {
-              console.log("Response is empty.");
+              console.log(getCurrentTime() + " " + getMillisDiff() + " Response is empty.");
             }
           }
 

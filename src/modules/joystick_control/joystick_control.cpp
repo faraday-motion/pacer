@@ -18,25 +18,46 @@ void Joystick_control::loop()
   if (enabled())
   {
     Logger::Instance().write(LogLevel::DEBUG, getModuleName(), FPSTR("::loop"));
+    if (mSensorEnabled == nullptr)
+      mSensorEnabled = mFMV -> sensors().getBoolSensor(mCfg -> sensorEnabled);
+    if (mSensorEnabled != nullptr)
+    {
+      Logger::Instance().write(LogLevel::DEBUG, FPSTR("mSensorEnabled: "), String(mSensorEnabled -> getValue()));
+      if (mSensorEnabled -> getValue())
+        clientEnabled = !clientEnabled;
+    }
     if (mSensorY == nullptr)
       mSensorY = mFMV -> sensors().getIntSensor(mCfg -> sensorNameY);
-    if (mSensorY != nullptr && mSensorY -> valueChanged())
+    if (mSensorY != nullptr)
+      Logger::Instance().write(LogLevel::DEBUG, FPSTR("mSensorY: "), String(mSensorY -> getValue()));
+    if (mSensorX == nullptr)
+      mSensorX = mFMV -> sensors().getIntSensor(mCfg -> sensorNameX);
+    if (mSensorX != nullptr)
+      Logger::Instance().write(LogLevel::DEBUG, FPSTR("mSensorX: "), String(mSensorX -> getValue()));
+
+    if (clientEnabled && mSensorY != nullptr)// && mSensorY -> valueChanged())
     {
       int valueY = constrain(mSensorY -> getValue(), mCfg -> limitYMin, mCfg -> limitYMax);
-      if (valueY > mCfg -> neutralY + mCfg -> deadbandY)
+      if (valueY > (mCfg -> neutralY + mCfg -> deadbandY))
       {
         //Accelerate
         mBack = 0;
         mForward = map(valueY, mCfg -> neutralY + mCfg -> deadbandY, mCfg -> limitYMax, 0, 100);
-        mOutputControl.setPower(mForward);
+        if (!mCfg -> invertY)
+          mOutputControl.setPower(mForward);
+        else
+          mOutputControl.setBrake(mForward);
         setHasClient(true);
       }
-      else if (valueY < mCfg -> neutralY - mCfg -> deadbandY)
+      else if (valueY < (mCfg -> neutralY - mCfg -> deadbandY))
       {
         //Brake
         mForward = 0;
         mBack = map(valueY, mCfg -> neutralY - mCfg -> deadbandY, mCfg -> limitYMin, 0, 100);
-        mOutputControl.setBrake(mBack);
+        if (!mCfg -> invertY)
+          mOutputControl.setBrake(mBack);
+        else
+          mOutputControl.setPower(mBack);
         setHasClient(true);
       }
       else
@@ -48,9 +69,7 @@ void Joystick_control::loop()
       }
     }
 
-    if (mSensorX == nullptr)
-      mSensorX = mFMV -> sensors().getIntSensor(mCfg -> sensorNameX);
-    if (mSensorX != nullptr && mSensorX -> valueChanged())
+    if (clientEnabled && mSensorX != nullptr)// && mSensorX -> valueChanged())
     {
       int valueX = constrain(mSensorX -> getValue(), mCfg -> limitXMin, mCfg -> limitXMax);
       if (valueX > mCfg -> neutralX + mCfg -> deadbandX)
@@ -58,7 +77,10 @@ void Joystick_control::loop()
         //Right
         mLeft = 0;
         mRight = map(valueX, mCfg -> neutralX + mCfg -> deadbandX, mCfg -> limitXMax, 0, 100);
-        mOutputControl.setRight(mRight);
+        if (!mCfg -> invertX)
+          mOutputControl.setRight(mRight);
+        else
+          mOutputControl.setLeft(mRight);
         setHasClient(true);
       }
       else if (valueX < mCfg -> neutralX - mCfg -> deadbandX)
@@ -66,7 +88,10 @@ void Joystick_control::loop()
         //Left
         mRight = 0;
         mLeft = map(valueX, mCfg -> neutralX - mCfg -> deadbandX, mCfg -> limitXMin, 0, 100);
-        mOutputControl.setLeft(mLeft);
+        if (!mCfg -> invertX)
+          mOutputControl.setLeft(mLeft);
+        else
+          mOutputControl.setRight(mLeft);
         setHasClient(true);
       }
       else

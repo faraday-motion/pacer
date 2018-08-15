@@ -54,7 +54,7 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName("Websocket_connection");
-    mSimpleTimer.setInterval(5, 50);
+    mSimpleTimer.setInterval(10, 50);
     mPingpongSimpleTimer.setInterval(500);
     setEnabled(mCfg -> enabled);
   }

@@ -8,6 +8,16 @@
 #include "../log/logger.h"
 #include "../interfaces/isend.h"
 
+bool Spiffs_storage::exists(String path){
+  bool fileExists = false;
+  File file = fs.open(path, "r");
+  if(!file.isDirectory()){
+    fileExists = true;
+  }
+  file.close();
+  return fileExists;
+}
+
 bool Spiffs_storage::save(String path, const String message){
     Logger::Instance().write(LogLevel::INFO, FPSTR("Save: "), path);
     File file = fs.open(path, FILE_WRITE);

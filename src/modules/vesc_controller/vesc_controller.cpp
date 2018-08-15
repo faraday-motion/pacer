@@ -33,8 +33,13 @@ void Vesc_controller::setup() {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     onEvent(Events::CONFIGURE);
     Logger::Instance().write(LogLevel::INFO, FPSTR("DefaultSerial: "), String(mCfg -> defaultSerial));
+
     //Set default mode
-    mDriveMode = Commands::CURRENT_MODE;
+    if (mCfg -> driveMode == 0)
+      mDriveMode = Commands::CURRENT_MODE;
+    else if (mCfg -> driveMode == 1)
+      mDriveMode = Commands::RPM_MODE;
+
     if (mCfg -> defaultSerial)
     {
       Configurator::Instance().initializeSerial();
@@ -376,9 +381,24 @@ void Vesc_controller::setRpm()
   Logger::Instance().write(LogLevel::DEBUG, FPSTR("Vesc_controller::setRpm "));
   for (int i=0; i<wheelDecorators.size(); i++)
   {
-      int rpm = map(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0, mCfg -> maxRpm);
-      pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
-      pVescInterface -> set_rpm(rpm);
+      int rpmPower = map(wheelDecorators[i] -> getWheelControl().getPower(), 0, 100, 0, mCfg -> maxRpm);
+      int rpmBrake = map(wheelDecorators[i] -> getWheelControl().getBrake(), 0, 100, 0, mCfg -> maxRpm);
+      if (rpmPower > 0)
+      {
+        pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
+        pVescInterface -> set_rpm(rpmPower);
+      }
+      else if (rpmBrake > 0)
+      {
+        pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
+        pVescInterface -> set_rpm(-rpmBrake);
+      }
+      else
+      {
+        pVescInterface -> set_forward_can(wheelDecorators[i] -> getCanId());
+        pVescInterface -> set_rpm(0);
+        //        pVescInterface -> set_current_brake(0);
+      }
   }
 }
 

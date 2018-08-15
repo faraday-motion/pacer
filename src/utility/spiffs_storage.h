@@ -14,6 +14,7 @@ class Spiffs_storage : public virtual IStore
     public:
       Spiffs_storage() : IStore(){
       };
+      bool exists(String path);
       bool save(String path, const String message);
       bool append(String path, const String message, size_t maxSize = 0);
       bool read(String path, ISend * sender);

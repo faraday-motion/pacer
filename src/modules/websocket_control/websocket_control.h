@@ -42,8 +42,8 @@ public:
   void setConfig()
   {
     mSimpleTimer.setName("Websocket_control");
-    mSimpleTimer.setInterval(5, 50);
-    setClientTimeout("Websocket_control", 10000);
+    mSimpleTimer.setInterval(10, 50);
+    setClientTimeout("Websocket_control", 1000);
     setEnabled(mCfg -> enabled);
   }
 

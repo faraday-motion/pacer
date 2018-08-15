@@ -18,6 +18,7 @@ public:
     root["maxBrakeCurrent"] = maxBrakeCurrent;
     root["maxRpm"] = maxRpm;
     root["defaultSerial"] = defaultSerial;
+    root["driveMode"] = driveMode;
   }
 
   void setModuleConfiguration(JsonObject &root)
@@ -26,12 +27,14 @@ public:
     maxBrakeCurrent = byte(root["maxBrakeCurrent"]);
     maxRpm = int(root["maxRpm"]);
     defaultSerial = root["defaultSerial"];
+    driveMode = root["driveMode"];
   }
 
   byte maxPowerCurrent = 60;
   byte maxBrakeCurrent = 60;
   int maxRpm = 10000;
   bool defaultSerial = true;
+  byte driveMode = 0; // Current mode
 };
 
 #endif

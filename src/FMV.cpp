@@ -56,12 +56,14 @@ void FMV::setup() {
 
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));
     modules().setup();
+
     //No need for buffering anymore
     Logger::Instance().setBufferSize(0);
     modules().listEnabled();
     Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
     //Should probably be done after a time delay of 30, once all has been looping a few times...
     successfullStart();
+
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Faraday Motion Pacer v"), String(mVersion));
     mIsSetup = true;
   }
@@ -115,6 +117,7 @@ void FMV::addEnabledCommands()
   Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_100);
   Configurator::Instance().addCommand(ExternalCommands::LED_ENABLED);
   Configurator::Instance().addCommand(ExternalCommands::LED_DISABLED);
+  Configurator::Instance().addCommand(ExternalCommands::GET_CONFIG);
 }
 
 void FMV::loop()
@@ -122,8 +125,9 @@ void FMV::loop()
   mModules -> loop();
   if (pSimpleTimerPingPong -> check())
   {
-    //Logger::Instance().write(LogLevel::INFO, FPSTR("PINGPONG"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("PINGPONG"));
     Logger::Instance().write(LogLevel::INFO, FPSTR("************* Free Heap: "), String(ESP.getFreeHeap()));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Reset Count: "), String(sensors().getIntSensor("rst") -> getValue()));
   }
 }
 

@@ -111,18 +111,36 @@ void Websocket_connection::onWsEvent(uint8_t num, WStype_t type, uint8_t * paylo
         int id = json["id"];
         byte command = json["command"];
         byte value = json["value"];
+        String response = "";
+        String responseValue = "";
 
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Packet Received"));
         Logger::Instance().write(LogLevel::DEBUG, FPSTR("command: "), String(command) + " value: " + String(value));
 
-        //For each reciever do
-        for (byte i=0; i < recievers().size(); i++) {
-          Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Packet recievers:"), String(i));
-          recievers()[i] -> recieve(command, value);
+        if (Configurator::Instance().commandEnabled(command))
+        {
+          //Hack handling the get config here for now
+          if (command == ExternalCommands::GET_CONFIG)
+          {
+            Configbase * config = Configurator::Instance().configs().get(0);
+          }
+          else
+          {
+            //For each reciever do
+            for (byte i=0; i < recievers().size(); i++) {
+              Logger::Instance().write(LogLevel::DEBUG, FPSTR("Websocket Packet recievers:"), String(i));
+              recievers()[i] -> recieve(command, value);
+            }
+          }
         }
-        String response = "";
+
         if (id > -1)
-          response = "{\"msg\":\"ok\",\"id\":\"" + String(id) + "\",\"command\":\"" + String(command) + "\"}";
+        {
+          if (responseValue == "")
+            response = "{\"msg\":\"ok\",\"id\":\"" + String(id) + "\",\"command\":\"" + String(command) + "\"}";
+          else
+            response = "{\"msg\":\"ok\",\"id\":\"" + String(id) + "\",\"command\":\"" + String(command) + "\",\"value\":\"" + String(responseValue) + "\"}";
+        }
         else
           response = "{\"msg\":\"ok\",\"command\":\"" + String(command) + "\"}";
         mWebSocketsServer -> sendTXT(num, response);

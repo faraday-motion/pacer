@@ -25,7 +25,7 @@ void Pwm_steering::setup() {
         pinMode(mCfg -> servoPins[wheelDecorators.size()], OUTPUT);
         Servo * mServo = new Servo();
         mServo -> attach(mCfg -> servoPins[wheelDecorators.size()]);
-        wheelDecorators.push_back(new Pwm_steering_wheel_decorator(wheelArray[i], mServo));
+        wheelDecorators.push_back(new Pwm_steering_wheel_decorator(wheelArray[i], mServo, mCfg -> minAngle, mCfg -> neutral, mCfg -> maxAngle));
       }
     }
     Logger::Instance().write(LogLevel::INFO, FPSTR("Finished setting up "), getModuleName());

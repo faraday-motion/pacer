@@ -1,3 +1,4 @@
+-Make configuration possible from webapp
 -Turn serial into a *_connection
 -Make eventrules configurable
 -Make configurations configurable
@@ -10,6 +11,47 @@
 -Refactoring sensor_value into template
 -Retrieve geo pos from phone
 -Set/retrieve actual time from webapp
--Make control app for pressure sensing
 -Update documentation
 -Implement can support http://www.iotsharing.com/2017/09/how-to-use-arduino-esp32-can-interface.html
+    https://github.com/miwagner/ESP32-Arduino-CAN/blob/master/examples/esp32can_basic/esp32can_basic.ino
+-Download files for html/js storage, http://www.iotsharing.com/2018/01/esp32-multipart-upload-file-and-download-via-http.html
+-Implement ADC output for drivecontroller https://github.com/espressif/arduino-esp32/blob/05a3de262a4e7bd8205f2e773f7777182bf58399/libraries/ESP32/examples/AnalogOut/LEDCSoftwareFade/LEDCSoftwareFade.ino
+-Implement NRF24L01 http://www.iotsharing.com/2018/03/esp-and-raspberry-connect-with-nrf24l01.html
+    https://github.com/nhatuan84/RF24
+
+-Rework main task into several tasks
+Module Name	Group Name	Priority
+control_priority	drive	1
+direct_power_modulation	drive	1
+exponential_power_modulation	drive	1
+force_control	drive	1
+joystick_control	drive	1
+mqtt_control	drive	1
+power_limit	drive	1
+pwm_controller	drive	1
+pwm_steering	drive	1
+serial_control	drive	1
+vesc_controller	drive	1
+websocket_control	drive	1
+wifi_simple_control	drive	1
+serial_log	core	2
+spiffs_log	core	2
+websocket_server_log	core	2
+bt_connection	connectivity	3
+mqtt_connection	connectivity	3
+serial_connection	connectivity	3
+websocket_connection	connectivity	3
+wifi_connection	connectivity	3
+analog_sensor	sensor	4
+boolean_sensor	sensor	4
+current_monitor	sensor	4
+temperature_monitor	sensor	4
+voltage_monitor	sensor	4
+arduino_ota	critical	5
+spiffs_drivelog	critical	5
+web_update	critical	5
+websocket_drivelog	critical	5
+esp32_digital_led	general	6
+fastled_led	general	6
+neopixels_led	general	6
+ntp_timeservice	general	6

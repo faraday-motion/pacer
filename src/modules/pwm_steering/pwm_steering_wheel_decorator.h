@@ -12,10 +12,16 @@ private:
   Vehiclecontrol mWheelControl;
   IWheel * mWheel = nullptr;
   Servo * mServo = nullptr;
+  byte mMinAngle;
+  byte mNeutral;
+  byte mMaxAngle;
 public:
-  Pwm_steering_wheel_decorator(IWheel * wheel, Servo * servo) {
+  Pwm_steering_wheel_decorator(IWheel * wheel, Servo * servo, byte minAngle, byte neutral, byte maxAngle) {
     mWheel = wheel;
     mServo = servo;
+    mMinAngle = minAngle;
+    mNeutral = neutral;
+    mMaxAngle = maxAngle;
   }
 
   Vehiclecontrol getWheelControl() const
@@ -31,16 +37,16 @@ public:
       //Logger::Instance().write(LogLevel::DEBUG, "Pwm_steering_wheel_decorator::Turning " + String(mWheelControl.getLeft()) + " " + String(mWheelControl.getRight()));
       if (mWheelControl.getLeft() > 0)
         if (!mWheel -> isInverse())
-          mServo -> write(map(mWheelControl.getLeft(), 0, 100, 89, 0));
+          mServo -> write(map(mWheelControl.getLeft(), 0, mWheelControl.getLeftMax(), mNeutral-1, mMinAngle));
         else
-          mServo -> write(map(mWheelControl.getLeft(), 0, 100, 91, 100));
+          mServo -> write(map(mWheelControl.getLeft(), 0, mWheelControl.getLeftMax(), mNeutral+1, mMaxAngle));
       else if (mWheelControl.getRight() > 0)
         if (!mWheel -> isInverse())
-          mServo -> write(map(mWheelControl.getRight(), 0, 100, 91, 180));
+          mServo -> write(map(mWheelControl.getRight(), 0, mWheelControl.getRightMax(), mNeutral+1, mMaxAngle));
         else
-          mServo -> write(map(mWheelControl.getRight(), 0, 100, 89, 0));
+          mServo -> write(map(mWheelControl.getRight(), 0, mWheelControl.getRightMax(), mNeutral-1, mMinAngle));
       else
-        mServo -> write(90);
+        mServo -> write(mNeutral);
     }
   }
 

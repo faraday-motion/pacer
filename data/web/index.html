@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Faraday Motion Web App v. 1.0</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -27,7 +27,7 @@
                 </div>
             </div>
           </div>
-            <div id="region_console">
+            <div class="hidden" id="region_console">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Console</h5>
@@ -35,7 +35,12 @@
                             <div class="col">
                               <p class="strong">Functionality</p>
                               <div class="btn-group fullwidth" role="group" aria-label="">
-                                <button type="button" class="btn" id="btnled">LED</button>
+                                <button type="button" class="btn btn-danger" id="btnled">LED</button>
+                                <button type="button" class="btn btn-danger" id="btndm20">DM20</button>
+                                <button type="button" class="btn btn-danger" id="btndm40">DM40</button>
+                                <button type="button" class="btn btn-danger" id="btndm60">DM60</button>
+                                <button type="button" class="btn btn-danger" id="btndm80">DM80</button>
+                                <button type="button" class="btn btn-danger" id="btndm100">DM100</button>
                               </div>
                             </div>
                         </div>
@@ -75,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div id="region_tilt">
+            <div class="hidden" id="region_tilt">
                 <div class="card">
                     <button type="button" class="btn btn-danger btn-lg btn-block btnenable" id="btnenabletilt">OFF</button>
                     <div class="card-body">
@@ -84,20 +89,20 @@
                     </div>
                 </div>
             </div>
-            <div id="region_joystick">
+            <div class="hidden" id="region_joystick">
                 <div class="row">
                     <div class="col">
                         <div id="joyjoystick" style="width:200px;height:200px;margin-bottom:20px;"></div>
                     </div>
                   </div>
             </div>
-            <div id="region_nipple">
+            <div class="hidden" id="region_nipple">
                 <div class="row">
                     <div class="col" id="nipplejoystick" style="height:200px;">
                     </div>
                   </div>
             </div>
-            <div id="region_pressure">
+            <div class="hidden" id="region_pressure">
                 <div class="row">
                     <div class="col">
                       <button type="button" class="btn btn-success btn-lg btn-block accel" id="btnpressureaccel">Accelerate</button>
@@ -109,7 +114,7 @@
                     </div>
                 </div>
             </div>
-            <div id="region_data">
+            <div class="hidden" id="region_data">
                         <div class="row">
                             <div class="col">
                                 <canvas id="canpower" width="350" height="100"></canvas>
@@ -138,21 +143,21 @@
                 </div>
               </form>
           </div>
-            <script src="jquery/jquery-3.3.1.min.js"></script>
-            <script src="jquery/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+            <script src="jquery-3.3.1.min.js"></script>
+            <script src="jquery.mobile.min.js"></script>
             <script src="dependencies/smoothie.js"></script>
             <script src="dependencies/joy.js"></script>
             <script src="dependencies/nipplejs.min.js"></script>
             <script src="dependencies/pressure.min.js"></script>
-            <script src="commands.js"></script>
-            <script src="console.js"></script>
-            <script src="websocket.js"></script>
-            <script src="joystick.js"></script>
-            <script src="nipple.js"></script>
-            <script src="pressure.js"></script>
-            <script src="tilt.js"></script>
-            <script src="graph.js"></script>
-            <script src="pacer.js"></script>
+            <script src="module_commands.js"></script>
+            <script src="module_console.js"></script>
+            <script src="module_websocket.js"></script>
+            <script src="module_joystick.js"></script>
+            <script src="module_nipple.js"></script>
+            <script src="module_pressure.js"></script>
+            <script src="module_tilt.js"></script>
+            <script src="module_graph.js"></script>
+            <script src="module_pacer.js"></script>
             <script type="text/javascript">
       websocketModule.initialize(pacerModule.connectChange, pacerModule.messageRecieved);
 

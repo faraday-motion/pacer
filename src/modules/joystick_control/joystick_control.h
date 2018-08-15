@@ -13,11 +13,14 @@ private:
   IFMV * mFMV = nullptr;
   Int_sensor_value * mSensorX = nullptr;
   Int_sensor_value * mSensorY = nullptr;
+  Bool_sensor_value * mSensorEnabled = nullptr;
   byte mForward = 0;
   byte mBack = 0;
   byte mLeft = 0;
   byte mRight = 0;
   Joystick_control_config * mCfg = nullptr;
+  //TODO: the clientEnabled should be enabled by default,
+  bool clientEnabled = false;
 protected:
   void onDisable();
   void onEvent(byte eventId, bool always = false)

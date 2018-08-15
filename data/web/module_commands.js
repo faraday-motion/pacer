@@ -99,6 +99,36 @@ var commandsModule = (function () {
     addCommand(LED_DISABLED, 1);
   }
 
+  function driveMode0()
+  {
+    addCommand(DRIVE_MODE_0, 1);
+  }
+
+  function driveMode20()
+  {
+    addCommand(DRIVE_MODE_20, 1);
+  }
+
+  function driveMode40()
+  {
+    addCommand(DRIVE_MODE_40, 1);
+  }
+
+  function driveMode60()
+  {
+    addCommand(DRIVE_MODE_60, 1);
+  }
+
+  function driveMode80()
+  {
+    addCommand(DRIVE_MODE_80, 1);
+  }
+
+  function driveMode100()
+  {
+    addCommand(DRIVE_MODE_100, 1);
+  }
+
   return {
     // public
     clear : clear,
@@ -111,6 +141,12 @@ var commandsModule = (function () {
     directionNeutral : directionNeutral,
     ledOn : ledOn,
     ledOff : ledOff,
+    driveMode0 : driveMode0,
+    driveMode20 : driveMode20,
+    driveMode40 : driveMode40,
+    driveMode60 : driveMode60,
+    driveMode80 : driveMode80,
+    driveMode100 : driveMode100,
     addCommand : addCommand
   };
 }());

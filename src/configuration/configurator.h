@@ -115,7 +115,6 @@ public:
   {
     Logger::Instance().write(LogLevel::INFO, FPSTR("Initializing Analog"));
     analogReadResolution(10);
-    analogSetAttenuation(ADC_6db);
   }
 
 

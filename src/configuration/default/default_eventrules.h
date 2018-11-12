@@ -34,7 +34,7 @@ public:
         //mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_STA);
       }
     }
-/*
+
     if (sender -> module() == Modules::WIFI_CONNECTION)
     {
       //Configure ap on startup
@@ -43,7 +43,7 @@ public:
         mFMV -> modules().commandByType(Modules::WIFI_CONNECTION, (byte)Wifi_connection::Commands::CONNECTION_WIFI_AP);
       }
     }
-*/
+
 
     //Handle getting the time when connected to the internet
     if (sender -> module() == Modules::WIFI_CONNECTION)

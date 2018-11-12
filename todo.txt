@@ -1,3 +1,4 @@
+-https://vuejs.org/v2/examples/elastic-header.html
 -Make configuration possible from webapp
 -Turn serial into a *_connection
 -Make eventrules configurable

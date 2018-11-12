@@ -1,130 +1,191 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Faraday Motion Vehicle Configurator v0.1</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-   
-   <div class="container content-box">
-      <div class="row">
-        <span>Menu:</span>
-        <a href="index.html">Setup</a>
-        <a href="console.html">Console</a>
-      </div>
-   </div>
-    <div class="container content-box">
-      <div class="row text-center">
-        <h1>Configure your Faraday Motion Vehicle</h1>
-          <p>We're happy you decided to use Pacer!</p>
-          <p>For more help on how to configure your Faraday Motion Vehicle check our forum <a href="http://forum.faradaymotion.com">forum</a>.</p>
-        <div class="hr"></div>
-      </div>
-      <div class="row">
-        <div class="form-group center-form">
-          <h2>Step 1: Setup WiFi Network</h2>
-          <p class="form-label">Wifi ssid: </p>
-          <pre><strong>Default:</strong> NewFaradayVehicle</pre>
-          <input id="wifiSsid" class="form-input" type="text" class="form-control">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Faraday Motion Web App v. 1.0</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+      <form>
+        <div id="region_controls">
+            <div class="row">
+                <div class="col">
+                    <div class="btn-group fullwidth" role="group" aria-label="">
+                      <button type="button" class="btn btn-block btn-secondary" id="btnenable">Connecting...</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                  &nbsp;
+                </div>
+            </div>
+          </div>
+            <div class="hidden" id="region_console">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Console</h5>
+                        <div class="row">
+                            <div class="col">
+                              <p class="strong">Functionality</p>
+                              <div class="btn-group fullwidth" role="group" aria-label="">
+                                <button type="button" class="btn btn-danger" id="btnled">LED</button>
+                                <button type="button" class="btn btn-danger" id="btndm20">DM20</button>
+                                <button type="button" class="btn btn-danger" id="btndm40">DM40</button>
+                                <button type="button" class="btn btn-danger" id="btndm60">DM60</button>
+                                <button type="button" class="btn btn-danger" id="btndm80">DM80</button>
+                                <button type="button" class="btn btn-danger" id="btndm100">DM100</button>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p class="strong">Command</p>
+                                <select name="" id="selconsolecommand">
+                                    <option value="0">MODULE_ON </option>
+                                    <option value="1">MODULE_OFF </option>
+                                    <option value="2">DISABLE_CONTROLLERS</option>
+                                    <option value="3">ENABLE_CONTROLLER</option>
+                                    <option value="4">DRIVE_POWER</option>
+                                    <option value="5">DRIVE_BRAKE </option>
+                                    <option value="6">TURN_LEFT</option>
+                                    <option value="7">TURN_RIGHT</option>
+                                    <option value="8">DRIVE_MODE_0</option>
+                                    <option value="9">DRIVE_MODE_20</option>
+                                    <option value="10">DRIVE_MODE_40</option>
+                                    <option value="11">DRIVE_MODE_60</option>
+                                    <option value="12">DRIVE_MODE_80</option>
+                                    <option value="13">DRIVE_MODE_100</option>
+                                </select>
+                                <p class="strong">Value</p>
+                                <textarea id="txtconsolevalue" style="width:100%" rows="5"></textarea>
+                                <div class="btn-group" role="group" aria-label="">
+                                    <button type="button" id="btnconsolesend" onClick="event.preventDefault();" class="btn btn-secondary">Send Command</button>
+                                    <button type="button" id="btnconsolepause" onClick="event.preventDefault();" class="btn btn-secondary">Pause</button>
+                                    <button type="button" id="btnconsoleclear" onClick="event.preventDefault();" class="btn btn-secondary">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <pre id="consolemessage">---------------------------------- empty ----------------------------------</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden" id="region_tilt">
+                <div class="card">
+                    <button type="button" class="btn btn-danger btn-lg btn-block btnenable" id="btnenabletilt">OFF</button>
+                    <div class="card-body">
+                        <h5 class="card-title">Tilt: <label id="lblangle1">0</label></h5>
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden" id="region_joystick">
+                <div class="row">
+                    <div class="col">
+                        <div id="joyjoystick" style="width:200px;height:200px;margin-bottom:20px;"></div>
+                    </div>
+                  </div>
+            </div>
+            <div class="hidden" id="region_nipple">
+                <div class="row">
+                    <div class="col" id="nipplejoystick" style="height:200px;">
+                    </div>
+                  </div>
+            </div>
+            <div class="hidden" id="region_pressure">
+                <div class="row">
+                    <div class="col">
+                      <button type="button" class="btn btn-success btn-lg btn-block accel" id="btnpressureaccel">Accelerate</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                      <button type="button" class="btn btn-danger btn-lg btn-block brake" id="btnpressurebrake">Brake</button>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden" id="region_data">
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="canpower" width="350" height="100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="canperformance" width="350" height="100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="cancharge" width="350" height="100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                              <div class="card fullheight">
+                                  <div class="card-body">
+                                      <h5 class="card-title">Sensors</h5>
+                                      <p class="card-text"><pre id="lblsensors"></pre></p>
+                                  </div>
+                              </div>
+                            </div>
+                        </div>
+                </div>
+              </form>
+          </div>
+            <script src="jquery-3.3.1.min.js"></script>
+            <script src="jquery.mobile.min.js"></script>
+            <script src="dependencies/smoothie.js"></script>
+            <script src="dependencies/joy.js"></script>
+            <script src="dependencies/nipplejs.min.js"></script>
+            <script src="dependencies/pressure.min.js"></script>
+            <script src="module_commands.js"></script>
+            <script src="module_console.js"></script>
+            <script src="module_websocket.js"></script>
+            <script src="module_joystick.js"></script>
+            <script src="module_nipple.js"></script>
+            <script src="module_pressure.js"></script>
+            <script src="module_tilt.js"></script>
+            <script src="module_graph.js"></script>
+            <script src="module_pacer.js"></script>
+            <script type="text/javascript">
+      websocketModule.initialize(pacerModule.connectChange, pacerModule.messageRecieved);
 
-          <p class="form-label">WiFi Password: </p> 
-          <pre><strong>Default:</strong> newfaradayvehicle</pre>
-          <input id="wifiPassword" class="form-input" type="text" class="form-control">
+      Storage.prototype.setObject = function(key, value) {
+          this.setItem(key, JSON.stringify(value));
+      }
 
-          <p class="form-label">Ip Address: </p>
-          <pre><strong>Default:</strong> 10.10.100.254 </pre> 
-          <input id="wifiIpAddress" class="form-input" type="text" class="form-control" value="10.10.100.254">          
+      Storage.prototype.getObject = function(key) {
+          var value = this.getItem(key);
+          return value && JSON.parse(value);
+      }
 
-          <p class="form-label">Subnet: </p>
-          <pre><strong>Default:</strong> 255.255.255.0 </pre> 
-          <input id="wifiSubnet" class="form-input" type="text" class="form-control" value="255.255.255.0">
-          
-          <p class="form-label">Channel: </p>
-          <pre><strong>Default:</strong> 11 </pre> 
-          <input id="wifiChannel" class="form-input" type="text" class="form-control" value="11">
-            
-          <p class="form-label">Port: </p>
-          <pre><strong>Default:</strong> 8899 </pre> 
-          <input id="wifiPort" class="form-input" type="text" class="form-control" value="8899">
-        </div>
-        <br>
-        <div class="hr"></div>
-      </div>
-    
-      <div class="row">
-        <form class="form-group center-form">
-          <h2>Step 2: Enable Modules</h2>
-          <p class="strong">Web Socket Server</p>
-          <pre>Used for wireless configuration and logging.</pre> 
-          <input id="websocketEnabled" name="webSocketServer" value="1" type="checkbox" checked> Enable          
+  /*
+      var obj = {};
+      obj.ok = "YEAH";
+      localStorage.setObject("sune", obj);
+      console.log(localStorage.getObject("sune"));
 
-          <p class="strong">Web Server</p>
-          <pre>Used for over the air firmware update.</pre>
-          <input id="webServerEnabled" name="webServer" value="1" type="checkbox" checked> Enable          
+      var testObject = { 'one': 1, 'two': 2, 'three': 3 };
+      // Put the object into storage
+      localStorage.setItem('testObject', testObject);
 
-          <p class="strong">Radio (RF24)</p>
-          <pre>Used for the Faraday Motion Remote Controller (Nunchuck)</pre>
-          <input id="radio" name="rf24" value="0" type="checkbox"> Enable
-        </form>
-        <br>
-        <div class="hr"></div>
-      </div>    
+      // Retrieve the object from storage
+      var retrievedObject = localStorage.getItem('testObject');
 
-
-      <div class="row">
-        <form class="form-group center-form">
-          <h2>Step 3: Configure Modules</h2>
-          <p class="strong">Web Socket Server</p>
-          <p class="form-label">Port: </p>
-          <pre><strong>Default:</strong> 81 </pre> 
-          <input id="websocketPort" class="form-input" type="text" class="form-control" value="81">
-          
-          <p class="strong">Web Server</p>
-          <pre>Comming soon..</pre>
-          <!-- TODO:: MAKE THE WEB SERVER CONFIGURABLE
-          <p class="strong">WebServer</p>
-          <p class="form-label">Port: </p>
-          <pre><strong>Default:</strong> 81 </pre> 
-          <input id="websocketPort" class="form-input" type="text" class="form-control" value="81"> -->
-        </form>
-        <br>
-        <div class="hr"></div>
-      </div>
-
-      <div class="row">
-        <form class="form-group center-form">
-          <h2>Step 4: Configure Vehicle</h2>
-          <p class="strong">How many motors does your vehicle have?</p>
-          <pre>Amount of VESCs.</pre> 
-          <input type="radio" name="motorCount" id="vesc1" value"1" checked> 1
-          <input type="radio" name="motorCount" id="vesc2" value"2"> 2
-          <input type="radio" name="motorCount" id="vesc4" value"4"> 4
-
-          <p class="strong">Choose wired controller types to enable.</p>
-          <pre>Wired Joystic, Accelerometer, Pressure Sensors etc.</pre>
-          <input id="wifiCtrl" value="0" type="checkbox" checked> Wifi Controllers (e.g. Android/iOS phones)      <br>         
-          <input id="radiCtrl" value="0" type="checkbox"> Radio Controllers (e.g. Nunchuck)               <br>         
-          <input id="acceCtrl" value="0" type="checkbox"> I2C Controllers (e.g Accelerometer controller)  <br>         
-          <input id="wireCtrl" value="0" type="checkbox"> Analog Controllers (e.g. Wired joystic/Sensor Pads controller) <br>
-
-        </form>
-        <br>
-        <div class="hr"></div>
-      </div> 
-    </div>
-    
-    <div class="sidebar">
-      <button class="btn" onClick="event.preventDefault();saveConfiguration();" >Save Configuration</button>
-    </div>
-
-  
-    <script src="default_config.js"></script>
-    <script src="setup.js"></script>
-    <script src="websocket.js"></script>
-
-  </body>
+      console.log('typeof retrievedObject: ' + typeof retrievedObject);
+      console.log('Value of retrievedObject: ' + retrievedObject);
+      */
+            </script>
+</body>
 </html>

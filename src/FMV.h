@@ -1,35 +1,69 @@
-#ifndef FMV_h
-#define FMV_h
+#ifndef FMV_H
+#define FMV_H
 
-#include <Metro.h>
-#include "components/Console/Console.h"
-#include "components/Config/ConfigController.h"
-#include "components/Controller/ControllerManager.h"
-#include "components/Connection/ConnectionManager.h"
+#include <Arduino.h>
+#include <vector>
+#include <Preferences.h>
+#include "./utility/simpletimer.h"
+#include "./macros.h"
+#include "./log/logger.h"
+#include "./enums/enums.hpp"
+#include "./modules/base/base.hpp"
+#include "./modules/modulelist.h"
+#include "./sensors/sensorlist.h"
+#include "./utility/spiffs_config.h"
+#include "./utility/spiffs_storage.h"
+#include "./configuration/base/default_eventrulesbase.h"
+#include "./interfaces/interfaces.hpp"
 
-class Console; // Forward declaration to make the compiler happy.
-class FMV {
-
-  /* Metro timers */
-  Metro* handleClientInterval;
-
-  bool wasConfigured = 0;
-
+class FMV : public virtual IFMV {
+private:
+  void getFactoryInstances(std::vector<Configbase*> mConfigArray);
+  const String mVersion = "1.0";
+  std::vector<IWheel*> wheelArray;
+  bool mIsSetup = false;
+  bool mSafeMode = false;
+  IModuleList * mModules = new ModuleList();
+  ISensorList * mSensors = new SensorList();
+  Default_eventrulesbase * mEventRules = nullptr;
+  Spiffs_config * pSpiffs_config;
+  Spiffs_storage * pSpiffs_storage;
+  SimpleTimer * pSimpleTimerPingPong = new SimpleTimer(1000);
+  Preferences preferences;
+  void incrementResetStats();
+  void successfullStart();
+  void addEnabledCommands();
 public:
-  ConnectionManager* connectionManager;
-  ControllerManager* controllerManager;
-  ConfigController* configController;
-  const String version = "0.1";
+  FMV() {
 
-  FMV();
-  void loop();
+  };
   void setup();
+  void loop();
+  void moduleEvent(IModule * sender, byte eventId);
 
-  // Tasks?
-  void handlePendingConnectionDevices();
-  void registerControllers();
+  std::vector<IWheel*> getWheelValues() const
+  {
+    return wheelArray;
+  }
 
+  IModuleList &modules()
+  {
+    return * mModules;
+  }
+
+  Default_eventrulesbase &eventRules()
+  {
+    return * mEventRules;
+  }
+
+  ISensorList &sensors()
+  {
+    return * mSensors;
+  }
+
+  String getVersion()
+  {
+    return mVersion;
+  }
 };
-
-
 #endif

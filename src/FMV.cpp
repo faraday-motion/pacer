@@ -1,81 +1,158 @@
-#include "FMV.h"
-#include "components/Utility/Log.h"
-#include "components/Device/AbstractDevice.h"
+#include <vector>
+#include <Arduino.h>
+#include <rom/rtc.h>
+#include "./modules/base/base.hpp"
+#include "./log/logger.h"
+#include "./configuration/wheel.h"
+#include "./configuration/base/configbase.h"
+#include "./configuration/default/configuration.h"
+#include "./configuration/configurator.h"
+#include "./configuration/custom/custom_config.h"
+#include "./configuration/custom/custom_safe_config.h"
+#include "./configuration/custom/custom_eventrules.h"
 
-FMV::FMV()
-{
-}
+#include "./factory/modulefactory.h"
+#include "./sensors/sensors.hpp"
+
+#include "./enums/modules.h"
 
 void FMV::setup() {
+  if (mIsSetup == false)
+  {
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Faraday Motion Pacer v"),  String(mVersion));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Reset Reason Core 0: "), Tools::resetReason(rtc_get_reset_reason(0)));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Reset Reason Core 1: "), Tools::resetReason(rtc_get_reset_reason(1)));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Running Core: "), String(xPortGetCoreID()));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
 
-  Log::Logger()->enable();
-  Log::Logger()->setLevel(Log::Level::DEBUG);
+    incrementResetStats();
+    if (mSafeMode)
+      Logger::Instance().write(LogLevel::INFO, FPSTR("************* Running in SAFE MODE"));
 
-  Log::Logger()->write(Log::Level::INFO, "Setting up the Faraday Motion Vehicle...");
-  Log::Logger()->write(Log::Level::DEBUG, "Setting the console");
-  Console::Cmd()->setFMV(this);
+    Configurator::Instance().initializeAnalog();
+    Configurator::Instance().initializeSerial();
+    Configurator::Instance().initializeSpiff();
 
-  this->configController = new ConfigController;
-  this->wasConfigured = this->configController->hasLoadedConfig;
+    //Delete the SPIFFS file configs if there are problems with the old configuration
+    Configurator::Instance().configs().clear(true);
 
-  if (this->wasConfigured) {
-    this->connectionManager = new ConnectionManager();
-    this->connectionManager->setup();
-    this->controllerManager = new ControllerManager(connectionManager);
-    this->connectionManager->bindControllerManager(this->controllerManager);
-    this->registerControllers(); // We need to have a safety check.
-    Log::Logger()->write(Log::Level::INFO, "Finished setting up the Faraday Motion Vehicle");
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring Modules"));
+    if (mSafeMode)
+      Configurator::Instance().configs().load(new Custom_safe_config(), true);
+    else
+      Configurator::Instance().configs().load(new Custom_config(), false);
+
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Enabling Commands"));
+    addEnabledCommands();
+
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Creating Module Instances"));
+    getFactoryInstances(Configurator::Instance().configs().all());
+
+    if (!mSafeMode)
+    {
+      Logger::Instance().write(LogLevel::INFO, FPSTR("************* Configuring EventRules"));
+      mEventRules = new Custom_eventrules(this);
+    }
+
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Modules"));
+    modules().setup();
+
+    //No need for buffering anymore
+    Logger::Instance().setBufferSize(0);
+    modules().listEnabled();
+    Logger::Instance().write(LogLevel::INFO, FPSTR("Free Heap: "), String(ESP.getFreeHeap()));
+    //Should probably be done after a time delay of 30, once all has been looping a few times...
+    successfullStart();
+
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Faraday Motion Pacer v"), String(mVersion));
+    mIsSetup = true;
   }
+}
+
+void FMV::incrementResetStats()
+{
+  Logger::Instance().write(LogLevel::INFO, FPSTR("************* Setting up Preferences"));
+  preferences.begin("pacer", false);
+  //preferences.clear();
+  //preferences.remove("restarts");
+  unsigned int restartCounter = preferences.getUInt("restarts", 0);
+  restartCounter++;
+  preferences.putUInt("restarts", restartCounter);
+
+  unsigned int failedstartCounter = preferences.getUInt("failedstart", 0);
+  if (failedstartCounter > 3)
+    mSafeMode = true;
+  failedstartCounter++;
+  preferences.putUInt("failedstart", failedstartCounter);
+
+  preferences.end();
+  sensors().setIntSensor("rst", restartCounter);
+  Logger::Instance().write(LogLevel::INFO, FPSTR("Restarts: "), String(restartCounter));
+  Logger::Instance().write(LogLevel::INFO, FPSTR("************* Finished setting up Preferences"));
+}
+
+void FMV::successfullStart()
+{
+  preferences.begin("pacer", false);
+  unsigned int failedstartCounter = preferences.getUInt("failedstart", 0);
+  failedstartCounter = 0;
+  preferences.putUInt("failedstart", failedstartCounter);
+  preferences.end();
+  sensors().setIntSensor("fst", failedstartCounter);
+}
+
+void FMV::addEnabledCommands()
+{
+  Configurator::Instance().addCommand(ExternalCommands::MODULE_ON);
+  Configurator::Instance().addCommand(ExternalCommands::MODULE_OFF);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_POWER);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_BRAKE);
+  Configurator::Instance().addCommand(ExternalCommands::TURN_LEFT);
+  Configurator::Instance().addCommand(ExternalCommands::TURN_RIGHT);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_0);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_20);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_40);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_60);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_80);
+  Configurator::Instance().addCommand(ExternalCommands::DRIVE_MODE_100);
+  Configurator::Instance().addCommand(ExternalCommands::LED_ENABLED);
+  Configurator::Instance().addCommand(ExternalCommands::LED_DISABLED);
+  Configurator::Instance().addCommand(ExternalCommands::GET_CONFIG);
 }
 
 void FMV::loop()
 {
-  if (this->wasConfigured)
+  mModules -> loop();
+  if (pSimpleTimerPingPong -> check())
   {
-    // Connection Manager Loop
-    this->connectionManager->loop();
-
-    // Handle Newly Connected Devices
-    this->handlePendingConnectionDevices(); // try to register the pending controllers if any are waiting.
-
-    // Conntroller Manager Loop
-    this->controllerManager->loop();
-    // Read Data from VESC  // TODO:: This should be moved somewhere else.
-    while (Serial.available() > 0) this->controllerManager->motorController->processUartByte(Serial.read());
-  }
-  else
-  {
-    Log::Logger()->write(Log::Level::ERR, "FATAL: Faraday Motion Pacer Vehicle was not correctly configured.");
-    delay(2000);
+    Logger::Instance().write(LogLevel::INFO, FPSTR("PINGPONG"));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Free Heap: "), String(ESP.getFreeHeap()));
+    Logger::Instance().write(LogLevel::INFO, FPSTR("************* Reset Count: "), String(sensors().getIntSensor("rst") -> getValue()));
   }
 }
 
-/***
-   * Register all enabled devices from the configuration.
-   * TODO:: This should happend on the controller manager.
-***/
-void FMV::registerControllers()
+void FMV::moduleEvent(IModule * sender, byte eventId)
 {
-  Config* config = Config::get();
-  //config->printRegisteredControllers();
-  if (config->registeredControllersCount > 0) {
-    for (byte i = 0; i < config->registeredControllersCount; i++)
-    {
-      AbstractDevice registeredController(config->registeredControllers[i]);
-      this->controllerManager->registerController(registeredController);
+  Logger::Instance().write(LogLevel::DEBUG, FPSTR("FMV::moduleEvent Module: "), String(sender -> module()) + "eventId: " + String(eventId));
+  if (mEventRules != nullptr)
+    mEventRules -> moduleEvent(sender, eventId);
+}
+
+void FMV::getFactoryInstances(std::vector<Configbase*> mConfigArray)
+{
+  for (int i=0; i<mConfigArray.size(); i++)
+  {
+    int configuration = mConfigArray[i] -> configuration;
+    byte id = mConfigArray[i] -> getId();
+
+    IModule * fb = Modulefactory::getModuleInstance(id, configuration, this);
+    mModules -> add(fb);
+
+    switch(configuration) {
+      case Configurations::WHEEL_CONFIG :
+        Logger::Instance().write(LogLevel::DEBUG, FPSTR("getWheelInstance WHEEL_CONFIG"));
+        wheelArray.push_back(new Wheel(id));
+        break;
     }
-  }
-}
-
-/**
-  * Gets the devices that are pending registration from all connection interfaces and attempts to register them as controllers.
-*/
-void FMV::handlePendingConnectionDevices()
-{
-  if (this->connectionManager->pendingDevice.pending == true)
-  {
-   bool registered = this->controllerManager->registerController(this->connectionManager->pendingDevice);
-   if (!registered)
-     this->connectionManager->clearPendingDevice(); // zerofy the pendingDevice.
   }
 }
